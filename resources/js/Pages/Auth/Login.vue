@@ -129,12 +129,6 @@ const submit = () => {
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label for="password">Password</Label>
-              <a
-                :href="route('password.request')"
-                class="ml-auto inline-block text-sm underline"
-              >
-                Forgot your password?
-              </a>
             </div>
             <Input
               id="password"
@@ -144,6 +138,12 @@ const submit = () => {
               autocomplete="current-password"
             />
             <FormError :message="form.errors.password" />
+            <a
+              :href="route('password.request')"
+              class="ml-auto inline-block text-sm underline"
+            >
+              Forgot your password?
+            </a>
           </div>
           <div class="mt-4 flex items-center space-x-2">
             <!--            <label class="flex items-center">-->

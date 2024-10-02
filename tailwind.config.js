@@ -1,6 +1,6 @@
-import forms from '@tailwindcss/forms'
-import defaultTheme from 'tailwindcss/defaultTheme'
-import animate from 'tailwindcss-animate'
+import forms from "@tailwindcss/forms"
+import defaultTheme from "tailwindcss/defaultTheme"
+import animate from "tailwindcss-animate"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -58,16 +58,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        page: "hsl(var(--page))",
       },
       borderRadius: {
-      	xl: "calc(var(--radius) + 4px)",
+        xl: "calc(var(--radius) + 4px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-        fontFamily: {
-            sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-        },
+      fontFamily: {
+        sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },
@@ -79,10 +80,10 @@ module.exports = {
         },
         "collapsible-down": {
           from: { height: 0 },
-          to: { height: 'var(--radix-collapsible-content-height)' },
+          to: { height: "var(--radix-collapsible-content-height)" },
         },
         "collapsible-up": {
-          from: { height: 'var(--radix-collapsible-content-height)' },
+          from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
         },
       },
