@@ -24,12 +24,15 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "@vee-validate/zod": "^4.13.2",
         "@vueuse/core": "^11.1.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "embla-carousel-vue": "^8.3.0",
         "lucide-vue-next": "^0.446.0",
         "radix-vue": "^1.9.6",
-        "tailwind-merge": "^2.5.2"
+        "tailwind-merge": "^2.5.2",
+        "vee-validate": "^4.13.2",
+        "zod": "^3.23.8"
     }
 }
