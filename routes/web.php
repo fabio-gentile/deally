@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'show'])
-    ->name('home');
+    ->name('home.show');
+
+Route::get('/pour-vous', [HomeController::class, 'forYou'])
+    ->name('home.for-you');
+
+Route::get('/nouveaux', [HomeController::class, 'new'])
+    ->name('home.new');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

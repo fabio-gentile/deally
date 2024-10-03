@@ -10,7 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/Components/ui/carousel"
-import { Card, CardContent } from "@/Components/ui/card"
+import CardDeal from "@/Components/Deal/CardDeal.vue"
 
 defineProps<{
   categories: CategoryDeal[]
@@ -20,7 +20,7 @@ defineProps<{
 <template>
   <div>
     <Head title="Accueil" />
-    <div class="bg-primary py-4">
+    <div class="bg-primary py-4 dark:bg-primary-foreground">
       <Wrapper class="max-w-2xl lg:max-w-4xl">
         <Carousel
           class="relative flex w-full max-w-full"
@@ -57,5 +57,26 @@ defineProps<{
         </Carousel>
       </Wrapper>
     </div>
+    <div class="border-b bg-background py-3">
+      <Wrapper>
+        <div class="flex gap-6 font-semibold">
+          <Link :href="route('home.show')" class="text-primary">Populaire</Link>
+          <Link :href="route('home.new')" class="text-muted-foreground"
+            >Nouveauté</Link
+          >
+          <Link :href="route('home.for-you')" class="text-muted-foreground"
+            >Pour vous</Link
+          >
+        </div>
+      </Wrapper>
+    </div>
+
+    <main class="bg-page">
+      <Wrapper class="pt-8">
+        <div class="flex flex-col gap-3">
+          <CardDeal v-for="n in 10" />
+        </div>
+      </Wrapper>
+    </main>
   </div>
 </template>
