@@ -32,6 +32,9 @@ dependencies:
   vee-validate:
     specifier: ^4.13.2
     version: 4.13.2(vue@3.5.10)
+  vue-filepond:
+    specifier: ^7.0.4
+    version: 7.0.4(filepond@4.31.4)(vue@3.5.10)
   zod:
     specifier: ^3.23.8
     version: 3.23.8
@@ -1157,6 +1160,10 @@ packages:
       reusify: 1.0.4
     dev: true
 
+  /filepond@4.31.4:
+    resolution: {integrity: sha512-3kR87Rsw2OP8CktlIehdbFjWB33GEH5iLs8izl2OcZGOszUFWYTjRY6pffLpjz/gRE61u1F67rZ2++ujFiUxPQ==}
+    dev: false
+
   /fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
@@ -2022,6 +2029,16 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
+      vue: 3.5.10(typescript@5.6.2)
+    dev: false
+
+  /vue-filepond@7.0.4(filepond@4.31.4)(vue@3.5.10):
+    resolution: {integrity: sha512-HvWlCG8qjvyykrpPTDjJ+JqsHTXt5/0zWMX9vu7kU3JXCUODPUkGi9prZcauOnIZ4MqyeSZ9M0sDVwdMATyt1g==}
+    peerDependencies:
+      filepond: '>=4.7.4 < 5.x'
+      vue: '>=3 < 4'
+    dependencies:
+      filepond: 4.31.4
       vue: 3.5.10(typescript@5.6.2)
     dev: false
 

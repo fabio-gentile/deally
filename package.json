@@ -33,6 +33,7 @@
         "radix-vue": "^1.9.6",
         "tailwind-merge": "^2.5.2",
         "vee-validate": "^4.13.2",
+        "vue-filepond": "^7.0.4",
         "zod": "^3.23.8"
     }
 }

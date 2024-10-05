@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Deal extends Model
 {
-    use HasFactory;
+    use HasFactory, hasSlug;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +32,18 @@ class Deal extends Model
         'category_deal_id',
         'user_id',
     ];
+
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom(['title', 'id'])
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(50);
+    }
 
     /**
      * Get the category that owns the deal.

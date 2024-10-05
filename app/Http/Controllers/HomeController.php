@@ -29,14 +29,10 @@ class HomeController extends Controller
     /**
      * Display the resource.
      */
-    public function show(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
 //        dd(CategoryDeal::all());
         return Inertia::render('Home', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
             'categories' => CategoryDeal::all(),
         ]);
     }

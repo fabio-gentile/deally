@@ -320,6 +320,12 @@ return [
         "websites" => "sites web",
         "year" => "année",
         "years" => "années",
+        'images' => 'images',
+        'start_date' => 'date de début',
+        'expiration_date' => 'date d\'expiration',
+        'original_price' => 'prix original',
+        'promo_code' => 'code promotionnel',
+        'deal_url' => 'lien de l\'offre',
     ],
 
 ];

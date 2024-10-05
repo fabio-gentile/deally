@@ -6,8 +6,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [HomeController::class, 'show'])
-    ->name('home.show');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home.index');
 
 Route::get('/pour-vous', [HomeController::class, 'forYou'])
     ->name('home.for-you');
@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
-    Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
+    Route::post('/deals/create', [DealController::class, 'store'])->name('deals.store');
     Route::get('/deals/{deal}/edit', [DealController::class, 'edit'])->name('deals.edit');
     Route::patch('/deals/{deal}', [DealController::class, 'update'])->name('deals.update');
     Route::delete('/deals/{deal}', [DealController::class, 'destroy'])->name('deals.destroy');
