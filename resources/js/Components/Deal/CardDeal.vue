@@ -7,6 +7,10 @@ import MessageSquare from "@/Components/common/MessageSquare.vue"
 import SaveBookmark from "@/Components/common/SaveBookmark.vue"
 import Report from "@/Components/common/Report.vue"
 import Button from "@/Components/ui/button/Button.vue"
+import { Deal } from "@/types/model/deal"
+defineProps<{
+  deal: Deal
+}>()
 </script>
 
 <template>
@@ -21,7 +25,11 @@ import Button from "@/Components/ui/button/Button.vue"
           alt=""
         />
         <div class="flex flex-col gap-3 md:hidden">
-          <UpVote />
+          <UpVote
+            :deal="deal"
+            :votes="deal.votes"
+            :vote="deal.user_vote ?? false"
+          />
           <div class="flex flex-col gap-6 text-sm md:flex-row">
             <div class="flex items-center gap-2">
               <CalendarClock />
@@ -38,7 +46,11 @@ import Button from "@/Components/ui/button/Button.vue"
         <div
           class="hidden flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between"
         >
-          <UpVote />
+          <UpVote
+            :deal="deal"
+            :votes="deal.votes"
+            :vote="deal.user_vote ?? false"
+          />
           <div class="flex flex-col gap-6 text-sm md:flex-row">
             <div class="flex items-center gap-2">
               <CalendarClock />
@@ -74,11 +86,11 @@ import Button from "@/Components/ui/button/Button.vue"
         >
           <div class="flex gap-6">
             <ShareSocial url="ewtqweq" title="Jordan 1 Mid" />
-            <MessageSquare count="12" url="#comments" />
+            <MessageSquare :count="12" url="#comments" />
             <Report type="deal" url="" />
             <SaveBookmark type="deal" url="#" />
           </div>
-          <Link class="w-full md:w-fit">
+          <Link href="#" class="w-full md:w-fit">
             <Button class="w-full">
               <Eye class="mr-2" />
               Voir l'annonce

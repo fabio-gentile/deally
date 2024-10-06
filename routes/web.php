@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +33,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/deals/{id}', [DealController::class, 'update'])->name('deals.update');
     Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deals.destroy');
     Route::delete('/deals/image/{filename}', [DealController::class, 'deleteImage'])->name('deals.delete-image');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/deals/{deal}/vote', [VoteController::class, 'store'])->name('deals.vote.store');
+//    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');
 });
 
 require __DIR__.'/auth.php';

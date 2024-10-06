@@ -11,9 +11,11 @@ import {
   CarouselPrevious,
 } from "@/Components/ui/carousel"
 import CardDeal from "@/Components/Deal/CardDeal.vue"
+import { Deal } from "@/types/model/deal"
 
 defineProps<{
   categories: CategoryDeal[]
+  deals: Deal[]
 }>()
 </script>
 
@@ -76,7 +78,7 @@ defineProps<{
     <main class="bg-page">
       <Wrapper class="pt-8">
         <div class="flex flex-col gap-3">
-          <CardDeal v-for="n in 10" />
+          <CardDeal v-for="(deal, index) in deals" :key="index" :deal="deal" />
         </div>
       </Wrapper>
     </main>

@@ -66,6 +66,14 @@ class Deal extends Model
     }
 
     /**
+     * Get the votes for the deal.
+     */
+    public function voteDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(VoteDeals::class, 'deal_id');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -74,8 +82,6 @@ class Deal extends Model
     {
         return [
             'created_at' => 'datetime',
-            'expiration_date' => 'datetime',
-            'start_date' => 'datetime',
         ];
     }
 }

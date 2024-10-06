@@ -1,5 +1,6 @@
 import { CategoryDeal } from "@/types/model/category-deal"
 import { User } from "@/types/model/user"
+import { VoteDeals } from "@/types/model/vote-deal"
 
 export interface Deal {
   // columns
@@ -17,6 +18,8 @@ export interface Deal {
   deal_url: string
   user_id: number
   category_deal_id: number
+  votes: number
+  user_vote?: VoteDeals
   // relations
   category_deal: CategoryDeal
   user: User
