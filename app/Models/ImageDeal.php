@@ -15,4 +15,12 @@ class ImageDeal extends Model
      * @var array<int, string>
      */
     protected $guarded = [];
+
+    /**
+     * Get the deal that owns the image.
+     */
+    public function deal(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Deal::class);
+    }
 }

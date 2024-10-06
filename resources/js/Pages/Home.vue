@@ -60,7 +60,9 @@ defineProps<{
     <div class="border-b bg-background py-3">
       <Wrapper>
         <div class="flex gap-6 font-semibold">
-          <Link :href="route('home.show')" class="text-primary">Populaire</Link>
+          <Link :href="route('home.index')" class="text-primary"
+            >Populaire</Link
+          >
           <Link :href="route('home.new')" class="text-muted-foreground"
             >Nouveauté</Link
           >

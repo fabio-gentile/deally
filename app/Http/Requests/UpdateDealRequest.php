@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDealRequest extends FormRequest
+class UpdateDealRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +33,8 @@ class StoreDealRequest extends FormRequest
             'deal_url' => ['required', 'string', 'max:255'],
             'category' => ['required', 'exists:category_deals,name'],
             'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Valide chaque image
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'uploaded_images' => ['nullable', 'array']// Valide chaque image
         ];
     }
 

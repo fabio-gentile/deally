@@ -11,7 +11,7 @@
         "@vitejs/plugin-vue": "^5.0.0",
         "@vue/server-renderer": "^3.4.0",
         "autoprefixer": "^10.4.12",
-        "axios": "^1.7.4",
+        "axios": "^1.7.7",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.31",
         "prettier": "^3.3.3",
@@ -34,6 +34,7 @@
         "tailwind-merge": "^2.5.2",
         "vee-validate": "^4.13.2",
         "vue-filepond": "^7.0.4",
+        "vue-sonner": "^1.2.1",
         "zod": "^3.23.8"
     }
 }

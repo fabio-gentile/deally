@@ -28,9 +28,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
     Route::post('/deals/create', [DealController::class, 'store'])->name('deals.store');
-    Route::get('/deals/{deal}/edit', [DealController::class, 'edit'])->name('deals.edit');
-    Route::patch('/deals/{deal}', [DealController::class, 'update'])->name('deals.update');
-    Route::delete('/deals/{deal}', [DealController::class, 'destroy'])->name('deals.destroy');
+    Route::get('/deals/{slug}/edit', [DealController::class, 'edit'])->name('deals.edit');
+    Route::patch('/deals/{id}', [DealController::class, 'update'])->name('deals.update');
+    Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deals.destroy');
+    Route::delete('/deals/image/{filename}', [DealController::class, 'deleteImage'])->name('deals.delete-image');
 });
 
 require __DIR__.'/auth.php';
