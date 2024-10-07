@@ -33,13 +33,14 @@ import ShareSocial from "@/Components/common/ShareSocial.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import { CarouselApi } from "@/Components/ui/carousel"
 import { calculatePercentage } from "@/lib/utils"
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/Components/ui/separator"
 
 const { deal, images, category, userDealsCount } = defineProps<{
   deal: Deal
   images: ImageDeal[]
   category: string
   userDealsCount: number
+  similarDeals: Deal[]
 }>()
 
 const emblaMainApi = ref<CarouselApi>()
@@ -293,6 +294,70 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
             Nous vous encourageons à faire preuve de vigilance. Si vous estimez
             que cette annonce enfreint nos règles ou contient des informations
             inappropriées, vous pouvez la signaler.
+          </div>
+        </div>
+
+        <!-- similar deals -->
+        <div
+          v-if="similarDeals.length > 0"
+          class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
+        >
+          <h2 class="text-xl font-semibold">Deals similaires</h2>
+          <div class="flex shrink-0 flex-row flex-nowrap gap-6 overflow-x-auto">
+            <article v-for="(similarDeal, index) in similarDeals" :key="index">
+              <Link
+                :href="route('deals.show', similarDeal.slug)"
+                class="grid w-[160px] gap-2"
+              >
+                <img
+                  class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain dark:bg-primary-foreground"
+                  v-if="similarDeal.images[0]"
+                  :src="
+                    '/storage/' +
+                    similarDeal.images[0].path +
+                    '/' +
+                    similarDeal.images[0].filename
+                  "
+                  :alt="similarDeal.images[0].original_filename"
+                />
+                <ImageOff
+                  v-else
+                  class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain text-muted-foreground dark:bg-primary-foreground"
+                />
+                <h3 class="line-clamp-1 text-sm font-semibold text-foreground">
+                  {{ similarDeal.title }}
+                </h3>
+                <div class="flex gap-1 text-sm">
+                  <span class="font-semibold text-primary">
+                    <span
+                      v-if="
+                        (!similarDeal.price || similarDeal.price == 0) &&
+                        similarDeal.original_price
+                      "
+                      >GRATUIT</span
+                    >
+                    <span v-if="similarDeal.price != 0 && similarDeal.price"
+                      >{{ similarDeal.price }}€</span
+                    >
+                  </span>
+                  <span
+                    v-if="similarDeal.original_price"
+                    class="font-medium text-muted-foreground line-through"
+                    >{{ similarDeal.original_price }}€</span
+                  >
+                  <span
+                    v-if="similarDeal.original_price && deal.price"
+                    class="font-medium text-muted-foreground"
+                    >-{{
+                      calculatePercentage(
+                        similarDeal.price,
+                        similarDeal.original_price
+                      )
+                    }}</span
+                  >
+                </div>
+              </Link>
+            </article>
           </div>
         </div>
       </Wrapper>

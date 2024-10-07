@@ -27,11 +27,21 @@ class DealController extends Controller
             $deal->user_vote = $deal->voteDetails->first();
         }
 
+        $similarDeals = Deal::where('category_deal_id', $deal->category_deal_id)
+            ->with('images')
+            ->where('id', '!=', $deal->id)
+            ->where('expiration_date', '>', now())
+            ->where('votes', '>', -5)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
         return Inertia::render('Deal/Show', [
             'deal' => $deal,
             'userDealsCount' => $deal->user->deals->count(),
             'images' => $deal->images,
             'category' => CategoryDeal::where('id', $deal->category_deal_id)->first()->name,
+            'similarDeals' => $similarDeals ?? [],
         ]);
     }
     /**
