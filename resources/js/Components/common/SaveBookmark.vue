@@ -9,7 +9,8 @@ const props = defineProps<{
 </script>
 <template>
   <!--    TODO: add route-->
-  <Link href="#">
+  <Link href="#" class="flex w-fit items-center gap-1 text-sm">
     <BookmarkPlus class="h-5 w-5 object-contain" />
+    <slot />
   </Link>
 </template>

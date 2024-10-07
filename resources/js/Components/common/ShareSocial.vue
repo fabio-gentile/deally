@@ -39,7 +39,10 @@ const socialShare = (social) => {
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Share2 class="h-5 w-5 cursor-pointer object-contain" />
+      <div class="flex w-fit cursor-pointer items-center gap-1 text-sm">
+        <Share2 class="h-5 w-5 cursor-pointer object-contain" />
+        <slot />
+      </div>
     </DialogTrigger>
     <DialogContent class="sm:max-w-md">
       <DialogHeader>

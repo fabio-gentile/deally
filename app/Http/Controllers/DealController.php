@@ -15,6 +15,26 @@ use Inertia\Inertia;
 class DealController extends Controller
 {
     /**
+     * Display the specified deal.
+     */
+    public function show(Request $request, string $slug): \Inertia\Response
+    {
+        $deal = Deal::where('slug', $slug)->with('user')->firstOrFail();
+        $user = auth()->user();
+//        dd($deal);
+        if ($user) {
+            // associate the voteDeals to the deal
+            $deal->user_vote = $deal->voteDetails->first();
+        }
+
+        return Inertia::render('Deal/Show', [
+            'deal' => $deal,
+            'userDealsCount' => $deal->user->deals->count(),
+            'images' => $deal->images,
+            'category' => CategoryDeal::where('id', $deal->category_deal_id)->first()->name,
+        ]);
+    }
+    /**
      * Store a newly created deal.
      */
     public function store(Request $request, StoreDealRequest $storeDealRequest): \Illuminate\Http\RedirectResponse

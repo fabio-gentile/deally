@@ -13,7 +13,7 @@ defineProps<{
   <div
     class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
   >
-    <div class="grow">
+    <div class="grow bg-page">
       <NavigationBar :user="user" />
       <slot />
       <footer></footer>

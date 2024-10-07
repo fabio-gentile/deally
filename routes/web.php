@@ -30,11 +30,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
     Route::post('/deals/create', [DealController::class, 'store'])->name('deals.store');
     Route::get('/deals/{slug}/edit', [DealController::class, 'edit'])->name('deals.edit');
-    Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
     Route::patch('/deals/{id}', [DealController::class, 'update'])->name('deals.update');
     Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deals.destroy');
     Route::delete('/deals/image/{filename}', [DealController::class, 'deleteImage'])->name('deals.delete-image');
 });
+
+Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/{deal}/vote', [VoteController::class, 'store'])->name('deals.vote.store');

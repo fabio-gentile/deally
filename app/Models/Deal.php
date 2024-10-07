@@ -46,6 +46,14 @@ class Deal extends Model
     }
 
     /**
+     * Get the images for the deal.
+     */
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ImageDeal::class);
+    }
+
+    /**
      * Get the category that owns the deal.
      *
      * @return BelongsTo
@@ -82,6 +90,8 @@ class Deal extends Model
     {
         return [
             'created_at' => 'datetime',
+            'expiration_date' => 'datetime',
+            'start_date' => 'datetime',
         ];
     }
 }

@@ -4,13 +4,17 @@ import { Link } from "@inertiajs/vue3"
 
 const props = defineProps<{
   url: string
-  count: number
+  count?: number
 }>()
 </script>
 <template>
-  <Link :href="props.url + '#comments'" class="flex gap-1 font-medium">
+  <Link
+    :href="props.url + '#comments'"
+    class="flex w-fit items-center gap-1 text-sm font-medium"
+  >
     <MessageSquareText class="h-5 w-5 object-contain" />
     <!--              TODO: add number of comments-->
+    <slot />
     {{ props.count }}
   </Link>
 </template>
