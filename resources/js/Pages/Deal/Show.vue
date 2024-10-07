@@ -33,6 +33,7 @@ import ShareSocial from "@/Components/common/ShareSocial.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import { CarouselApi } from "@/Components/ui/carousel"
 import { calculatePercentage } from "@/lib/utils"
+import { Separator } from "@/components/ui/separator"
 
 const { deal, images, category, userDealsCount } = defineProps<{
   deal: Deal
@@ -107,15 +108,16 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
         </BreadcrumbList>
       </Breadcrumb>
       <Wrapper class="mt-6 !max-w-[850px]">
+        <!-- deal information-->
         <div
-          class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 md:flex-row md:gap-8"
+          class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground md:flex-row md:gap-8"
         >
-          <ImageOff
-            v-if="!images"
-            class="mx-auto h-52 w-52 w-full object-contain text-muted-foreground"
-          />
-
-          <!--            carousel-->
+          <div v-if="!images" class="flex items-center justify-center">
+            <ImageOff
+              class="mx-auto h-52 w-52 object-contain text-muted-foreground"
+            />
+          </div>
+          <!-- carousel -->
           <div v-else class="w-full sm:w-auto">
             <Carousel
               class="relative w-full max-w-xs"
@@ -182,8 +184,11 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
 
             <div class="flex gap-2 text-xl">
               <span class="font-semibold text-primary">
-                <span v-if="!deal.price && deal.original_price">GRATUIT</span>
-                <span v-if="deal.price">{{ deal.price }}€</span>
+                <span
+                  v-if="(!deal.price || deal.price == 0) && deal.original_price"
+                  >GRATUIT</span
+                >
+                <span v-if="deal.price != 0">{{ deal.price }}€</span>
               </span>
               <span
                 v-if="deal.original_price"
@@ -239,7 +244,7 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
                 <div class="grid gap-2">
                   <div>
                     Proposé par
-                    <!--                    TODO: Add redirection to user profile-->
+                    <!-- TODO: Add redirection to user profile -->
                     <Link href="#" class="font-semibold">{{
                       deal.user.name
                     }}</Link>
@@ -262,6 +267,32 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- description -->
+        <div
+          class="mt-6 grid gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
+        >
+          <h2 class="text-xl font-semibold">Description</h2>
+          <div
+            class="text-sm text-muted-foreground lg:text-base"
+            v-html="deal.description"
+          ></div>
+          <Separator class="my-1" />
+          <div class="text-sm text-muted-foreground">
+            <div class="italic">
+              Dernière édition par
+              <!-- TODO: Add redirection to user profile -->
+              <Link href="" class="font-semibold">{{ deal.user.name }}</Link
+              >, il y a {{ since }}.
+            </div>
+          </div>
+          <div class="text-sm italic text-muted-foreground">
+            Le contenu de cette annonce n'a pas été vérifié par notre équipe.
+            Nous vous encourageons à faire preuve de vigilance. Si vous estimez
+            que cette annonce enfreint nos règles ou contient des informations
+            inappropriées, vous pouvez la signaler.
           </div>
         </div>
       </Wrapper>
