@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/Components/ui/dialog"
+import { Label } from "@/Components/ui/label"
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import { useClipboard } from "@vueuse/core"
@@ -89,7 +90,12 @@ const socialShare = (social) => {
             readonly="readonly"
           />
         </div>
-        <Button @click="copy(source)" size="sm" class="w-24">
+        <Button
+          @click="copy(source)"
+          title="Copier dans le presse papier"
+          size="sm"
+          class="w-24"
+        >
           <Copy v-if="!copied" class="mr-2 h-4 w-4" />
           <Check v-else class="mr-2 h-4 w-4" />
           <span v-if="!copied">Copier</span>
