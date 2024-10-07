@@ -89,9 +89,10 @@ const since = timeAgo(new Date(deal.created_at)) // string
           >
           <!--        <span></span>-->
         </div>
-        <p class="line-clamp-3 text-sm text-muted-foreground md:line-clamp-2">
-          {{ deal.description }}
-        </p>
+        <p
+          class="line-clamp-3 text-sm text-muted-foreground md:line-clamp-2"
+          v-html="deal.description"
+        ></p>
         <div
           class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
         >

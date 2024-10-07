@@ -23,6 +23,7 @@ import Wrapper from "@/Pages/Layout/Wrapper.vue"
 import { CategoryDeal } from "@/types/model/category-deal"
 import FormError from "@/Components/FormError.vue"
 import { Textarea } from "@/Components/ui/textarea"
+import TipTap from "@/Components/TipTap.vue"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -33,8 +34,8 @@ const form = useForm({
   deal_url: "",
   title: "",
   description: "",
-  price: "",
-  original_price: "",
+  price: 0,
+  original_price: 0,
   promo_code: "",
   category: "",
   start_date: "",
@@ -49,7 +50,10 @@ const submit = () => {
   })
   form.images = formData.getAll("images[]")
 
-  form.post(route("deals.store"), {})
+  // console.log(form.description)
+  form.post(route("deals.store"), {
+    preserveScroll: true,
+  })
 }
 
 const images = ref([])
@@ -96,7 +100,8 @@ const removeImage = (index) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea v-model="form.description" />
+                  <!--                  <Textarea v-model="form.description" />-->
+                  <TipTap v-model="form.description" />
                 </FormControl>
                 <FormError :message="form.errors.description" />
               </FormItem>

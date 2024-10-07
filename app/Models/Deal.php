@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Deal extends Model
 {
@@ -92,6 +93,7 @@ class Deal extends Model
             'created_at' => 'datetime',
             'expiration_date' => 'datetime',
             'start_date' => 'datetime',
+            'description' => PurifyHtmlOnGet::class,
         ];
     }
 }

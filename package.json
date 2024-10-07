@@ -24,6 +24,10 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "@tiptap/extension-underline": "^2.8.0",
+        "@tiptap/pm": "^2.8.0",
+        "@tiptap/starter-kit": "^2.8.0",
+        "@tiptap/vue-3": "^2.8.0",
         "@vee-validate/zod": "^4.13.2",
         "@vueuse/core": "^11.1.0",
         "class-variance-authority": "^0.7.0",

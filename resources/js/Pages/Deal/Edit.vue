@@ -26,6 +26,7 @@ import { Textarea } from "@/Components/ui/textarea"
 import { Deal } from "@/types/model/deal"
 import { ImageDeal } from "@/types/model/image-deal"
 import axios from "axios"
+import TipTap from "@/Components/TipTap.vue"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -40,7 +41,7 @@ const form = useForm({
   images: [],
   title: props.deal?.title,
   description: props.deal?.description,
-  price: props.deal?.price,
+  price: props.deal?.price || 0,
   original_price: props.deal?.original_price,
   deal_url: props.deal?.deal_url,
   promo_code: props.deal?.promo_code,
@@ -57,7 +58,7 @@ const submit = () => {
     formData.append("images[]", image.file)
   })
   form.images = formData.getAll("images[]")
-
+  console.log(form.data())
   form.post(route("deals.update", props.deal.id))
 }
 
@@ -115,7 +116,8 @@ const deleteImage = async (filename, index) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea v-model="form.description" />
+                  <TipTap v-model="form.description" />
+                  <!--                  <Textarea v-model="form.description" />-->
                 </FormControl>
                 <FormError :message="form.errors.description" />
               </FormItem>
