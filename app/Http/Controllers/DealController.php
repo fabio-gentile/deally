@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDealRequest;
 use App\Http\Requests\UpdateDealRequest;
 use App\Models\CategoryDeal;
+use App\Models\CommentDeal;
 use App\Models\Deal;
 use App\Models\ImageDeal;
 use Illuminate\Http\Request;
@@ -14,6 +15,21 @@ use Inertia\Inertia;
 
 class DealController extends Controller
 {
+    /**
+     *  Load all replies for a comment.
+     */
+    protected function loadAllReplies($comment): void
+    {
+        // Récupérer les réponses pour ce commentaire
+        $comment->replies->each(function ($reply) {
+            // Charger les sous-réponses et les trier
+            $reply->load(['replies' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // Trier les sous-réponses par created_at
+            }]);
+
+            $this->loadAllReplies($reply); // Appeler récursivement pour charger les sous-réponses
+        });
+    }
     /**
      * Display the specified deal.
      */
@@ -36,12 +52,27 @@ class DealController extends Controller
             ->limit(6)
             ->get();
 
+        $allComments = $deal->comments()
+            ->with(['replies' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // Trier les réponses directes par created_at
+            }, 'user']) // Charger l'utilisateur
+            ->whereNull('parent_id') // Obtenir uniquement les commentaires principaux
+            ->orderBy('created_at', 'desc')
+            ->get();
+//dd($allComments);
+
+        foreach ($allComments as $comment) {
+            $this->loadAllReplies($comment);
+        }
+
         return Inertia::render('Deal/Show', [
             'deal' => $deal,
             'userDealsCount' => $deal->user->deals->count(),
             'images' => $deal->images,
             'category' => CategoryDeal::where('id', $deal->category_deal_id)->first()->name,
             'similarDeals' => $similarDeals ?? [],
+            'allComments' => $allComments,
+            'allCommentsCount' => CommentDeal::where('deal_id', $deal->id)->count(),
         ]);
     }
     /**

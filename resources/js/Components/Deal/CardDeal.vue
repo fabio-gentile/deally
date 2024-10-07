@@ -79,12 +79,14 @@ const since = timeAgo(new Date(deal.created_at)) // string
         </strong>
         <div class="flex gap-2">
           <span class="font-semibold text-primary">
-            <span v-if="!deal.price && deal.original_price">GRATUIT</span>
-            <span v-if="deal.price">{{ deal.price }}€</span>
+            <span v-if="(!deal.price || deal.price == 0) && deal.original_price"
+              >GRATUIT</span
+            >
+            <span v-if="deal.price != 0 && deal.price">{{ deal.price }}€</span>
           </span>
           <span
             v-if="deal.original_price"
-            class="font-semibold text-muted-foreground line-through"
+            class="font-medium text-muted-foreground line-through"
             >{{ deal.original_price }}€</span
           >
           <!--        <span></span>-->

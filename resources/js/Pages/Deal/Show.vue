@@ -6,6 +6,8 @@ import {
   Clock,
   ImageOff,
   LucideSquareArrowOutUpRight,
+  Ellipsis,
+  Reply,
 } from "lucide-vue-next"
 import {
   Breadcrumb,
@@ -14,7 +16,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
-import { Link } from "@inertiajs/vue3"
+import { Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Pages/Layout/Wrapper.vue"
 import UpVote from "@/Components/Deal/UpVote.vue"
@@ -34,14 +36,24 @@ import Button from "@/Components/ui/button/Button.vue"
 import { CarouselApi } from "@/Components/ui/carousel"
 import { calculatePercentage } from "@/lib/utils"
 import { Separator } from "@/Components/ui/separator"
+import SendMessage from "@/Components/SendMessage.vue"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu"
 
-const { deal, images, category, userDealsCount } = defineProps<{
-  deal: Deal
-  images: ImageDeal[]
-  category: string
-  userDealsCount: number
-  similarDeals: Deal[]
-}>()
+const { deal, images, category, userDealsCount, allCommentsCount } =
+  defineProps<{
+    deal: Deal
+    images: ImageDeal[]
+    category: string
+    userDealsCount: number
+    similarDeals: Deal[]
+    allComments: any
+    allCommentsCount: number
+  }>()
 
 const emblaMainApi = ref<CarouselApi>()
 const emblaThumbnailApi = ref<CarouselApi>()
@@ -70,6 +82,57 @@ const expirationDate = useDateFormat(deal.expiration_date, "DD/MM/YYYY")
 const since = timeAgo(new Date(deal.created_at)) // string
 
 const discountPercentage = calculatePercentage(deal.price, deal.original_price)
+
+const activeCommentId = ref<number | null>(null) // stocke l'ID du commentaire auquel on répond
+
+const toggleReplyForm = (commentId: number) => {
+  activeCommentId.value = activeCommentId.value === commentId ? null : commentId
+}
+
+// Fermer le formulaire après l'envoi
+const closeReplyForm = () => {
+  activeCommentId.value = null
+}
+
+const allReplies = (comment: any) => {
+  const replies = []
+
+  // Récupérer les réponses directes
+  comment.replies.forEach((reply) => {
+    replies.push(reply) // Ajouter la réponse directe
+
+    // Ajouter les sous-réponses de manière récursive
+    getAllSubReplies(reply, replies)
+  })
+
+  return replies
+}
+
+function getAllSubReplies(reply, replies) {
+  // Vérifier s'il y a des sous-réponses
+  if (reply.replies && reply.replies.length) {
+    reply.replies.forEach((subReply) => {
+      replies.push(subReply) // Ajouter la sous-réponse
+      getAllSubReplies(subReply, replies) // Appeler récursivement pour les sous-réponses
+    })
+  }
+}
+
+const handleRemoveComment = (id) => {
+  router.delete(
+    route(
+      "deals.comments.destroy",
+      { id: id },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          console.log("Remove comment with id:", id)
+          console.log("Comment removed")
+        },
+      }
+    )
+  )
+}
 </script>
 
 <template>
@@ -113,13 +176,16 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
         <div
           class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground md:flex-row md:gap-8"
         >
-          <div v-if="!images" class="flex items-center justify-center">
+          <div
+            v-if="images.length < 1"
+            class="flex items-center justify-center"
+          >
             <ImageOff
               class="mx-auto h-52 w-52 object-contain text-muted-foreground"
             />
           </div>
           <!-- carousel -->
-          <div v-else class="w-full sm:w-auto">
+          <div v-else class="w-full shrink-0 sm:w-auto">
             <Carousel
               class="relative w-full max-w-xs"
               @init-api="(val) => (emblaMainApi = val)"
@@ -131,9 +197,6 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
                       <CardContent
                         class="flex aspect-square items-center justify-center bg-page !p-0"
                       >
-                        <!--                        <span class="text-4xl font-semibold">{{-->
-                        <!--                          index + 1-->
-                        <!--                        }}</span>-->
                         <img
                           class="h-64 w-64 object-contain"
                           :src="'/storage/' + image.path + '/' + image.filename"
@@ -171,7 +234,6 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
               </CarouselContent>
             </Carousel>
           </div>
-
           <div class="flex grow flex-col justify-evenly gap-6">
             <UpVote
               :deal="deal"
@@ -358,6 +420,137 @@ const discountPercentage = calculatePercentage(deal.price, deal.original_price)
                 </div>
               </Link>
             </article>
+          </div>
+        </div>
+
+        <!-- comments -->
+        <div
+          class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
+          id="comments"
+        >
+          <h2 class="text-xl font-semibold">
+            Commentaire{{ allCommentsCount > 1 ? "s" : "" }} ({{
+              allCommentsCount
+            }})
+          </h2>
+          <SendMessage :deal="deal" />
+          <div
+            v-for="comment in allComments"
+            :key="comment.id"
+            class="flex flex-col gap-3 p-4 text-sm"
+          >
+            <div class="flex items-start justify-between">
+              <div class="flex flex-row gap-2">
+                <img
+                  src="/images/avatar.jpg"
+                  :alt="'Avatar de ' + comment.user.name"
+                  class="avatar h-[52px] rounded-full object-contain"
+                />
+                <div class="flex flex-col justify-evenly gap-1">
+                  <Link href="#" class="font-medium">{{
+                    comment.user.name
+                  }}</Link>
+                  <span
+                    >Il y a {{ timeAgo(new Date(comment.created_at)) }}</span
+                  >
+                </div>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Ellipsis />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <!-- TODO: Ajouter action -->
+                  <DropdownMenuItem>Signaler</DropdownMenuItem>
+                  <DropdownMenuItem
+                    v-if="comment.user.id === $page?.props?.auth?.user?.id"
+                    @click="handleRemoveComment(comment.id)"
+                    >Supprimer</DropdownMenuItem
+                  >
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <p>
+              {{ comment.content }}
+            </p>
+
+            <Button
+              variant="ghost"
+              class="w-fit"
+              @click="toggleReplyForm(comment.id)"
+              ><Reply class="mr-2" />Répondre</Button
+            >
+            <SendMessage
+              v-if="activeCommentId === comment.id"
+              :deal="deal"
+              :comment="comment"
+              @submitted="closeReplyForm"
+              class="ml-8"
+            />
+
+            <!-- Boucler pour afficher les réponses -->
+            <div
+              v-if="comment.replies.length"
+              class="ml-4 grid gap-4 border-l py-2 pl-2"
+            >
+              <div
+                v-for="reply in allReplies(comment)"
+                :key="reply.id"
+                class="flex flex-col gap-4 pl-4"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex flex-row gap-2">
+                    <img
+                      src="/images/avatar.jpg"
+                      :alt="'Avatar de ' + comment.user.name"
+                      class="avatar h-[52px] rounded-full object-contain"
+                    />
+                    <div class="flex flex-col justify-evenly gap-1">
+                      <Link href="#" class="font-medium">{{
+                        comment.user.name
+                      }}</Link>
+                      <span
+                        >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
+                      >
+                    </div>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Ellipsis />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <!-- TODO: Ajouter action -->
+                      <DropdownMenuItem>Signaler</DropdownMenuItem>
+                      <DropdownMenuItem
+                        v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                        @click="handleRemoveComment(reply.id)"
+                        >Supprimer</DropdownMenuItem
+                      >
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <p>
+                  {{ reply.content }}
+                </p>
+
+                <Button
+                  variant="ghost"
+                  class="w-fit"
+                  @click="toggleReplyForm(reply.id)"
+                  ><Reply class="mr-2" />Répondre</Button
+                >
+
+                <SendMessage
+                  v-if="activeCommentId === reply.id"
+                  :deal="deal"
+                  :comment="reply"
+                  @submitted="closeReplyForm"
+                  class="ml-8"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </Wrapper>

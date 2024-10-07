@@ -83,6 +83,14 @@ class Deal extends Model
     }
 
     /**
+     * Get the comments for the deal.
+     */
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CommentDeal::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

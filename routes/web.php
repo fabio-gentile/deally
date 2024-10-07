@@ -33,6 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/deals/{id}', [DealController::class, 'update'])->name('deals.update');
     Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deals.destroy');
     Route::delete('/deals/image/{filename}', [DealController::class, 'deleteImage'])->name('deals.delete-image');
+
+//    comments
+    Route::post('/deals/{slug}/comments', [\App\Http\Controllers\CommentDealController::class, 'store'])->name('deals.comments.store');
+    Route::delete('/deals/comments/{comment}', [\App\Http\Controllers\CommentDealController::class, 'destroy'])->name('deals.comments.destroy');
 });
 
 Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
