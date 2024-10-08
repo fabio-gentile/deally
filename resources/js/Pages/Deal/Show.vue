@@ -18,7 +18,7 @@ import {
 } from "@/Components/ui/breadcrumb"
 import { Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
-import Wrapper from "@/Pages/Layout/Wrapper.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 import UpVote from "@/Components/Deal/UpVote.vue"
 import Carousel from "@/Components/ui/carousel/Carousel.vue"
 import CarouselContent from "@/Components/ui/carousel/CarouselContent.vue"

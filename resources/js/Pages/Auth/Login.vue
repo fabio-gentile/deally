@@ -7,7 +7,7 @@ import { Checkbox } from "@/Components/ui/checkbox"
 import FormError from "@/Components/FormError.vue"
 import Separator from "@/Components/ui/separator/Separator.vue"
 import { LockKeyholeOpen } from "lucide-vue-next"
-import Wrapper from "@/Pages/Layout/Wrapper.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 
 defineProps<{
   canResetPassword?: boolean

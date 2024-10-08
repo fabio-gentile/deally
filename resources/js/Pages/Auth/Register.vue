@@ -5,7 +5,7 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import FormError from "@/Components/FormError.vue"
 import { Button } from "@/Components/ui/button"
-import Wrapper from "@/Pages/Layout/Wrapper.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 
 const form = useForm("post", route("register"), {
   name: "",

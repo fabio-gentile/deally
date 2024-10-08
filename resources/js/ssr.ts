@@ -4,7 +4,7 @@ import { renderToString } from "@vue/server-renderer"
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
 import { createSSRApp, DefineComponent, h } from "vue"
 import { ZiggyVue } from "../../vendor/tightenco/ziggy"
-import MainLayout from "@/Pages/Layout/MainLayout.vue"
+import MainLayout from "@/Components/layout/MainLayout.vue"
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel"
 

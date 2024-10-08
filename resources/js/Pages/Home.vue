@@ -2,7 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3"
 import Button from "@/Components/ui/button/Button.vue"
 import { CategoryDeal } from "@/types/model/category-deal"
-import Wrapper from "@/Pages/Layout/Wrapper.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 import {
   Carousel,
   CarouselContent,

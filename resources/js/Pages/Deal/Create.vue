@@ -19,7 +19,7 @@ import {
 } from "@/Components/ui/select"
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
-import Wrapper from "@/Pages/Layout/Wrapper.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 import { CategoryDeal } from "@/types/model/category-deal"
 import FormError from "@/Components/FormError.vue"
 import { Textarea } from "@/Components/ui/textarea"
