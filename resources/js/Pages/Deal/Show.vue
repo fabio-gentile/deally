@@ -171,7 +171,7 @@ const handleRemoveComment = (id) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Wrapper class="mt-6 !max-w-[850px]">
+      <Wrapper class="mt-6 !max-w-[850px] !p-0">
         <!-- deal information-->
         <div
           class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground md:flex-row md:gap-8"

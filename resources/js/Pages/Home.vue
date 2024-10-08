@@ -20,7 +20,7 @@ defineProps<{
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <Head title="Accueil" />
     <div class="bg-primary py-4 dark:bg-primary-foreground">
       <Wrapper class="max-w-2xl lg:max-w-4xl">

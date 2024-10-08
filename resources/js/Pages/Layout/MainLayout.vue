@@ -8,10 +8,10 @@ import { Toaster } from "@/Components/ui/sonner"
   <div
     class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
   >
-    <div class="grow bg-page">
-      <NavigationBar :user="$page.props.auth.user?.name" />
+    <NavigationBar :user="$page.props.auth.user?.name" />
+    <div class="flex grow flex-col items-center justify-center bg-page">
       <slot />
-      <footer></footer>
     </div>
+    <footer></footer>
   </div>
 </template>
