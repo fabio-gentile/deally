@@ -101,7 +101,7 @@ const deleteImage = async (filename, index) => {
     <Wrapper>
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
         <form @submit.prevent="submit">
-          <div class="mt-4 flex flex-col gap-4">
+          <div class="flex flex-col gap-4">
             <FormField name="title">
               <FormItem>
                 <FormLabel>Titre</FormLabel>

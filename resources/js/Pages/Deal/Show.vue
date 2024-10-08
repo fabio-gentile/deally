@@ -138,7 +138,7 @@ const handleRemoveComment = (id) => {
 <template>
   <main class="bg-page">
     <Wrapper>
-      <Breadcrumb class="mt-8">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink>

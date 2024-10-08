@@ -1,66 +1,85 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue"
+import InputError from "@/Components/InputError.vue"
+import InputLabel from "@/Components/InputLabel.vue"
+import PrimaryButton from "@/Components/PrimaryButton.vue"
+import TextInput from "@/Components/TextInput.vue"
+import { Head, Link, useForm } from "@inertiajs/vue3"
+import { Input } from "@/Components/ui/input"
+import { Label } from "@/Components/ui/label"
+import FormError from "@/Components/FormError.vue"
+import { Checkbox } from "@/Components/ui/checkbox"
+import { Button } from "@/Components/ui/button"
+import Separator from "@/Components/ui/separator/Separator.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
 
 defineProps<{
-    status?: string;
-}>();
+  status?: string
+}>()
 
 const form = useForm({
-    email: '',
-});
+  email: "",
+})
 
 const submit = () => {
-    form.post(route('password.email'));
-};
+  form.post(route("password.email"))
+}
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Forgot Password" />
-
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
-        </div>
-
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600 dark:text-green-400"
-        >
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
+  <Head>
+    <title>Mot de passe oublié</title>
+  </Head>
+  <div class="grid w-full grid-cols-1 place-items-center">
+    <Wrapper>
+      <form
+        @submit.prevent="submit"
+        class="mx-auto w-fit overflow-hidden rounded-lg border bg-white p-4 dark:bg-primary-foreground"
+      >
+        <div class="flex items-center justify-center">
+          <div class="mx-auto grid w-[350px] gap-6">
+            <div class="grid gap-4">
+              <h1 class="text-3xl font-bold">Mot de passe oublié</h1>
+              <p class="text-muted-foreground">
+                Indiquez votre adresse e-mail et nous vous enverrons un lien de
+                réinitialisation du mot de passe par e-mail qui vous permettra
+                d'en choisir un nouveau.
+              </p>
+              <p
+                v-if="status"
+                class="text-success text-sm font-semibold text-muted-foreground"
+              >
+                {{ status }}
+              </p>
+            </div>
+            <div class="grid gap-4">
+              <div class="grid gap-2">
+                <Label for="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  autocomplete="email"
+                  v-model="form.email"
+                  required
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                <FormError :message="form.errors.email" />
+              </div>
+              <Button
+                type="submit"
+                class="w-full"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+              >
+                Obtenir un lien de réinitialisation
+              </Button>
             </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Email Password Reset Link
-                </PrimaryButton>
+            <div class="text-center text-sm">
+              Revenir à la page de
+              <Link :href="route('login')" class="underline"> connexion </Link>
             </div>
-        </form>
-    </GuestLayout>
+          </div>
+        </div>
+      </form>
+    </Wrapper>
+  </div>
 </template>
