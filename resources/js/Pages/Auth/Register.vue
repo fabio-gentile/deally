@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from "@inertiajs/vue3"
+import { Head, Link } from "@inertiajs/vue3"
+import { useForm } from "laravel-precognition-vue-inertia"
 import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import FormError from "@/Components/FormError.vue"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Pages/Layout/Wrapper.vue"
 
-const form = useForm({
+const form = useForm("post", route("register"), {
   name: "",
   email: "",
   password: "",
   password_confirmation: "",
 })
 
-const submit = () => {
-  form.post(route("register"), {
-    onFinish: () => {
-      form.reset("password", "password_confirmation")
-    },
+form.setValidationTimeout(1000)
+
+const submit = () =>
+  form.submit({
+    preserveScroll: true,
+    onSuccess: () => form.reset(),
   })
-}
 </script>
 
 <template>
@@ -49,11 +50,15 @@ const submit = () => {
                   type="text"
                   class="mt-1 block w-full"
                   v-model="form.name"
+                  @change="form.validate('name')"
                   required
                   autofocus
                   autocomplete="name"
                 />
-                <FormError :message="form.errors.name" />
+                <FormError
+                  v-if="form.invalid('name')"
+                  :message="form.errors.name"
+                />
               </div>
               <div class="grid gap-2">
                 <Label for="email">Email</Label>
@@ -62,9 +67,13 @@ const submit = () => {
                   type="email"
                   autocomplete="email"
                   v-model="form.email"
+                  @change="form.validate('email')"
                   required
                 />
-                <FormError :message="form.errors.email" />
+                <FormError
+                  v-if="form.invalid('email')"
+                  :message="form.errors.email"
+                />
               </div>
               <div class="grid gap-2">
                 <Label for="password">Mot de passe</Label>
