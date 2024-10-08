@@ -37,8 +37,9 @@ const submitForm = () => {
       class="avatar h-[52px] rounded-full object-contain"
     />
     <div class="relative grow">
-      <Label for="content" value="Content" />
+      <Label for="content" value="Contenu" />
       <Textarea
+        id="content"
         placeholder="Écrivez votre commentaire..."
         v-model="form.content"
         type="text"

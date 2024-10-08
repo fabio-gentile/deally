@@ -79,8 +79,8 @@ class CommentDealController extends Controller
      */
     public function destroy(int $id): \Illuminate\Http\RedirectResponse
     {
-        $comment = CommentDeal::where('id', $id)->firstOrFail()->with('user')->first();
-
+        $comment = CommentDeal::with('user')->where('id', $id)->firstOrFail();
+//dd($comment, $id);
         if ($comment->user->id !== auth()->id()) {
             return redirect()->back()->with('error', 'Vous ne pouvez pas supprimer ce commentaire.');
         }
