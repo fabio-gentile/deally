@@ -1,59 +1,71 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed } from "vue"
+import { Button } from "@/Components/ui/button"
+import { Head, Link, useForm } from "@inertiajs/vue3"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/Components/ui/card"
 
 const props = defineProps<{
-    status?: string;
-}>();
+  status?: string
+}>()
 
-const form = useForm({});
+const form = useForm({})
 
 const submit = () => {
-    form.post(route('verification.send'));
-};
+  form.post(route("verification.send"))
+}
 
 const verificationLinkSent = computed(
-    () => props.status === 'verification-link-sent',
-);
+  () => props.status === "verification-link-sent"
+)
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Email Verification" />
-
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
+  <Head title="Vérification email" />
+  <form @submit.prevent="submit" class="max-w-[350px] p-4 sm:max-w-[450px]">
+    <Card>
+      <CardHeader>
+        <CardTitle class="mb-4">Vérification email</CardTitle>
+        <div v-if="!verificationLinkSent">
+          <CardDescription
+            >Pour pouvoir accéder à toutes les fonctionnalités de Deally,
+            veuillez vérifier votre adresse email en cliquant sur le lien que
+            nous venons de vous envoyer par email.
+          </CardDescription>
+          <CardDescription class="mt-2">
+            Si vous n'avez pas reçu l'email, nous vous en enverrons un autre
+            avec plaisir.
+          </CardDescription>
         </div>
-
-        <div
-            class="mb-4 text-sm font-medium text-green-600 dark:text-green-400"
-            v-if="verificationLinkSent"
+        <CardDescription v-else>
+          Un nouveau lien de vérification a été envoyé à l'adresse e-mail que
+          vous avez fournie lors de l'inscription.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          class="w-full"
+          :class="{ 'opacity-25': form.processing }"
+          :disabled="form.processing"
         >
-            A new verification link has been sent to the email address you
-            provided during registration.
-        </div>
-
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Resend Verification Email
-                </PrimaryButton>
-
-                <Link
-                    :href="route('logout')"
-                    method="post"
-                    as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                    >Log Out</Link
-                >
-            </div>
-        </form>
-    </GuestLayout>
+          Renvoyer l'email de vérification
+        </Button>
+      </CardContent>
+      <CardFooter>
+        <Link
+          :href="route('logout')"
+          method="post"
+          as="button"
+          class="ml-auto cursor-pointer"
+          ><Button variant="link">Se déconnecter</Button></Link
+        >
+      </CardFooter>
+    </Card>
+  </form>
 </template>
