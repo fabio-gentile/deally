@@ -6,8 +6,10 @@ use App\Models\CategoryDiscussion;
 use App\Models\Discussion;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class DiscussionController extends Controller
 {
@@ -68,17 +70,72 @@ class DiscussionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Discussion $discussion)
+    public function edit(string $slug): \Inertia\Response
     {
-        //
+        $discussion = Discussion::where('slug', $slug)->firstOrFail();
+        Gate::authorize('update', $discussion);
+
+        if ($discussion->thumbnail) {
+            $currentThumbnail = [
+                'path' => $discussion->path,
+                'filename' => $discussion->thumbnail,
+                'originalName' => $discussion->original_filename,
+            ];
+        } else {
+            $currentThumbnail = null;
+        }
+
+        return Inertia::render('Discussion/Edit', [
+            'discussion' => $discussion,
+            'currentCategory' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
+            'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
+            'currentThumbnail' => $currentThumbnail,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDiscussionRequest $request, Discussion $discussion)
+    public function update(UpdateDiscussionRequest $request, int $id)
     {
-        //
+        $discussion = Discussion::where('id', $id)->firstOrFail();
+//        dd($request->all());
+        Gate::authorize('update', $discussion);
+
+        if ($request->get('isThumbnailRemoved') === true) {
+            try {
+                Storage::delete($discussion->path . $discussion->thumbnail);
+                $discussion->update([
+                    'thumbnail' => null,
+                    'original_filename' => null,
+                    'path' => null,
+                ]);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
+            }
+        }
+
+        if ($request->hasFile('thumbnail')) {
+//            dd('thumbnail');
+            $thumbnail = $request->file('thumbnail');
+            $extension = $thumbnail->extension();
+            $originalName = $thumbnail->getClientOriginalName();
+            $filename = uniqid('discussion-', true) . '.' . $extension;
+            $path = 'uploads/discussions/';
+
+            $thumbnail->storeAs($path, $filename, 'public');
+        }
+
+        $discussion->update([
+            'title' => $request->get('title'),
+            'content' => $request->get('content'),
+            'category_discussion_id' => CategoryDiscussion::where('name', $request->get('category'))->first()->id,
+            'thumbnail' => $filename ?? $discussion->thumbnail,
+            'original_filename' => $originalName ?? $discussion->original_filename,
+            'path' => $path ?? $discussion->path,
+        ]);
+
+        return redirect()->route('home.index')->with('success', 'Discussion modifiée avec succès');
     }
 
     /**

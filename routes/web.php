@@ -48,8 +48,8 @@ Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show')
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/discussions/create', [DiscussionController::class, 'create'])->name('discussions.create');
     Route::post('/discussions/create', [DiscussionController::class, 'store'])->name('discussions.store');
-//    Route::get('/discussions/{slug}/edit', [DealController::class, 'edit'])->name('discussions.edit');
-//    Route::patch('/discussions/{id}', [DealController::class, 'update'])->name('discussions.update');
+    Route::get('/discussions/{slug}/edit', [DiscussionController::class, 'edit'])->name('discussions.edit');
+    Route::patch('/discussions/{id}', [DiscussionController::class, 'update'])->name('discussions.update');
 //    Route::delete('/discussions/{id}', [DealController::class, 'destroy'])->name('discussions.destroy');
 //    Route::delete('/discussions/image/{filename}', [DealController::class, 'deleteImage'])->name('discussions.delete-image');
 
