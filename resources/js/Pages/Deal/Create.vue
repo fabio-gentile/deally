@@ -79,7 +79,7 @@ const removeImage = (index) => {
 }
 </script>
 <template>
-  <div>
+  <div class="py-8">
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
     <Wrapper>

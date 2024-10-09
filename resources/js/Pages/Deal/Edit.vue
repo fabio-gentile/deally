@@ -95,7 +95,7 @@ const deleteImage = async (filename, index) => {
 }
 </script>
 <template>
-  <div>
+  <div class="py-8">
     <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.deal.title" />
     <Wrapper>

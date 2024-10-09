@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Deal::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->unique(['deal_id', 'user_id']);
-            $table->enum('type', ['up', 'down']);
+            $table->string('type');
         });
 
         Schema::table('deals', function (Blueprint $table) {

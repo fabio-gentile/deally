@@ -30,6 +30,7 @@ class VoteController extends Controller
      */
     public function store(Request $request, Deal $deal)
     {
+//        dd($request->all());
         $type = $request->type;
         // Check if the user has already voted for this deal
         $vote = VoteDeals::where('deal_id', $deal->id)
@@ -43,10 +44,11 @@ class VoteController extends Controller
 
         // If the user has not voted for this deal, create a new vote
 
+//        return response()->json(['error' => $type])->setStatusCode(403);
         VoteDeals::create([
             'deal_id' => $deal->id,
             'user_id' => auth()->id(),
-            'type' => $type,
+            'type' => $type == 'down' ? 'down' : 'up',
             'created_at' => now(),
         ]);
 

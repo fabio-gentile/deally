@@ -10,7 +10,7 @@ import Footer from "@/Components/layout/Footer.vue"
     class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
   >
     <NavigationBar :user="$page.props.auth.user?.name" />
-    <div class="flex grow flex-col items-center justify-center bg-page py-8">
+    <div class="flex grow flex-col items-center justify-center bg-page">
       <slot />
     </div>
     <Footer />

@@ -12,7 +12,6 @@ const { votes, vote, deal } = defineProps<{
 }>()
 
 const voteCount = ref(votes)
-
 const currentVote = ref({
   //@ts-ignore
   type: vote?.type,
@@ -22,16 +21,15 @@ const currentVote = ref({
 
 const handleVote = (type: "up" | "down") => {
   if (currentVote.value.hasVoted) {
-    // console.log("already voted")
     return
   }
 
+  currentVote.value.type = type
+
   try {
-    // console.log("votting")
     axios
       .post(route("deals.vote.store", { deal: deal }), { type })
       .then((response) => {
-        console.log(response)
         currentVote.value.hasVoted = true
         currentVote.value.type = type
         voteCount.value =

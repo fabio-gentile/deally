@@ -13,6 +13,7 @@ class VoteDeals extends Model
     protected $fillable = [
         'deal_id',
         'user_id',
+        'type',
     ];
 
     /**

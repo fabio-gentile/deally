@@ -136,7 +136,7 @@ const handleRemoveComment = (id) => {
 </script>
 
 <template>
-  <main class="bg-page">
+  <main class="bg-page py-8">
     <Wrapper>
       <Breadcrumb>
         <BreadcrumbList>
