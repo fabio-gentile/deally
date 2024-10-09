@@ -8,6 +8,8 @@ import {
   LucideSquareArrowOutUpRight,
   Ellipsis,
   Reply,
+  Pencil,
+  Trash2,
 } from "lucide-vue-next"
 import {
   Breadcrumb,
@@ -16,6 +18,17 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
 import { Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
@@ -133,6 +146,21 @@ const handleRemoveComment = (id) => {
     )
   )
 }
+
+const destroyDeal = (id: number) => {
+  router.delete(
+    route(
+      "deals.destroy",
+      { id: id },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          console.log("Deal removed")
+        },
+      }
+    )
+  )
+}
 </script>
 
 <template>
@@ -172,6 +200,46 @@ const handleRemoveComment = (id) => {
         </BreadcrumbList>
       </Breadcrumb>
       <Wrapper class="mt-6 !max-w-[850px] !p-0">
+        <!-- status -->
+        <div
+          class="my-6 flex items-center justify-between gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
+          v-if="deal.user_id === $page.props.auth?.user?.id"
+        >
+          <div class="font-semibold">Action</div>
+          <div class="flex gap-4">
+            <Button variant="ghost" as-child class="flex items-center gap-4">
+              <Link :href="route('deals.edit', deal.slug)">
+                <Pencil />
+                Modifier
+              </Link>
+            </Button>
+            <Button as-child class="flex items-center gap-4"> </Button>
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button variant="ghost"><Trash2 />Supprimer</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Êtes-vous vraiment sûr ?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Cette action ne peut pas être annulée. Cela supprimera
+                    définitivement votre deal et celui-ci sera supprimé de nos
+                    serveurs.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  <AlertDialogAction
+                    @click="destroyDeal(deal.id)"
+                    class="!bg-destructive"
+                  >
+                    Supprimer</AlertDialogAction
+                  >
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
         <!-- deal information-->
         <div
           class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground md:flex-row md:gap-8"
