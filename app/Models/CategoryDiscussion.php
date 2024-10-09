@@ -7,16 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class CategoryDeal extends Model
+class CategoryDiscussion extends Model
 {
     use HasFactory, hasSlug;
 
-    protected $fillable = ['name', 'slug'];
-
-    public function deals(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Deal::class);
-    }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
 
     /**
      * Get the options for generating the slug.
