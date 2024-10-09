@@ -503,12 +503,12 @@ const handleRemoveComment = (id) => {
                   <div class="flex flex-row gap-2">
                     <img
                       src="/images/avatar.jpg"
-                      :alt="'Avatar de ' + comment.user.name"
+                      :alt="'Avatar de ' + reply.user.name"
                       class="avatar h-[52px] rounded-full object-contain"
                     />
                     <div class="flex flex-col justify-evenly gap-1">
                       <Link href="#" class="font-medium">{{
-                        comment.user.name
+                        reply.user.name
                       }}</Link>
                       <span
                         >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
@@ -531,6 +531,13 @@ const handleRemoveComment = (id) => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+                <div v-if="reply.answer_to_user" class="text-muted-foreground">
+                  <!--  TODO: redirection                  -->
+                  En réponse à
+                  <Link href="#" class="font-semibold text-primary">{{
+                    reply.answer_to_user.name
+                  }}</Link>
+                </div>
                 <p>
                   {{ reply.content }}
                 </p>
@@ -541,11 +548,11 @@ const handleRemoveComment = (id) => {
                   @click="toggleReplyForm(reply.id)"
                   ><Reply class="mr-2" />Répondre</Button
                 >
-
                 <SendMessage
                   v-if="activeCommentId === reply.id"
                   :deal="deal"
-                  :comment="reply"
+                  :comment="comment"
+                  :answer-to="reply.user_id"
                   @submitted="closeReplyForm"
                   class="ml-8"
                 />

@@ -8,15 +8,17 @@ import { SendHorizonal } from "lucide-vue-next"
 
 const emit = defineEmits(["submitted"])
 
-const { deal, comment } = defineProps<{
+const { deal, comment, answerTo } = defineProps<{
   deal: Deal
   comment?: Comment | null
+  answerTo?: number | null
 }>()
 
 const form = useForm({
   content: "",
   deal_id: deal.id,
   parent_id: comment ? comment.id : null,
+  answer_to: answerTo,
 })
 
 const submitForm = () => {

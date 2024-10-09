@@ -19,6 +19,7 @@ class CommentDeal extends Model
         'deal_id',
         'user_id',
         'parent_id',
+        'answer_to',
     ];
 
     /**
@@ -36,4 +37,21 @@ class CommentDeal extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the deal that owns the comment.
+     */
+    public function deal(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Deal::class);
+    }
+
+    /**
+     * Get user.
+     */
+    public function answerToUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'answer_to');
+    }
+
 }

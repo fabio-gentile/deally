@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->foreignIdFor(\App\Models\CommentDeal::class, 'parent_id')->nullable();
             $table->text('content');
+//            $table->foreignIdFor(\App\Models\User::class, 'answer_to')->nullable()->constrained();
+//            $table->foreignId('answer_user_id')->nullable()->constrained();
+            $table->unsignedBigInteger('answer_to')->nullable();
+            $table->foreign('answer_to')->references('id')->on('users');
         });
     }
 

@@ -31,7 +31,7 @@ class CommentDealController extends Controller
     public function store(Request $request, string $slug, CommentRequest $commentRequest): \Illuminate\Http\RedirectResponse
     {
         $validated = $commentRequest->validated();
-
+//dd($validated);
         $deal = Deal::where('slug', $slug)->firstOrFail();
 
         if ($request->get('parent_id')) {
@@ -44,6 +44,7 @@ class CommentDealController extends Controller
             'content' => $validated['content'],
             'deal_id' => $deal->id,
             'user_id' => auth()->id(),
+            'answer_to' => $validated['answer_to'] ?? null,
             'parent_id' => $comment ? $comment->id : null,
         ]);
 

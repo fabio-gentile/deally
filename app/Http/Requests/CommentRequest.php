@@ -26,6 +26,7 @@ class CommentRequest extends FormRequest
             'content' => ['required', 'string', 'max:512', 'min:1'],
             'parent_id' => ['nullable', 'integer'],
             'deal_id' => ['required', 'integer'],
+            'answer_to' => ['nullable', 'integer'],
         ];
     }
 }

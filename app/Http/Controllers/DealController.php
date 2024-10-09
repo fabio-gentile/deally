@@ -20,16 +20,16 @@ class DealController extends Controller
      */
     protected function loadAllReplies($comment): void
     {
-        // Récupérer les réponses pour ce commentaire
         $comment->replies->each(function ($reply) {
-            // Charger les sous-réponses et les trier
+            // Load the user corresponding to the 'answer_to' field
             $reply->load(['replies' => function ($query) {
-                $query->orderBy('created_at', 'desc'); // Trier les sous-réponses par created_at
-            }]);
+                $query->orderBy('created_at', 'desc'); // Sort replies by created_at
+            }, 'answerToUser', 'user']); // Load the user referenced by 'answer_to'
 
-            $this->loadAllReplies($reply); // Appeler récursivement pour charger les sous-réponses
+            $this->loadAllReplies($reply); // Recursively load sub-replies
         });
     }
+
     /**
      * Display the specified deal.
      */
@@ -53,17 +53,23 @@ class DealController extends Controller
             ->get();
 
         $allComments = $deal->comments()
-            ->with(['replies' => function ($query) {
-                $query->orderBy('created_at', 'desc'); // Trier les réponses directes par created_at
-            }, 'user']) // Charger l'utilisateur
-            ->whereNull('parent_id') // Obtenir uniquement les commentaires principaux
+            ->with([
+                'replies' => function ($query) {
+                    $query->orderBy('created_at', 'desc'); // Sort direct replies by created_at
+                },
+                'user', // Load the user for each comment
+                'replies.user', // Load the user for each reply,
+                'replies.answerToUser' // Load the 'answer_to' user for each reply
+            ])
+            ->whereNull('parent_id') // Only get top-level comments
             ->orderBy('created_at', 'desc')
             ->get();
-//dd($allComments);
 
         foreach ($allComments as $comment) {
-            $this->loadAllReplies($comment);
+            $this->loadAllReplies($comment); // Recursively load replies
         }
+
+//        dd($allComments);
 
         return Inertia::render('Deal/Show', [
             'deal' => $deal,
