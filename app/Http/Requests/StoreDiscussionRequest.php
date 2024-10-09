@@ -24,6 +24,8 @@ class StoreDiscussionRequest extends FormRequest
         return [
             'title' => ['required',  'min:3', 'string', 'max:255'],
             'content' => ['required', 'min:5', 'string'],
+            'category' => ['required', 'exists:category_deals,name'],
+            'thumbnail' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
@@ -40,6 +42,11 @@ class StoreDiscussionRequest extends FormRequest
             'title.max' => 'Le titre ne doit pas dépasser 255 caractères',
             'content.required' => 'Le contenu est obligatoire',
             'content.min' => 'Le contenu doit comporter au moins 5 caractères',
+            'category.required' => 'La catégorie est obligatoire',
+            'category.exists' => 'La catégorie n\'existe pas',
+            'thumbnail.image' => 'Le fichier doit être une image',
+            'thumbnail.mimes' => 'Le fichier doit être de type jpg, jpeg, png ou webp',
+            'thumbnail.max' => 'Le fichier ne doit pas dépasser 512 Ko',
         ];
     }
 }

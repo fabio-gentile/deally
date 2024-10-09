@@ -18,6 +18,10 @@ return new class extends Migration
             $table->text('content');
             $table->string('slug')->unique();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->onDelete('cascade');
+            $table->string('thumbnail')->nullable();
+            $table->string('original_filename')->nullable();
+            $table->string('path')->nullable();
+            $table->foreignIdFor(\App\Models\CategoryDiscussion::class)->constrained()->onDelete('cascade');
         });
     }
 

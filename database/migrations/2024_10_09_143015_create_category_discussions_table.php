@@ -17,10 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
         });
-
-        Schema::table('discussions', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\CategoryDiscussion::class)->constrained()->onDelete('cascade');
-        });
     }
 
     /**

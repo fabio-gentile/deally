@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
-import { X } from "lucide-vue-next"
 import {
   Form,
   FormControl,
@@ -9,20 +8,12 @@ import {
   FormItem,
   FormLabel,
 } from "@/Components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select"
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import { CategoryDeal } from "@/types/model/category-deal"
 import FormError from "@/Components/FormError.vue"
-import { Textarea } from "@/Components/ui/textarea"
 import TipTap from "@/Components/TipTap.vue"
 import {
   Breadcrumb,
@@ -37,22 +28,14 @@ const props = defineProps<{
 }>()
 
 const form = useForm({
-  images: [],
   title: "",
   content: "",
   category: "",
+  thumbnail: "",
 })
 
 const submit = () => {
-  const formData = new FormData()
-
-  images.value.forEach((image) => {
-    formData.append("images[]", image.file)
-  })
-  form.images = formData.getAll("images[]")
-
-  // console.log(form.description)
-  form.post(route("deals.store"), {
+  form.post(route("discussions.create"), {
     preserveScroll: true,
   })
 }
@@ -60,7 +43,7 @@ const submit = () => {
 const images = ref([])
 const handleImageUpload = (event) => {
   const files = Array.from(event.target.files)
-
+  form.thumbnail = files[0]
   files.forEach((file) => {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -125,6 +108,43 @@ const removeImage = (index) => {
                 </FormItem>
               </FormField>
 
+              <FormField name="thumbnail">
+                <FormItem>
+                  <FormLabel>Image de couverture</FormLabel>
+                  <FormControl>
+                    <Input
+                      title="your text"
+                      type="file"
+                      accept=".jpg, .jpeg, .png, .webp"
+                      @change="handleImageUpload"
+                    />
+                  </FormControl>
+                  <div
+                    v-if="images.length"
+                    class="rounded-lg border bg-white p-4"
+                  >
+                    <div
+                      v-for="(image, index) in images"
+                      :key="index"
+                      class="relative w-fit rounded-lg border"
+                    >
+                      <img
+                        class="h-64 w-64 object-contain"
+                        :src="image.previewUrl"
+                        alt="Image Preview"
+                      />
+                      <Button
+                        variant="link"
+                        @click="removeImage(index)"
+                        class="w-full text-center font-semibold"
+                        >Supprimer
+                      </Button>
+                    </div>
+                  </div>
+                  <FormError :message="form.errors.thumbnail" />
+                </FormItem>
+              </FormField>
+
               <FormField name="content">
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -139,25 +159,50 @@ const removeImage = (index) => {
               <FormField name="category">
                 <FormItem>
                   <FormLabel>Catégorie</FormLabel>
-                  <Select v-model="form.category">
-                    <FormControl>
-                      <SelectTrigger v-model="form.category">
-                        <SelectValue placeholder="Choisissez une catégorie" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem
-                          v-for="category in props.categories"
-                          :value="category.name"
-                          >{{ category.name }}
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormError :message="form.errors.category" />
+                  <FormControl>
+                    <ToggleGroup
+                      id="category"
+                      type="single"
+                      class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
+                      v-model="form.category"
+                    >
+                      <ToggleGroupItem
+                        aria-label="Toggle bold"
+                        v-for="(category, index) in props.categories"
+                        :value="category.name"
+                        :key="index"
+                        class="border data-[state=on]:bg-primary data-[state=on]:text-white"
+                      >
+                        {{ category.name }}
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </FormControl>
+                  <FormError :message="form.errors.content" />
                 </FormItem>
               </FormField>
+
+              <!--              <FormField name="category">-->
+              <!--                <FormItem>-->
+              <!--                  <FormLabel>Catégorie</FormLabel>-->
+              <!--                  <Select v-model="form.category">-->
+              <!--                    <FormControl>-->
+              <!--                      <SelectTrigger v-model="form.category">-->
+              <!--                        <SelectValue placeholder="Choisissez une catégorie" />-->
+              <!--                      </SelectTrigger>-->
+              <!--                    </FormControl>-->
+              <!--                    <SelectContent>-->
+              <!--                      <SelectGroup>-->
+              <!--                        <SelectItem-->
+              <!--                          v-for="category in props.categories"-->
+              <!--                          :value="category.name"-->
+              <!--                          >{{ category.name }}-->
+              <!--                        </SelectItem>-->
+              <!--                      </SelectGroup>-->
+              <!--                    </SelectContent>-->
+              <!--                  </Select>-->
+              <!--                  <FormError :message="form.errors.category" />-->
+              <!--                </FormItem>-->
+              <!--              </FormField>-->
             </div>
 
             <div class="mt-4 flex items-center justify-between">

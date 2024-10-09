@@ -1,5 +1,10 @@
 <script setup>
-import { Head, Link, useForm } from "@inertiajs/vue3"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/Components/ui/popover"
+import { Button } from "@/Components/ui/button"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { Link as LinkExtension } from "@tiptap/extension-link"
 import StarterKit from "@tiptap/starter-kit"
@@ -20,6 +25,8 @@ import {
   Link2,
   Link2Off,
 } from "lucide-vue-next"
+import Input from "@/Components/ui/input/Input.vue"
+import Label from "@/Components/ui/label/Label.vue"
 
 const props = defineProps({
   modelValue: String,
@@ -50,17 +57,18 @@ const editor = useEditor({
   },
 })
 
+const url = defineModel("url")
+
 const setLink = () => {
   const previousUrl = editor.value.getAttributes("link").href
-  const url = window.prompt("URL", previousUrl)
 
   // cancelled
-  if (url === null) {
+  if (url.value === null) {
     return
   }
 
   // empty
-  if (url === "") {
+  if (url.value === "") {
     editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
 
     return
@@ -71,7 +79,7 @@ const setLink = () => {
     .chain()
     .focus()
     .extendMarkRange("link")
-    .setLink({ href: url })
+    .setLink({ href: url.value })
     .run()
 }
 </script>
@@ -126,33 +134,35 @@ const setLink = () => {
       >
         <Heading2 title="Titre 2" />
       </button>
-      <button
-        @click="setLink"
-        :class="{ 'is-active': editor.isActive('link') }"
-      >
-        <Link2 title="Lien" />
-      </button>
+      <Popover>
+        <PopoverTrigger>
+          <Link2 title="Lien" />
+        </PopoverTrigger>
+        <PopoverContent class="space-y-2">
+          <Label for="url">Lien</Label>
+          <Input
+            @keyup.enter="setLink"
+            type="text"
+            id="url"
+            placeholder="https://www.google.fr"
+            v-model="url"
+          />
+          <div class="flex w-full justify-end">
+            <Button
+              :class="{ 'is-active': editor.isActive('link') }"
+              class="!mt-4 ml-auto"
+              @click="setLink"
+              >Ajouter</Button
+            >
+          </div>
+        </PopoverContent>
+      </Popover>
       <button
         @click="editor.chain().focus().unsetLink().run()"
         :disabled="!editor.isActive('link')"
       >
         <Link2Off title="Défaire le lien" />
       </button>
-      <!--      <button-->
-      <!--        type="button"-->
-      <!--        @click="-->
-      <!--          editor-->
-      <!--            .chain()-->
-      <!--            .focus()-->
-      <!--            .extendMarkRange('link')-->
-      <!--            .setLink({ href: url })-->
-      <!--            .run()-->
-      <!--        "-->
-      <!--        :class="{ 'rounded bg-secondary': editor.isActive('link') }"-->
-      <!--        class="p-1"-->
-      <!--      >-->
-      <!--        <ListIcon title="Lien" />-->
-      <!--      </button>-->
       <button
         type="button"
         @click="editor.chain().focus().toggleBulletList().run()"

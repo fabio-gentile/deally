@@ -31,4 +31,12 @@ class CategoryDiscussion extends Model
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(100);
     }
+
+    /**
+     * Get the discussions for the category.
+     */
+    public function discussions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Discussion::class);
+    }
 }
