@@ -18,7 +18,11 @@ const props = defineProps<{
 const form = useForm({})
 
 const submit = () => {
-  form.post(route("verification.send"))
+  form.post(route("verification.send"), {
+    onFinish: () => {
+      form.reset()
+    },
+  })
 }
 
 const verificationLinkSent = computed(
