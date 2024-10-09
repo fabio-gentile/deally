@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DealController;
+use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//Deals
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/deals/create', [DealController::class, 'create'])->name('deals.create');
     Route::post('/deals/create', [DealController::class, 'store'])->name('deals.store');
@@ -41,6 +43,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
 
+
+//Discussion
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/discussions/create', [DiscussionController::class, 'create'])->name('discussions.create');
+    Route::post('/discussions/create', [DiscussionController::class, 'store'])->name('discussions.store');
+//    Route::get('/discussions/{slug}/edit', [DealController::class, 'edit'])->name('discussions.edit');
+//    Route::patch('/discussions/{id}', [DealController::class, 'update'])->name('discussions.update');
+//    Route::delete('/discussions/{id}', [DealController::class, 'destroy'])->name('discussions.destroy');
+//    Route::delete('/discussions/image/{filename}', [DealController::class, 'deleteImage'])->name('discussions.delete-image');
+
+
+////comments
+//    Route::post('/discussions/{slug}/comments', [\App\Http\Controllers\CommentDealController::class, 'store'])->name('discussions.comments.store');
+//    Route::delete('/discussions/comments/{comment}', [\App\Http\Controllers\CommentDealController::class, 'destroy'])->name('discussions.comments.destroy');
+});
+
+
+//Vote
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/{deal}/vote', [VoteController::class, 'store'])->name('deals.vote.store');
 //    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');

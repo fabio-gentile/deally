@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
+import { Link as LinkExtension } from "@tiptap/extension-link"
 import StarterKit from "@tiptap/starter-kit"
 import Underline from "@tiptap/extension-underline"
 import {
@@ -16,6 +17,8 @@ import {
   UndoIcon,
   RedoIcon,
   Minus,
+  Link2,
+  Link2Off,
 } from "lucide-vue-next"
 
 const props = defineProps({
@@ -30,14 +33,47 @@ const editor = useEditor({
     // console.log(editor.getHTML())
     emit("update:modelValue", editor.getHTML())
   },
-  extensions: [StarterKit, Underline],
+  extensions: [
+    StarterKit,
+    Underline,
+    LinkExtension.configure({
+      HTMLAttributes: { target: "_blank", class: "!underline" },
+      openOnClick: true,
+      defaultProtocol: "https",
+    }),
+  ],
   editorProps: {
     attributes: {
       class:
-        "p-2 rounded-bl-lg rounded-br-lg border min-h-[12rem] max-h-[12rem] overflow-y-auto outline-none prose max-w-none",
+        "p-2 rounded-bl-lg rounded-br-lg border min-h-[12rem] bg-white dark:primary-foreground max-h-[12rem] overflow-y-auto outline-none prose max-w-none",
     },
   },
 })
+
+const setLink = () => {
+  const previousUrl = editor.value.getAttributes("link").href
+  const url = window.prompt("URL", previousUrl)
+
+  // cancelled
+  if (url === null) {
+    return
+  }
+
+  // empty
+  if (url === "") {
+    editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
+
+    return
+  }
+
+  // update link
+  editor.value
+    .chain()
+    .focus()
+    .extendMarkRange("link")
+    .setLink({ href: url })
+    .run()
+}
 </script>
 
 <template>
@@ -90,6 +126,33 @@ const editor = useEditor({
       >
         <Heading2 title="Titre 2" />
       </button>
+      <button
+        @click="setLink"
+        :class="{ 'is-active': editor.isActive('link') }"
+      >
+        <Link2 title="Lien" />
+      </button>
+      <button
+        @click="editor.chain().focus().unsetLink().run()"
+        :disabled="!editor.isActive('link')"
+      >
+        <Link2Off title="Défaire le lien" />
+      </button>
+      <!--      <button-->
+      <!--        type="button"-->
+      <!--        @click="-->
+      <!--          editor-->
+      <!--            .chain()-->
+      <!--            .focus()-->
+      <!--            .extendMarkRange('link')-->
+      <!--            .setLink({ href: url })-->
+      <!--            .run()-->
+      <!--        "-->
+      <!--        :class="{ 'rounded bg-secondary': editor.isActive('link') }"-->
+      <!--        class="p-1"-->
+      <!--      >-->
+      <!--        <ListIcon title="Lien" />-->
+      <!--      </button>-->
       <button
         type="button"
         @click="editor.chain().focus().toggleBulletList().run()"

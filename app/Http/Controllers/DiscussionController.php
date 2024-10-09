@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryDiscussion;
 use App\Models\Discussion;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
+use Inertia\Inertia;
 
 class DiscussionController extends Controller
 {
@@ -21,7 +23,9 @@ class DiscussionController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Discussion/Create', [
+            'categories' => CategoryDiscussion::all(),
+        ]);
     }
 
     /**
