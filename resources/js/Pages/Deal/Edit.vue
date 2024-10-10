@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from "@inertiajs/vue3"
+import { Head, Link, useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
 import { X } from "lucide-vue-next"
 import {
@@ -27,6 +27,13 @@ import { Deal } from "@/types/model/deal"
 import { ImageDeal } from "@/types/model/image-deal"
 import axios from "axios"
 import TipTap from "@/Components/TipTap.vue"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/Components/ui/breadcrumb"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -99,6 +106,41 @@ const deleteImage = async (filename, index) => {
     <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.deal.title" />
     <Wrapper>
+      <Breadcrumb class="mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <Link :href="route('home.index')"> Deally </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <!-- TODO: Add redirection to category-->
+              <Link :href="route('home.index')"> Les bons plan </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <Link :href="route('deals.show', deal.slug)">
+                {{ deal.title }}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <Link
+                class="font-semibold text-foreground"
+                :href="route('deals.edit', deal.slug)"
+              >
+                Modifier le deal
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
         <form @submit.prevent="submit">
           <div class="flex flex-col gap-4">

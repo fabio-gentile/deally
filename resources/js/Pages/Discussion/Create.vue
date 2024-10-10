@@ -64,8 +64,10 @@ const removeImage = (index) => {
 </script>
 <template>
   <div class="w-full bg-page py-8">
-    <Wrapper>
-      <Breadcrumb>
+    <!--      TODO: Refaire le front-->
+    <Head title="Créer un bon plan" />
+    <Wrapper class="!max-w-[850px]">
+      <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink>
@@ -92,125 +94,122 @@ const removeImage = (index) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <!--      TODO: Refaire le front-->
-      <Head title="Créer un bon plan" />
-      <Wrapper class="mt-6 !max-w-[850px]">
-        <Form v-slot="{ meta, values, validate }" as="" keep-values>
-          <form @submit.prevent="submit">
-            <div class="flex flex-col gap-4">
-              <FormField name="title">
-                <FormItem>
-                  <FormLabel>Titre</FormLabel>
-                  <FormControl>
-                    <Input type="text" v-model="form.title" />
-                  </FormControl>
-                  <FormError :message="form.errors.title" />
-                </FormItem>
-              </FormField>
 
-              <FormField name="thumbnail">
-                <FormItem>
-                  <FormLabel>Image de couverture</FormLabel>
-                  <FormControl>
-                    <Input
-                      title="your text"
-                      type="file"
-                      accept=".jpg, .jpeg, .png, .webp"
-                      @change="handleImageUpload"
-                    />
-                  </FormControl>
+      <Form v-slot="{ meta, values, validate }" as="" keep-values>
+        <form @submit.prevent="submit">
+          <div class="flex flex-col gap-4">
+            <FormField name="title">
+              <FormItem>
+                <FormLabel>Titre</FormLabel>
+                <FormControl>
+                  <Input type="text" v-model="form.title" />
+                </FormControl>
+                <FormError :message="form.errors.title" />
+              </FormItem>
+            </FormField>
+
+            <FormField name="thumbnail">
+              <FormItem>
+                <FormLabel>Image de couverture</FormLabel>
+                <FormControl>
+                  <Input
+                    title="your text"
+                    type="file"
+                    accept=".jpg, .jpeg, .png, .webp"
+                    @change="handleImageUpload"
+                  />
+                </FormControl>
+                <div
+                  v-if="images.length"
+                  class="rounded-lg border bg-white p-4"
+                >
                   <div
-                    v-if="images.length"
-                    class="rounded-lg border bg-white p-4"
+                    v-for="(image, index) in images"
+                    :key="index"
+                    class="relative w-fit rounded-lg border"
                   >
-                    <div
-                      v-for="(image, index) in images"
-                      :key="index"
-                      class="relative w-fit rounded-lg border"
-                    >
-                      <img
-                        class="h-64 w-64 object-contain"
-                        :src="image.previewUrl"
-                        alt="Image Preview"
-                      />
-                      <Button
-                        variant="link"
-                        @click="removeImage(index)"
-                        class="w-full text-center font-semibold"
-                        >Supprimer
-                      </Button>
-                    </div>
+                    <img
+                      class="h-64 w-64 object-contain"
+                      :src="image.previewUrl"
+                      alt="Image Preview"
+                    />
+                    <Button
+                      variant="link"
+                      @click="removeImage(index)"
+                      class="w-full text-center font-semibold"
+                      >Supprimer
+                    </Button>
                   </div>
-                  <FormError :message="form.errors.thumbnail" />
-                </FormItem>
-              </FormField>
+                </div>
+                <FormError :message="form.errors.thumbnail" />
+              </FormItem>
+            </FormField>
 
-              <FormField name="content">
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <!--                  <Textarea v-model="form.content" />-->
-                    <TipTap v-model="form.content" />
-                  </FormControl>
-                  <FormError :message="form.errors.content" />
-                </FormItem>
-              </FormField>
+            <FormField name="content">
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <!--                  <Textarea v-model="form.content" />-->
+                  <TipTap v-model="form.content" />
+                </FormControl>
+                <FormError :message="form.errors.content" />
+              </FormItem>
+            </FormField>
 
-              <FormField name="category">
-                <FormItem>
-                  <FormLabel>Catégorie</FormLabel>
-                  <FormControl>
-                    <ToggleGroup
-                      id="category"
-                      type="single"
-                      class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
-                      v-model="form.category"
+            <FormField name="category">
+              <FormItem>
+                <FormLabel>Catégorie</FormLabel>
+                <FormControl>
+                  <ToggleGroup
+                    id="category"
+                    type="single"
+                    class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
+                    v-model="form.category"
+                  >
+                    <ToggleGroupItem
+                      aria-label="Toggle bold"
+                      v-for="(category, index) in props.categories"
+                      :value="category.name"
+                      :key="index"
+                      class="border data-[state=on]:bg-primary data-[state=on]:text-white"
                     >
-                      <ToggleGroupItem
-                        aria-label="Toggle bold"
-                        v-for="(category, index) in props.categories"
-                        :value="category.name"
-                        :key="index"
-                        class="border data-[state=on]:bg-primary data-[state=on]:text-white"
-                      >
-                        {{ category.name }}
-                      </ToggleGroupItem>
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormError :message="form.errors.content" />
-                </FormItem>
-              </FormField>
+                      {{ category.name }}
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </FormControl>
+                <FormError :message="form.errors.content" />
+              </FormItem>
+            </FormField>
 
-              <!--              <FormField name="category">-->
-              <!--                <FormItem>-->
-              <!--                  <FormLabel>Catégorie</FormLabel>-->
-              <!--                  <Select v-model="form.category">-->
-              <!--                    <FormControl>-->
-              <!--                      <SelectTrigger v-model="form.category">-->
-              <!--                        <SelectValue placeholder="Choisissez une catégorie" />-->
-              <!--                      </SelectTrigger>-->
-              <!--                    </FormControl>-->
-              <!--                    <SelectContent>-->
-              <!--                      <SelectGroup>-->
-              <!--                        <SelectItem-->
-              <!--                          v-for="category in props.categories"-->
-              <!--                          :value="category.name"-->
-              <!--                          >{{ category.name }}-->
-              <!--                        </SelectItem>-->
-              <!--                      </SelectGroup>-->
-              <!--                    </SelectContent>-->
-              <!--                  </Select>-->
-              <!--                  <FormError :message="form.errors.category" />-->
-              <!--                </FormItem>-->
-              <!--              </FormField>-->
-            </div>
+            <!--              <FormField name="category">-->
+            <!--                <FormItem>-->
+            <!--                  <FormLabel>Catégorie</FormLabel>-->
+            <!--                  <Select v-model="form.category">-->
+            <!--                    <FormControl>-->
+            <!--                      <SelectTrigger v-model="form.category">-->
+            <!--                        <SelectValue placeholder="Choisissez une catégorie" />-->
+            <!--                      </SelectTrigger>-->
+            <!--                    </FormControl>-->
+            <!--                    <SelectContent>-->
+            <!--                      <SelectGroup>-->
+            <!--                        <SelectItem-->
+            <!--                          v-for="category in props.categories"-->
+            <!--                          :value="category.name"-->
+            <!--                          >{{ category.name }}-->
+            <!--                        </SelectItem>-->
+            <!--                      </SelectGroup>-->
+            <!--                    </SelectContent>-->
+            <!--                  </Select>-->
+            <!--                  <FormError :message="form.errors.category" />-->
+            <!--                </FormItem>-->
+            <!--              </FormField>-->
+          </div>
 
-            <div class="mt-4 flex items-center justify-between">
-              <Button size="sm" type="submit"> Publier </Button>
-            </div>
-          </form>
-        </Form>
-      </Wrapper>
+          <div class="mt-4 flex items-center justify-between">
+            <Button size="sm" type="submit"> Publier </Button>
+          </div>
+        </form>
+      </Form>
     </Wrapper>
   </div>
 </template>

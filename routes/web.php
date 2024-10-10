@@ -42,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
-Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 
 //Discussion
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -56,6 +55,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/discussions/{slug}/comments', [\App\Http\Controllers\CommentDiscussionController::class, 'store'])->name('discussions.comments.store');
     Route::delete('/discussions/comments/{id}', [\App\Http\Controllers\CommentDiscussionController::class, 'destroy'])->name('discussions.comments.destroy');
 });
+
+Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
+
 
 
 //Vote
