@@ -326,6 +326,7 @@ const { copy, copied } = useClipboard({ source })
           </div>
           <div class="flex grow flex-col justify-evenly gap-6">
             <UpVote
+              :is-expired="isExpired"
               :deal="deal"
               :votes="deal.votes"
               :vote="deal.user_vote ?? false"

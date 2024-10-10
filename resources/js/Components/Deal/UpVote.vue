@@ -5,10 +5,11 @@ import { Deal } from "@/types/model/deal"
 import axios from "axios"
 import { ref } from "vue"
 import { VoteDeals } from "@/types/model/vote-deal"
-const { votes, vote, deal } = defineProps<{
+const { votes, vote, deal, isExpired } = defineProps<{
   votes: number
   vote?: VoteDeals | boolean
   deal: Deal
+  isExpired: boolean
 }>()
 
 const voteCount = ref(votes)
@@ -20,6 +21,10 @@ const currentVote = ref({
 })
 
 const handleVote = (type: "up" | "down") => {
+  if (isExpired) {
+    return
+  }
+
   if (currentVote.value.hasVoted) {
     return
   }
@@ -28,7 +33,7 @@ const handleVote = (type: "up" | "down") => {
 
   try {
     axios
-      .post(route("deals.vote.store", { deal: deal }), { type })
+      .post(route("deals.vote.store", { id: deal.id }), { type })
       .then((response) => {
         currentVote.value.hasVoted = true
         currentVote.value.type = type
@@ -42,12 +47,19 @@ const handleVote = (type: "up" | "down") => {
 </script>
 
 <template>
-  <!--  hasVoted {{ currentVote.hasVoted }} type {{ currentVote.type }}-->
-  <div class="flex w-fit gap-3 rounded-lg bg-border p-2">
-    <Link v-if="!$page.props.auth.user" :href="route('login')">
+  <div
+    class="flex w-fit gap-3 rounded-lg bg-border p-2"
+    :class="isExpired ? '!pointer-events-none opacity-50' : ''"
+  >
+    <Link
+      :disabled="isExpired"
+      v-if="!$page.props.auth.user"
+      :href="route('login')"
+    >
       <ArrowDown
         @click="handleVote('down')"
         :class="[
+          isExpired ? 'opacity-50' : '',
           currentVote.hasVoted ? 'pointer-events-none' : 'cursor-pointer',
           currentVote.type === 'down'
             ? 'text-primary'
