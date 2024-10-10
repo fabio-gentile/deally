@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3"
-import { CalendarClock, Clock, Eye } from "lucide-vue-next"
+import { CalendarClock, Clock, Eye, ImageOff } from "lucide-vue-next"
 import UpVote from "@/Components/Deal/UpVote.vue"
 import ShareSocial from "@/Components/common/ShareSocial.vue"
 import MessageSquare from "@/Components/common/MessageSquare.vue"
@@ -10,6 +10,7 @@ import Button from "@/Components/ui/button/Button.vue"
 import { Deal } from "@/types/model/deal"
 import { useDateFormat } from "@vueuse/core"
 import { timeAgo } from "@/lib/time-ago"
+import striptags from "striptags"
 
 const { deal } = defineProps<{
   deal: Deal
@@ -26,9 +27,16 @@ const since = timeAgo(new Date(deal.created_at)) // string
     <div class="flex flex-col gap-4 md:flex-row">
       <div class="flex shrink-0 gap-2">
         <img
+          v-if="deal?.images[0]?.filename && deal?.images[0]?.path"
           class="h-32 w-32 shrink-0 overflow-hidden rounded-lg bg-page object-contain md:h-52 md:w-52"
-          src="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b9e219ac-36be-4252-a00d-304de20d599b/WMNS+AIR+JORDAN+1+MID.png"
+          :src="
+            '/storage/' + deal.images[0].path + '/' + deal.images[0].filename
+          "
           alt=""
+        />
+        <ImageOff
+          v-else
+          class="mx-auto h-52 w-52 object-contain text-muted-foreground"
         />
         <div class="flex flex-col gap-3 md:hidden">
           <UpVote
@@ -91,10 +99,9 @@ const since = timeAgo(new Date(deal.created_at)) // string
           >
           <!--        <span></span>-->
         </div>
-        <p
-          class="line-clamp-3 text-sm text-muted-foreground md:line-clamp-2"
-          v-html="deal.description"
-        ></p>
+        <p class="line-clamp-3 text-sm text-muted-foreground md:line-clamp-2">
+          {{ striptags(deal.description) }}
+        </p>
         <div
           class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
         >
@@ -103,7 +110,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
               :url="route('deals.show', deal.slug)"
               title="Jordan 1 Mid"
             />
-            <MessageSquare :count="12" url="#comments" />
+            <MessageSquare :count="12" :url="route('deals.show', deal.slug)" />
             <Report type="deal" url="#" />
             <SaveBookmark type="deal" url="#" />
           </div>

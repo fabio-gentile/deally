@@ -41,6 +41,8 @@ class HomeController extends Controller
             if ($user) {
                 $query->where('user_id', $user->id);
             }
+        }, 'images' => function ($query) {
+            $query->limit(1);
         }])->get();
 
         // add the user vote to the deal
@@ -50,7 +52,7 @@ class HomeController extends Controller
                 $deal->user_vote = $deal->voteDetails->first();
             });
         }
-
+//dd($deals);
         return Inertia::render('Home', [
             'categories' => CategoryDeal::all(),
             'deals' => $deals,
