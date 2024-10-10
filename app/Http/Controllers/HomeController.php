@@ -43,7 +43,7 @@ class HomeController extends Controller
             }
         }, 'images' => function ($query) {
             $query->limit(1);
-        }])->get();
+        }])->limit(10)->get();
 
         // add the user vote to the deal
         if ($user) {

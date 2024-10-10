@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Deal } from "@/types/model/deal"
 import { ImageDeal } from "@/types/model/image-deal"
+import { Badge } from "@/Components/ui/badge"
 import {
   CalendarClock,
   Clock,
@@ -10,6 +11,8 @@ import {
   Reply,
   Pencil,
   Trash2,
+  Check,
+  Copy,
 } from "lucide-vue-next"
 import {
   Breadcrumb,
@@ -56,6 +59,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
+import { useClipboard } from "@vueuse/core/index"
 
 const { deal, images, category, userDealsCount, allCommentsCount } =
   defineProps<{
@@ -161,6 +165,9 @@ const destroyDeal = (id: number) => {
     )
   )
 }
+
+const source = ref(deal.promo_code)
+const { copy, copied } = useClipboard({ source })
 </script>
 
 <template>
@@ -331,6 +338,19 @@ const destroyDeal = (id: number) => {
                 class="font-medium text-muted-foreground"
                 >-{{ discountPercentage }}</span
               >
+            </div>
+
+            <div class="flex items-center gap-4">
+              <p>Code promotionnel</p>
+              <p
+                @click="copy(source)"
+                class="flex cursor-pointer items-center gap-1 rounded-lg border bg-primary px-4 py-1 font-semibold uppercase text-white"
+              >
+                <Copy v-if="!copied" class="mr-2 h-4 w-4" />
+                <Check v-else class="mr-2 h-4 w-4" />
+                <span v-if="!copied">{{ deal.promo_code }}</span>
+                <span v-else>Copié</span>
+              </p>
             </div>
 
             <div
