@@ -62,7 +62,7 @@ Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('
 
 //Vote
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('/deals/{deal}/vote', [VoteController::class, 'store'])->name('deals.vote.store');
+    Route::post('/deals/{id}/vote', [VoteController::class, 'store'])->name('deals.vote.store');
 //    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');
 });
 

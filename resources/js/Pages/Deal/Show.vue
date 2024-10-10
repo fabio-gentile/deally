@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Deal } from "@/types/model/deal"
 import { ImageDeal } from "@/types/model/image-deal"
-import { Badge } from "@/Components/ui/badge"
+import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
 import {
   CalendarClock,
   Clock,
@@ -13,6 +13,7 @@ import {
   Trash2,
   Check,
   Copy,
+  CircleAlert,
 } from "lucide-vue-next"
 import {
   Breadcrumb,
@@ -61,7 +62,7 @@ import {
 } from "@/Components/ui/dropdown-menu"
 import { useClipboard } from "@vueuse/core/index"
 
-const { deal, images, category, userDealsCount, allCommentsCount } =
+const { deal, images, category, userDealsCount, allCommentsCount, isExpired } =
   defineProps<{
     deal: Deal
     images: ImageDeal[]
@@ -70,6 +71,7 @@ const { deal, images, category, userDealsCount, allCommentsCount } =
     similarDeals: Deal[]
     allComments: any
     allCommentsCount: number
+    isExpired: boolean
   }>()
 
 const emblaMainApi = ref<CarouselApi>()
@@ -249,6 +251,19 @@ const { copy, copied } = useClipboard({ source })
         </div>
         <!-- deal information-->
         <div
+          v-if="isExpired"
+          class="my-6 grid gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
+        >
+          <!--            isExpired-->
+          <div class="flex items-center justify-center gap-4">
+            <CircleAlert class="h-8 w-8 text-destructive" />
+            <p class="text-center text-xl font-bold text-destructive">
+              Ce deal a expiré il y a
+              {{ timeAgo(new Date(deal.expiration_date)) }}
+            </p>
+          </div>
+        </div>
+        <div
           class="flex flex-col gap-6 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground md:flex-row md:gap-8"
         >
           <div
@@ -340,17 +355,18 @@ const { copy, copied } = useClipboard({ source })
               >
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4" v-if="deal.promo_code">
               <p>Code promotionnel</p>
-              <p
+              <Button
+                :disabled="isExpired"
                 @click="copy(source)"
                 class="flex cursor-pointer items-center gap-1 rounded-lg border bg-primary px-4 py-1 font-semibold uppercase text-white"
               >
-                <Copy v-if="!copied" class="mr-2 h-4 w-4" />
-                <Check v-else class="mr-2 h-4 w-4" />
+                <Copy v-if="!copied && !isExpired" class="mr-2 h-4 w-4" />
+                <Check v-else v-if="!isExpired" class="mr-2 h-4 w-4" />
                 <span v-if="!copied">{{ deal.promo_code }}</span>
                 <span v-else>Copié</span>
-              </p>
+              </Button>
             </div>
 
             <div
@@ -376,7 +392,7 @@ const { copy, copied } = useClipboard({ source })
               class="w-full"
               rel="nofollow noopener noreferrer"
             >
-              <Button class="w-full">
+              <Button class="w-full" :disabled="isExpired">
                 <LucideSquareArrowOutUpRight class="mr-2" />
                 Voir le deal
               </Button>
@@ -453,62 +469,70 @@ const { copy, copied } = useClipboard({ source })
           class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
         >
           <h2 class="text-xl font-semibold">Deals similaires</h2>
-          <div class="flex shrink-0 flex-row flex-nowrap gap-6 overflow-x-auto">
-            <article v-for="(similarDeal, index) in similarDeals" :key="index">
-              <Link
-                :href="route('deals.show', similarDeal.slug)"
-                class="grid w-[160px] gap-2"
+          <ScrollArea>
+            <div class="flex shrink-0 flex-row flex-nowrap gap-6 pb-6">
+              <article
+                v-for="(similarDeal, index) in similarDeals"
+                :key="index"
               >
-                <img
-                  class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain dark:bg-primary-foreground"
-                  v-if="similarDeal.images[0]"
-                  :src="
-                    '/storage/' +
-                    similarDeal.images[0].path +
-                    '/' +
-                    similarDeal.images[0].filename
-                  "
-                  :alt="similarDeal.images[0].original_filename"
-                />
-                <ImageOff
-                  v-else
-                  class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain text-muted-foreground dark:bg-primary-foreground"
-                />
-                <h3 class="line-clamp-1 text-sm font-semibold text-foreground">
-                  {{ similarDeal.title }}
-                </h3>
-                <div class="flex gap-1 text-sm">
-                  <span class="font-semibold text-primary">
+                <Link
+                  :href="route('deals.show', similarDeal.slug)"
+                  class="grid w-[160px] gap-2"
+                >
+                  <img
+                    class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain dark:bg-primary-foreground"
+                    v-if="similarDeal.images[0]"
+                    :src="
+                      '/storage/' +
+                      similarDeal.images[0].path +
+                      '/' +
+                      similarDeal.images[0].filename
+                    "
+                    :alt="similarDeal.images[0].original_filename"
+                  />
+                  <ImageOff
+                    v-else
+                    class="mx-auto h-40 w-40 overflow-hidden rounded-lg bg-page object-contain text-muted-foreground dark:bg-primary-foreground"
+                  />
+                  <h3
+                    class="line-clamp-1 text-sm font-semibold text-foreground"
+                  >
+                    {{ similarDeal.title }}
+                  </h3>
+                  <div class="flex gap-1 text-sm">
+                    <span class="font-semibold text-primary">
+                      <span
+                        v-if="
+                          (!similarDeal.price || similarDeal.price == 0) &&
+                          similarDeal.original_price
+                        "
+                        >GRATUIT</span
+                      >
+                      <span v-if="similarDeal.price != 0 && similarDeal.price"
+                        >{{ similarDeal.price }}€</span
+                      >
+                    </span>
                     <span
-                      v-if="
-                        (!similarDeal.price || similarDeal.price == 0) &&
-                        similarDeal.original_price
-                      "
-                      >GRATUIT</span
+                      v-if="similarDeal.original_price"
+                      class="font-medium text-muted-foreground line-through"
+                      >{{ similarDeal.original_price }}€</span
                     >
-                    <span v-if="similarDeal.price != 0 && similarDeal.price"
-                      >{{ similarDeal.price }}€</span
+                    <span
+                      v-if="similarDeal.original_price && deal.price"
+                      class="font-medium text-muted-foreground"
+                      >-{{
+                        calculatePercentage(
+                          similarDeal.price,
+                          similarDeal.original_price
+                        )
+                      }}</span
                     >
-                  </span>
-                  <span
-                    v-if="similarDeal.original_price"
-                    class="font-medium text-muted-foreground line-through"
-                    >{{ similarDeal.original_price }}€</span
-                  >
-                  <span
-                    v-if="similarDeal.original_price && deal.price"
-                    class="font-medium text-muted-foreground"
-                    >-{{
-                      calculatePercentage(
-                        similarDeal.price,
-                        similarDeal.original_price
-                      )
-                    }}</span
-                  >
-                </div>
-              </Link>
-            </article>
-          </div>
+                  </div>
+                </Link>
+              </article>
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
 
         <!-- comments -->

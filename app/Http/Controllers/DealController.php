@@ -49,7 +49,7 @@ class DealController extends Controller
             ->where('expiration_date', '>', now())
             ->where('votes', '>', -5)
             ->inRandomOrder()
-            ->limit(6)
+            ->limit(1)
             ->get();
 
         $allComments = $deal->comments()
@@ -79,6 +79,7 @@ class DealController extends Controller
             'similarDeals' => $similarDeals ?? [],
             'allComments' => $allComments,
             'allCommentsCount' => CommentDeal::where('deal_id', $deal->id)->count(),
+            'isExpired' => $deal->isExpired(),
         ]);
     }
     /**

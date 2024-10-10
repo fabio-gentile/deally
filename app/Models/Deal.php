@@ -91,6 +91,14 @@ class Deal extends Model
     }
 
     /**
+     * Check if the deal is expired.
+     */
+    public function isExpired()
+    {
+        return $this->expiration_date->isPast();
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

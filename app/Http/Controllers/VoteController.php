@@ -28,9 +28,14 @@ class VoteController extends Controller
     /**
      * Store a newly created vote in storage.
      */
-    public function store(Request $request, Deal $deal)
+    public function store(Request $request, int $id)
     {
-//        dd($request->all());
+        $deal = Deal::findOrFail($id);
+
+        if ($deal->isExpired()) {
+            return response()->json(['error' => 'Cette offre a expiré'])->setStatusCode(403);
+        }
+
         $type = $request->type;
         // Check if the user has already voted for this deal
         $vote = VoteDeals::where('deal_id', $deal->id)
