@@ -87,6 +87,7 @@ const socialShare = (social) => {
         <div class="grid flex-1 gap-2">
           <Label for="link" class="sr-only"> Link </Label>
           <Input
+            @focus="$event.target.select()"
             autofocus
             id="link"
             :default-value="props.url"
