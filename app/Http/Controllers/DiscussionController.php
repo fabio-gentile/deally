@@ -7,6 +7,7 @@ use App\Models\CommentDiscussion;
 use App\Models\Discussion;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -169,9 +170,23 @@ class DiscussionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Discussion $discussion)
+    public function destroy(Discussion $discussion, int $id, Request $request): \Illuminate\Http\RedirectResponse
     {
-        //
+        $discussion = Discussion::where('id', $id)->firstOrFail();
+        Gate::authorize('delete', $discussion);
+
+        if ($discussion->thumbnail) {
+            try {
+                Storage::delete($discussion->path . $discussion->thumbnail);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
+            }
+        }
+
+        $discussion->delete();
+
+        $request->session()->flash('success', 'Discussion supprimée avec succès.');
+        return redirect()->route('home.index');
     }
 
     /**

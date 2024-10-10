@@ -107,9 +107,6 @@ const discussionDestroy = (id: number) => {
       { id: id },
       {
         preserveScroll: true,
-        onSuccess: () => {
-          console.log("Deal removed")
-        },
       }
     )
   )
