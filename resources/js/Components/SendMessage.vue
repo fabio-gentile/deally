@@ -1,28 +1,46 @@
 <script setup lang="ts">
 import { useForm } from "@inertiajs/vue3"
-import { Deal } from "@/types/model/deal"
 import Button from "@/Components/ui/button/Button.vue"
 import Label from "@/Components/ui/label/Label.vue"
 import Textarea from "@/Components/ui/textarea/Textarea.vue"
 import { SendHorizonal } from "lucide-vue-next"
+import { Deal } from "@/types/model/deal"
+import { Discussion } from "@/types/model/discussion"
 
 const emit = defineEmits(["submitted"])
 
-const { deal, comment, answerTo } = defineProps<{
-  deal: Deal
+const { contentType, deal, discussion, blog, comment, answerTo } = defineProps<{
+  contentType: "deal" | "discussion" | "blog"
+  deal?: Deal | null
+  discussion?: Discussion | null
+  blog?: Blog | null
   comment?: Comment | null
   answerTo?: number | null
 }>()
 
 const form = useForm({
   content: "",
-  deal_id: deal.id,
+  content_id: deal?.id || discussion?.id || blog?.id,
   parent_id: comment ? comment.id : null,
   answer_to: answerTo,
 })
 
 const submitForm = () => {
-  form.post(route("deals.comments.store", { slug: deal.slug }), {
+  let routeName = ""
+  let slug = ""
+
+  if (contentType === "deal" && deal) {
+    routeName = "deals.comments.store"
+    slug = deal.slug
+  } else if (contentType === "discussion" && discussion) {
+    routeName = "discussions.comments.store"
+    slug = discussion.slug
+  } else if (contentType === "blog" && blog) {
+    routeName = "blogs.comments.store"
+    slug = blog.slug
+  }
+
+  form.post(route(routeName, { slug }), {
     preserveScroll: true,
     onSuccess: () => {
       form.content = ""
@@ -35,7 +53,7 @@ const submitForm = () => {
   <form @submit.prevent="submitForm" class="flex gap-4">
     <img
       src="/images/avatar.jpg"
-      :alt="'Avatar de ' + deal.user.name"
+      :alt="`Avatar de ${deal?.user.name || discussion?.user.name || blog?.user.name}`"
       class="avatar h-[52px] rounded-full object-contain"
     />
     <div class="relative grow">

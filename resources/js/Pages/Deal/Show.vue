@@ -501,7 +501,7 @@ const destroyDeal = (id: number) => {
               allCommentsCount
             }})
           </h2>
-          <SendMessage :deal="deal" />
+          <SendMessage :content-type="'deal'" :deal="deal" />
           <div
             v-for="comment in allComments"
             :key="comment.id"
@@ -524,16 +524,16 @@ const destroyDeal = (id: number) => {
                 </div>
               </div>
 
-              <DropdownMenu>
+              <DropdownMenu
+                v-if="comment.user.id === $page?.props?.auth?.user?.id"
+              >
                 <DropdownMenuTrigger>
                   <Ellipsis />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <!-- TODO: Ajouter action -->
                   <DropdownMenuItem>Signaler</DropdownMenuItem>
-                  <DropdownMenuItem
-                    v-if="comment.user.id === $page?.props?.auth?.user?.id"
-                    @click="handleRemoveComment(comment.id)"
+                  <DropdownMenuItem @click="handleRemoveComment(comment.id)"
                     >Supprimer</DropdownMenuItem
                   >
                 </DropdownMenuContent>
@@ -551,8 +551,9 @@ const destroyDeal = (id: number) => {
             >
             <SendMessage
               v-if="activeCommentId === comment.id"
-              :deal="deal"
               :comment="comment"
+              :content-type="'deal'"
+              :deal="deal"
               @submitted="closeReplyForm"
               class="ml-8"
             />
@@ -584,16 +585,16 @@ const destroyDeal = (id: number) => {
                     </div>
                   </div>
 
-                  <DropdownMenu>
+                  <DropdownMenu
+                    v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                  >
                     <DropdownMenuTrigger>
                       <Ellipsis />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <!-- TODO: Ajouter action -->
                       <DropdownMenuItem>Signaler</DropdownMenuItem>
-                      <DropdownMenuItem
-                        v-if="reply.user_id === $page?.props?.auth?.user?.id"
-                        @click="handleRemoveComment(reply.id)"
+                      <DropdownMenuItem @click="handleRemoveComment(reply.id)"
                         >Supprimer</DropdownMenuItem
                       >
                     </DropdownMenuContent>
@@ -618,6 +619,7 @@ const destroyDeal = (id: number) => {
                 >
                 <SendMessage
                   v-if="activeCommentId === reply.id"
+                  :content-type="'deal'"
                   :deal="deal"
                   :comment="comment"
                   :answer-to="reply.user_id"

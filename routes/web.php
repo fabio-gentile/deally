@@ -50,13 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/discussions/create', [DiscussionController::class, 'store'])->name('discussions.store');
     Route::get('/discussions/{slug}/edit', [DiscussionController::class, 'edit'])->name('discussions.edit');
     Route::patch('/discussions/{id}', [DiscussionController::class, 'update'])->name('discussions.update');
-    Route::delete('/discussions/{id}', [DealController::class, 'destroy'])->name('discussions.destroy');
-//    Route::delete('/discussions/image/{filename}', [DealController::class, 'deleteImage'])->name('discussions.delete-image');
+    Route::delete('/discussions/{id}', [DiscussionController::class, 'destroy'])->name('discussions.destroy');
 
-
-////comments
-//    Route::post('/discussions/{slug}/comments', [\App\Http\Controllers\CommentDealController::class, 'store'])->name('discussions.comments.store');
-//    Route::delete('/discussions/comments/{comment}', [\App\Http\Controllers\CommentDealController::class, 'destroy'])->name('discussions.comments.destroy');
+//comments
+    Route::post('/discussions/{slug}/comments', [\App\Http\Controllers\CommentDiscussionController::class, 'store'])->name('discussions.comments.store');
+    Route::delete('/discussions/comments/{id}', [\App\Http\Controllers\CommentDiscussionController::class, 'destroy'])->name('discussions.comments.destroy');
 });
 
 

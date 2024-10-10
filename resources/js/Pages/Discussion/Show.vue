@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import {
-  CalendarClock,
-  Clock,
-  ImageOff,
-  LucideSquareArrowOutUpRight,
-  Ellipsis,
-  Reply,
-  Pencil,
-  Trash2,
-} from "lucide-vue-next"
+import { Ellipsis, Reply, Pencil, Trash2 } from "lucide-vue-next"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,22 +21,12 @@ import {
 import { Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import UpVote from "@/Components/Deal/UpVote.vue"
-import Carousel from "@/Components/ui/carousel/Carousel.vue"
-import CarouselContent from "@/Components/ui/carousel/CarouselContent.vue"
-import CarouselItem from "@/Components/ui/carousel/CarouselItem.vue"
-import CardContent from "@/Components/ui/card/CardContent.vue"
-import Card from "@/Components/ui/card/Card.vue"
-import { watchOnce } from "@vueuse/core"
-import { useDateFormat } from "@vueuse/shared"
 import { timeAgo } from "@/lib/time-ago"
 import MessageSquare from "@/Components/common/MessageSquare.vue"
 import Report from "@/Components/common/Report.vue"
 import SaveBookmark from "@/Components/common/SaveBookmark.vue"
 import ShareSocial from "@/Components/common/ShareSocial.vue"
 import Button from "@/Components/ui/button/Button.vue"
-import { CarouselApi } from "@/Components/ui/carousel"
-import { calculatePercentage } from "@/lib/utils"
 import { Separator } from "@/Components/ui/separator"
 import SendMessage from "@/Components/SendMessage.vue"
 import {
@@ -56,13 +37,14 @@ import {
 } from "@/Components/ui/dropdown-menu"
 import { Discussion } from "@/types/model/discussion"
 
-const { discussion, category, similarDiscussions } = defineProps<{
-  discussion: Discussion
-  category: string
-  similarDiscussions: Discussion[]
-  // allComments: any
-  // allCommentsCount: number
-}>()
+const { discussion, category, similarDiscussions, allCommentsCount } =
+  defineProps<{
+    discussion: Discussion
+    category: string
+    similarDiscussions: Discussion[]
+    allComments: any
+    allCommentsCount: number
+  }>()
 
 const since = timeAgo(new Date(discussion.created_at)) // string
 
@@ -101,21 +83,22 @@ function getAllSubReplies(reply, replies) {
   }
 }
 
-// const handleRemoveComment = (id) => {
-//   router.delete(
-//     route(
-//       "deals.comments.destroy",
-//       { id: id },
-//       {
-//         preserveScroll: true,
-//         onSuccess: () => {
-//           console.log("Remove comment with id:", id)
-//           console.log("Comment removed")
-//         },
-//       }
-//     )
-//   )
-// }
+const handleRemoveComment = (id) => {
+  console.log("Remove comment with id:", id)
+  router.delete(
+    route(
+      "discussions.comments.destroy",
+      { id: id },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          console.log("Remove comment with id:", id)
+          console.log("Comment removed")
+        },
+      }
+    )
+  )
+}
 
 const discussionDestroy = (id: number) => {
   router.delete(
@@ -211,13 +194,18 @@ const discussionDestroy = (id: number) => {
           </div>
         </div>
 
-        <!-- discussion information-->
-
         <!-- description -->
         <div
           class="mt-6 grid gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
         >
           <h2 class="text-xl font-semibold">{{ discussion.title }}</h2>
+          <div v-if="discussion.thumbnail">
+            <img
+              class="max-h-[500px] w-full rounded-lg object-contain"
+              :src="'/storage/' + discussion.path + '/' + discussion.thumbnail"
+              :alt="'Image ' + discussion.title"
+            />
+          </div>
           <div
             class="tip-tap text-sm text-muted-foreground lg:text-base"
             v-html="discussion.content"
@@ -259,7 +247,7 @@ const discussionDestroy = (id: number) => {
           </div>
         </div>
 
-        <!-- similar deals -->
+        <!-- similar discussion -->
         <div
           v-if="similarDiscussions.length > 0"
           class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
@@ -283,142 +271,144 @@ const discussionDestroy = (id: number) => {
         </div>
 
         <!-- comments -->
-        <!--        <div-->
-        <!--          class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"-->
-        <!--          id="comments"-->
-        <!--        >-->
-        <!--          <h2 class="text-xl font-semibold">-->
-        <!--            Commentaire{{ allCommentsCount > 1 ? "s" : "" }} ({{-->
-        <!--              allCommentsCount-->
-        <!--            }})-->
-        <!--          </h2>-->
-        <!--          <SendMessage :deal="deal" />-->
-        <!--          <div-->
-        <!--            v-for="comment in allComments"-->
-        <!--            :key="comment.id"-->
-        <!--            class="flex flex-col gap-3 p-4 text-sm"-->
-        <!--          >-->
-        <!--            <div class="flex items-start justify-between">-->
-        <!--              <div class="flex flex-row gap-2">-->
-        <!--                <img-->
-        <!--                  src="/images/avatar.jpg"-->
-        <!--                  :alt="'Avatar de ' + comment.user.name"-->
-        <!--                  class="avatar h-[52px] rounded-full object-contain"-->
-        <!--                />-->
-        <!--                <div class="flex flex-col justify-evenly gap-1">-->
-        <!--                  <Link href="#" class="font-medium">{{-->
-        <!--                    comment.user.name-->
-        <!--                  }}</Link>-->
-        <!--                  <span-->
-        <!--                    >Il y a {{ timeAgo(new Date(comment.created_at)) }}</span-->
-        <!--                  >-->
-        <!--                </div>-->
-        <!--              </div>-->
+        <div
+          class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
+          id="comments"
+        >
+          <h2 class="text-xl font-semibold">
+            Commentaire{{ allCommentsCount > 1 ? "s" : "" }} ({{
+              allCommentsCount
+            }})
+          </h2>
+          <SendMessage :content-type="'discussion'" :discussion="discussion" />
+          <div
+            v-for="comment in allComments"
+            :key="comment.id"
+            class="flex flex-col gap-3 p-4 text-sm"
+          >
+            <div class="flex items-start justify-between">
+              <div class="flex flex-row gap-2">
+                <img
+                  src="/images/avatar.jpg"
+                  :alt="'Avatar de ' + comment.user.name"
+                  class="avatar h-[52px] rounded-full object-contain"
+                />
+                <div class="flex flex-col justify-evenly gap-1">
+                  <Link href="#" class="font-medium">{{
+                    comment.user.name
+                  }}</Link>
+                  <span
+                    >Il y a {{ timeAgo(new Date(comment.created_at)) }}</span
+                  >
+                </div>
+              </div>
 
-        <!--              <DropdownMenu>-->
-        <!--                <DropdownMenuTrigger>-->
-        <!--                  <Ellipsis />-->
-        <!--                </DropdownMenuTrigger>-->
-        <!--                <DropdownMenuContent align="end">-->
-        <!--                  &lt;!&ndash; TODO: Ajouter action &ndash;&gt;-->
-        <!--                  <DropdownMenuItem>Signaler</DropdownMenuItem>-->
-        <!--                  <DropdownMenuItem-->
-        <!--                    v-if="comment.user.id === $page?.props?.auth?.user?.id"-->
-        <!--                    @click="handleRemoveComment(comment.id)"-->
-        <!--                    >Supprimer</DropdownMenuItem-->
-        <!--                  >-->
-        <!--                </DropdownMenuContent>-->
-        <!--              </DropdownMenu>-->
-        <!--            </div>-->
-        <!--            <p>-->
-        <!--              {{ comment.content }}-->
-        <!--            </p>-->
+              <DropdownMenu
+                v-if="comment.user.id === $page?.props?.auth?.user?.id"
+              >
+                <DropdownMenuTrigger>
+                  <Ellipsis />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <!-- TODO: Ajouter action -->
+                  <DropdownMenuItem>Signaler</DropdownMenuItem>
+                  <DropdownMenuItem @click="handleRemoveComment(comment.id)"
+                    >Supprimer</DropdownMenuItem
+                  >
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <p>
+              {{ comment.content }}
+            </p>
 
-        <!--            <Button-->
-        <!--              variant="ghost"-->
-        <!--              class="w-fit"-->
-        <!--              @click="toggleReplyForm(comment.id)"-->
-        <!--              ><Reply class="mr-2" />Répondre</Button-->
-        <!--            >-->
-        <!--            <SendMessage-->
-        <!--              v-if="activeCommentId === comment.id"-->
-        <!--              :deal="deal"-->
-        <!--              :comment="comment"-->
-        <!--              @submitted="closeReplyForm"-->
-        <!--              class="ml-8"-->
-        <!--            />-->
+            <Button
+              variant="ghost"
+              class="w-fit"
+              @click="toggleReplyForm(comment.id)"
+              ><Reply class="mr-2" />Répondre</Button
+            >
+            <SendMessage
+              v-if="activeCommentId === comment.id"
+              :content-type="'discussion'"
+              :discussion="discussion"
+              :comment="comment"
+              @submitted="closeReplyForm"
+              class="ml-8"
+            />
 
-        <!--            &lt;!&ndash; Boucler pour afficher les réponses &ndash;&gt;-->
-        <!--            <div-->
-        <!--              v-if="comment.replies.length"-->
-        <!--              class="ml-4 grid gap-4 border-l py-2 pl-2"-->
-        <!--            >-->
-        <!--              <div-->
-        <!--                v-for="reply in allReplies(comment)"-->
-        <!--                :key="reply.id"-->
-        <!--                class="flex flex-col gap-4 pl-4"-->
-        <!--              >-->
-        <!--                <div class="flex items-start justify-between">-->
-        <!--                  <div class="flex flex-row gap-2">-->
-        <!--                    <img-->
-        <!--                      src="/images/avatar.jpg"-->
-        <!--                      :alt="'Avatar de ' + reply.user.name"-->
-        <!--                      class="avatar h-[52px] rounded-full object-contain"-->
-        <!--                    />-->
-        <!--                    <div class="flex flex-col justify-evenly gap-1">-->
-        <!--                      <Link href="#" class="font-medium">{{-->
-        <!--                        reply.user.name-->
-        <!--                      }}</Link>-->
-        <!--                      <span-->
-        <!--                        >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span-->
-        <!--                      >-->
-        <!--                    </div>-->
-        <!--                  </div>-->
+            <!-- Boucler pour afficher les réponses -->
+            <div
+              v-if="comment.replies.length"
+              class="ml-4 grid gap-4 border-l py-2 pl-2"
+            >
+              <div
+                v-for="reply in allReplies(comment)"
+                :key="reply.id"
+                class="flex flex-col gap-4 pl-4"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex flex-row gap-2">
+                    <img
+                      src="/images/avatar.jpg"
+                      :alt="'Avatar de ' + reply.user.name"
+                      class="avatar h-[52px] rounded-full object-contain"
+                    />
+                    <div class="flex flex-col justify-evenly gap-1">
+                      <Link href="#" class="font-medium">{{
+                        reply.user.name
+                      }}</Link>
+                      <span
+                        >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
+                      >
+                    </div>
+                  </div>
 
-        <!--                  <DropdownMenu>-->
-        <!--                    <DropdownMenuTrigger>-->
-        <!--                      <Ellipsis />-->
-        <!--                    </DropdownMenuTrigger>-->
-        <!--                    <DropdownMenuContent align="end">-->
-        <!--                      &lt;!&ndash; TODO: Ajouter action &ndash;&gt;-->
-        <!--                      <DropdownMenuItem>Signaler</DropdownMenuItem>-->
-        <!--                      <DropdownMenuItem-->
-        <!--                        v-if="reply.user_id === $page?.props?.auth?.user?.id"-->
-        <!--                        @click="handleRemoveComment(reply.id)"-->
-        <!--                        >Supprimer</DropdownMenuItem-->
-        <!--                      >-->
-        <!--                    </DropdownMenuContent>-->
-        <!--                  </DropdownMenu>-->
-        <!--                </div>-->
-        <!--                <div v-if="reply.answer_to_user" class="text-muted-foreground">-->
-        <!--                  &lt;!&ndash;  TODO: redirection                  &ndash;&gt;-->
-        <!--                  En réponse à-->
-        <!--                  <Link href="#" class="font-semibold text-primary">{{-->
-        <!--                    reply.answer_to_user.name-->
-        <!--                  }}</Link>-->
-        <!--                </div>-->
-        <!--                <p>-->
-        <!--                  {{ reply.content }}-->
-        <!--                </p>-->
+                  <DropdownMenu
+                    v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                  >
+                    <DropdownMenuTrigger>
+                      <Ellipsis />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <!-- TODO: Ajouter action -->
+                      <DropdownMenuItem>Signaler</DropdownMenuItem>
+                      <DropdownMenuItem @click="handleRemoveComment(reply.id)"
+                        >Supprimer</DropdownMenuItem
+                      >
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <div v-if="reply.answer_to_user" class="text-muted-foreground">
+                  <!--  TODO: redirection                  -->
+                  En réponse à
+                  <Link href="#" class="font-semibold text-primary">{{
+                    reply.answer_to_user.name
+                  }}</Link>
+                </div>
+                <p>
+                  {{ reply.content }}
+                </p>
 
-        <!--                <Button-->
-        <!--                  variant="ghost"-->
-        <!--                  class="w-fit"-->
-        <!--                  @click="toggleReplyForm(reply.id)"-->
-        <!--                  ><Reply class="mr-2" />Répondre</Button-->
-        <!--                >-->
-        <!--                <SendMessage-->
-        <!--                  v-if="activeCommentId === reply.id"-->
-        <!--                  :deal="deal"-->
-        <!--                  :comment="comment"-->
-        <!--                  :answer-to="reply.user_id"-->
-        <!--                  @submitted="closeReplyForm"-->
-        <!--                  class="ml-8"-->
-        <!--                />-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </div>-->
+                <Button
+                  variant="ghost"
+                  class="w-fit"
+                  @click="toggleReplyForm(reply.id)"
+                  ><Reply class="mr-2" />Répondre</Button
+                >
+                <SendMessage
+                  v-if="activeCommentId === reply.id"
+                  :content-type="'discussion'"
+                  :discussion="discussion"
+                  :comment="comment"
+                  :answer-to="reply.user_id"
+                  @submitted="closeReplyForm"
+                  class="ml-8"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </Wrapper>
     </Wrapper>
   </main>

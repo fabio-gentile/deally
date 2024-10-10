@@ -81,8 +81,10 @@ const handleRemoveThumbnail = () => {
 </script>
 <template>
   <div class="w-full bg-page py-8">
-    <Wrapper>
-      <Breadcrumb>
+    <!--      TODO: Refaire le front-->
+    <Head title="Créer un bon plan" />
+    <Wrapper class="!max-w-[850px]">
+      <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink>
@@ -99,137 +101,141 @@ const handleRemoveThumbnail = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink>
+              <Link :href="route('discussions.show', props.discussion.slug)">
+                {{ props.discussion.title }}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
               <Link
                 class="font-semibold text-foreground"
-                :href="route('discussions.create')"
+                :href="route('discussions.edit', props.discussion.slug)"
               >
-                Créer une discussion
+                Modifier la discussion
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <!--      TODO: Refaire le front-->
-      <Head title="Créer un bon plan" />
-      <Wrapper class="mt-6 !max-w-[850px]">
-        <Form v-slot="{ meta, values, validate }" as="" keep-values>
-          <form @submit.prevent="submit">
-            <div class="flex flex-col gap-4">
-              <FormField name="title">
-                <FormItem>
-                  <FormLabel>Titre</FormLabel>
-                  <FormControl>
-                    <Input type="text" v-model="form.title" />
-                  </FormControl>
-                  <FormError :message="form.errors.title" />
-                </FormItem>
-              </FormField>
+      <Form v-slot="{ meta, values, validate }" as="" keep-values>
+        <form @submit.prevent="submit">
+          <div class="flex flex-col gap-4">
+            <FormField name="title">
+              <FormItem>
+                <FormLabel>Titre</FormLabel>
+                <FormControl>
+                  <Input type="text" v-model="form.title" />
+                </FormControl>
+                <FormError :message="form.errors.title" />
+              </FormItem>
+            </FormField>
 
-              <FormField name="thumbnail">
-                <FormItem>
-                  <FormLabel>Image de couverture</FormLabel>
-                  <FormControl v-if="!currentThumbnail">
-                    <Input
-                      title="your text"
-                      type="file"
-                      accept=".jpg, .jpeg, .png, .webp"
-                      @change="handleImageUpload"
+            <FormField name="thumbnail">
+              <FormItem>
+                <FormLabel>Image de couverture</FormLabel>
+                <FormControl v-if="!currentThumbnail">
+                  <Input
+                    title="your text"
+                    type="file"
+                    accept=".jpg, .jpeg, .png, .webp"
+                    @change="handleImageUpload"
+                  />
+                </FormControl>
+                <div
+                  v-if="images.length"
+                  class="rounded-lg border bg-white p-4"
+                >
+                  <div
+                    v-for="(image, index) in images"
+                    :key="index"
+                    class="relative w-fit rounded-lg border"
+                  >
+                    <img
+                      class="h-64 w-64 object-contain"
+                      :src="image.previewUrl"
+                      alt="Image Preview"
                     />
-                  </FormControl>
-                  <div
-                    v-if="images.length"
-                    class="rounded-lg border bg-white p-4"
+                    <Button
+                      variant="link"
+                      @click="removeImage(index)"
+                      class="w-full text-center font-semibold"
+                      >Supprimer
+                    </Button>
+                  </div>
+                </div>
+
+                <!-- Current thumbnail -->
+                <div
+                  v-if="currentThumbnail"
+                  class="rounded-lg border bg-white p-4"
+                >
+                  <div class="relative w-fit rounded-lg border">
+                    <img
+                      class="h-64 w-64 object-contain"
+                      :src="
+                        '/storage/' +
+                        currentThumbnail.path +
+                        '/' +
+                        currentThumbnail.filename
+                      "
+                      alt="Image Preview"
+                    />
+                    <Button
+                      variant="link"
+                      @click="handleRemoveThumbnail"
+                      class="w-full text-center font-semibold"
+                      >Supprimer
+                    </Button>
+                  </div>
+                </div>
+                <FormError :message="form.errors.thumbnail" />
+              </FormItem>
+            </FormField>
+
+            <FormField name="content">
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <!--                  <Textarea v-model="form.content" />-->
+                  <TipTap v-model="form.content" />
+                </FormControl>
+                <FormError :message="form.errors.content" />
+              </FormItem>
+            </FormField>
+
+            <FormField name="category">
+              <FormItem>
+                <FormLabel>Catégorie</FormLabel>
+                <FormControl>
+                  <ToggleGroup
+                    id="category"
+                    type="single"
+                    class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
+                    v-model="form.category"
                   >
-                    <div
-                      v-for="(image, index) in images"
+                    <ToggleGroupItem
+                      aria-label="Toggle bold"
+                      v-for="(category, index) in props.categories"
+                      :value="category.name"
                       :key="index"
-                      class="relative w-fit rounded-lg border"
+                      class="border data-[state=on]:bg-primary data-[state=on]:text-white"
                     >
-                      <img
-                        class="h-64 w-64 object-contain"
-                        :src="image.previewUrl"
-                        alt="Image Preview"
-                      />
-                      <Button
-                        variant="link"
-                        @click="removeImage(index)"
-                        class="w-full text-center font-semibold"
-                        >Supprimer
-                      </Button>
-                    </div>
-                  </div>
+                      {{ category.name }}
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </FormControl>
+                <FormError :message="form.errors.content" />
+              </FormItem>
+            </FormField>
+          </div>
 
-                  <!-- Current thumbnail -->
-                  <div
-                    v-if="currentThumbnail"
-                    class="rounded-lg border bg-white p-4"
-                  >
-                    <div class="relative w-fit rounded-lg border">
-                      <img
-                        class="h-64 w-64 object-contain"
-                        :src="
-                          '/storage/' +
-                          currentThumbnail.path +
-                          '/' +
-                          currentThumbnail.filename
-                        "
-                        alt="Image Preview"
-                      />
-                      <Button
-                        variant="link"
-                        @click="handleRemoveThumbnail"
-                        class="w-full text-center font-semibold"
-                        >Supprimer
-                      </Button>
-                    </div>
-                  </div>
-                  <FormError :message="form.errors.thumbnail" />
-                </FormItem>
-              </FormField>
-
-              <FormField name="content">
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <!--                  <Textarea v-model="form.content" />-->
-                    <TipTap v-model="form.content" />
-                  </FormControl>
-                  <FormError :message="form.errors.content" />
-                </FormItem>
-              </FormField>
-
-              <FormField name="category">
-                <FormItem>
-                  <FormLabel>Catégorie</FormLabel>
-                  <FormControl>
-                    <ToggleGroup
-                      id="category"
-                      type="single"
-                      class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
-                      v-model="form.category"
-                    >
-                      <ToggleGroupItem
-                        aria-label="Toggle bold"
-                        v-for="(category, index) in props.categories"
-                        :value="category.name"
-                        :key="index"
-                        class="border data-[state=on]:bg-primary data-[state=on]:text-white"
-                      >
-                        {{ category.name }}
-                      </ToggleGroupItem>
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormError :message="form.errors.content" />
-                </FormItem>
-              </FormField>
-            </div>
-
-            <div class="mt-4 flex items-center justify-between">
-              <Button size="sm" type="submit"> Mettre à jour </Button>
-            </div>
-          </form>
-        </Form>
-      </Wrapper>
+          <div class="mt-4 flex items-center justify-between">
+            <Button size="sm" type="submit"> Mettre à jour </Button>
+          </div>
+        </form>
+      </Form>
     </Wrapper>
   </div>
 </template>

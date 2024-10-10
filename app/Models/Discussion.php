@@ -72,4 +72,12 @@ class Discussion extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the comments for the deal.
+     */
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CommentDiscussion::class);
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CommentRequest;
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\CommentDeal;
 use App\Models\Deal;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class CommentDealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, string $slug, CommentRequest $commentRequest): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, string $slug, StoreCommentRequest $commentRequest): \Illuminate\Http\RedirectResponse
     {
         $validated = $commentRequest->validated();
 //dd($validated);

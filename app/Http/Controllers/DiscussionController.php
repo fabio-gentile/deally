@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoryDiscussion;
+use App\Models\CommentDiscussion;
 use App\Models\Discussion;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 
 class DiscussionController extends Controller
 {
@@ -24,7 +24,7 @@ class DiscussionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): \Inertia\Response
     {
         return Inertia::render('Discussion/Create', [
             'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
@@ -62,7 +62,7 @@ class DiscussionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(string $slug): \Inertia\Response
     {
         $discussion = Discussion::where('slug', $slug)->with('user')->firstOrFail();
         $similarDeals = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
@@ -71,10 +71,29 @@ class DiscussionController extends Controller
             ->limit(6)
             ->get();
 
+        $allComments = $discussion->comments()
+            ->with([
+                'replies' => function ($query) {
+                    $query->orderBy('created_at', 'desc'); // Sort direct replies by created_at
+                },
+                'user', // Load the user for each comment
+                'replies.user', // Load the user for each reply,
+                'replies.answerToUser' // Load the 'answer_to' user for each reply
+            ])
+            ->whereNull('parent_id') // Only get top-level comments
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($allComments as $comment) {
+            $this->loadAllReplies($comment); // Recursively load replies
+        }
+
         return Inertia::render('Discussion/Show', [
             'discussion' => $discussion,
             'category' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
             'similarDiscussions' => $similarDeals ?? [],
+            'allComments' => $allComments,
+            'allCommentsCount' => CommentDiscussion::where('discussion_id', $discussion->id)->count(),
         ]);
     }
 
@@ -107,13 +126,12 @@ class DiscussionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDiscussionRequest $request, int $id)
+    public function update(UpdateDiscussionRequest $request, int $id): \Illuminate\Http\RedirectResponse
     {
         $discussion = Discussion::where('id', $id)->firstOrFail();
-//        dd($request->all());
         Gate::authorize('update', $discussion);
 
-        if ($request->get('isThumbnailRemoved') === true) {
+        if ($request->get('isThumbnailRemoved')) {
             try {
                 Storage::delete($discussion->path . $discussion->thumbnail);
                 $discussion->update([
@@ -127,7 +145,6 @@ class DiscussionController extends Controller
         }
 
         if ($request->hasFile('thumbnail')) {
-//            dd('thumbnail');
             $thumbnail = $request->file('thumbnail');
             $extension = $thumbnail->extension();
             $originalName = $thumbnail->getClientOriginalName();
@@ -155,5 +172,22 @@ class DiscussionController extends Controller
     public function destroy(Discussion $discussion)
     {
         //
+    }
+
+    /**
+     *  Load all replies for a comment.
+     * @param $comment
+     * @return void
+     */
+    protected function loadAllReplies($comment): void
+    {
+        $comment->replies->each(function ($reply) {
+            // Load the user corresponding to the 'answer_to' field
+            $reply->load(['replies' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // Sort replies by created_at
+            }, 'answerToUser', 'user']); // Load the user referenced by 'answer_to'
+
+            $this->loadAllReplies($reply); // Recursively load sub-replies
+        });
     }
 }
