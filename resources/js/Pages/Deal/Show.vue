@@ -202,11 +202,11 @@ const destroyDeal = (id: number) => {
       <Wrapper class="mt-6 !max-w-[850px] !p-0">
         <!-- status -->
         <div
-          class="my-6 flex items-center justify-between gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
+          class="my-6 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
           v-if="deal.user_id === $page.props.auth?.user?.id"
         >
           <div class="font-semibold">Action</div>
-          <div class="flex gap-4">
+          <div class="flex gap-4 text-muted-foreground">
             <Button variant="ghost" as-child class="flex items-center gap-4">
               <Link :href="route('deals.edit', deal.slug)">
                 <Pencil />

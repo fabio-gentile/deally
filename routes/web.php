@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
-
+Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 
 //Discussion
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -50,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/discussions/create', [DiscussionController::class, 'store'])->name('discussions.store');
     Route::get('/discussions/{slug}/edit', [DiscussionController::class, 'edit'])->name('discussions.edit');
     Route::patch('/discussions/{id}', [DiscussionController::class, 'update'])->name('discussions.update');
-//    Route::delete('/discussions/{id}', [DealController::class, 'destroy'])->name('discussions.destroy');
+    Route::delete('/discussions/{id}', [DealController::class, 'destroy'])->name('discussions.destroy');
 //    Route::delete('/discussions/image/{filename}', [DealController::class, 'deleteImage'])->name('discussions.delete-image');
 
 

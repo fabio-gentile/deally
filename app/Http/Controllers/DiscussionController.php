@@ -62,9 +62,20 @@ class DiscussionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Discussion $discussion)
+    public function show(string $slug)
     {
-        //
+        $discussion = Discussion::where('slug', $slug)->with('user')->firstOrFail();
+        $similarDeals = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
+            ->where('id', '!=', $discussion->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+
+        return Inertia::render('Discussion/Show', [
+            'discussion' => $discussion,
+            'category' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
+            'similarDiscussions' => $similarDeals ?? [],
+        ]);
     }
 
     /**

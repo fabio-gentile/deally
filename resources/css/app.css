@@ -86,3 +86,42 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Tiptap */
+.tip-tap p {
+    margin: 1rem 0;
+}
+
+.tip-tap h1 {
+    @apply text-3xl font-bold;
+}
+
+.tip-tap h2 {
+    @apply text-2xl font-bold;
+}
+
+.tip-tap ol {
+    @apply list-decimal pl-4;
+}
+
+.tip-tap blockquote {
+    @apply border-l-4 border-accent p-2;
+}
+
+.tip-tap pre {
+    @apply bg-muted p-2 rounded;
+}
+
+.tip-tap code {
+    @apply bg-muted p-1 rounded;
+}
+
+.tip-tap img {
+    @apply w-full;
+}
+
+.tip-tap a {
+    @apply text-primary underline;
+}
+
