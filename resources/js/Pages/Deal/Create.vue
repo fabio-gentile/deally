@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Head, useForm } from "@inertiajs/vue3"
+import { Head, Link, useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
-import { X } from "lucide-vue-next"
 import {
   Form,
   FormControl,
@@ -9,33 +8,43 @@ import {
   FormItem,
   FormLabel,
 } from "@/Components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select"
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import { CategoryDeal } from "@/types/model/category-deal"
 import FormError from "@/Components/FormError.vue"
-import { Textarea } from "@/Components/ui/textarea"
 import TipTap from "@/Components/TipTap.vue"
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/Components/ui/breadcrumb"
 
 const props = defineProps<{
   categories: CategoryDeal[]
 }>()
 
-const form = useForm({
+const form = useForm<{
+  images: File[]
+  deal_url: string
+  title: string
+  description: string
+  price: number | null
+  original_price: number | null
+  promo_code: string
+  category: string
+  start_date: string
+  expiration_date: string
+}>({
   images: [],
   deal_url: "",
   title: "",
   description: "",
-  price: 0,
-  original_price: 0,
+  price: null,
+  original_price: null,
   promo_code: "",
   category: "",
   start_date: "",
@@ -48,25 +57,29 @@ const submit = () => {
   images.value.forEach((image) => {
     formData.append("images[]", image.file)
   })
-  form.images = formData.getAll("images[]")
 
-  // console.log(form.description)
+  form.images = formData.getAll("images[]") as File[]
+
   form.post(route("deals.store"), {
     preserveScroll: true,
   })
 }
 
-const images = ref([])
-const handleImageUpload = (event) => {
-  const files = Array.from(event.target.files)
+const images = ref<{ file: File; previewUrl: string }[]>([])
+
+const handleImageUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const files = Array.from(input.files || [])
 
   files.forEach((file) => {
     const reader = new FileReader()
     reader.onload = (e) => {
-      images.value.push({
-        file,
-        previewUrl: e.target.result, // Génère un aperçu pour l'image
-      })
+      if (e.target?.result) {
+        images.value.push({
+          file,
+          previewUrl: e.target.result as string, // Génère un aperçu pour l'image
+        })
+      }
     }
 
     reader.readAsDataURL(file)
@@ -74,7 +87,7 @@ const handleImageUpload = (event) => {
 }
 
 // Fonction pour supprimer une image de la liste
-const removeImage = (index) => {
+const removeImage = (index: number) => {
   images.value.splice(index, 1)
 }
 </script>
@@ -83,6 +96,33 @@ const removeImage = (index) => {
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
     <Wrapper>
+      <Breadcrumb class="mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <Link :href="route('home.index')"> Deally </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <!-- TODO: Add redirection to category-->
+              <Link :href="route('home.index')"> Les bons plans </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink>
+              <Link
+                class="font-semibold text-foreground"
+                :href="route('deals.create')"
+              >
+                Créer un deal
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
         <form @submit.prevent="submit">
           <div class="flex flex-col gap-4">
@@ -165,11 +205,15 @@ const removeImage = (index) => {
                 <FormControl>
                   <Input type="file" multiple @change="handleImageUpload" />
                 </FormControl>
-                <div v-if="images.length">
+
+                <div
+                  v-if="images.length"
+                  class="rounded-lg border bg-white p-4"
+                >
                   <div
                     v-for="(image, index) in images"
                     :key="index"
-                    class="relative w-fit"
+                    class="relative w-fit rounded-lg border"
                   >
                     <img
                       class="h-64 w-64 object-contain"
@@ -177,38 +221,42 @@ const removeImage = (index) => {
                       alt="Image Preview"
                     />
                     <Button
+                      variant="link"
                       @click="removeImage(index)"
-                      variant="destructive"
-                      size="xs"
-                      class="absolute right-2 top-2 rounded-full"
-                    >
-                      <X class="h-4 w-4" />
+                      class="w-full text-center font-semibold"
+                      >Supprimer
                     </Button>
+                    <FormError
+                      class="text-center"
+                      v-if="form.errors[`images.${index}`]"
+                      :message="form.errors[`images.${index}`]"
+                    />
                   </div>
                 </div>
-                <FormError :message="form.errors.images" />
               </FormItem>
             </FormField>
 
             <FormField name="category">
               <FormItem>
                 <FormLabel>Catégorie</FormLabel>
-                <Select v-model="form.category">
-                  <FormControl>
-                    <SelectTrigger v-model="form.category">
-                      <SelectValue placeholder="Choisissez une catégorie" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem
-                        v-for="category in props.categories"
-                        :value="category.name"
-                        >{{ category.name }}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <ToggleGroup
+                    id="category"
+                    type="single"
+                    class="flex flex-wrap !justify-normal gap-4 rounded-lg border bg-white p-4"
+                    v-model="form.category"
+                  >
+                    <ToggleGroupItem
+                      aria-label="Toggle bold"
+                      v-for="(category, index) in props.categories"
+                      :value="category.name"
+                      :key="index"
+                      class="border data-[state=on]:bg-primary data-[state=on]:text-white"
+                    >
+                      {{ category.name }}
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </FormControl>
                 <FormError :message="form.errors.category" />
               </FormItem>
             </FormField>

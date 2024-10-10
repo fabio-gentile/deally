@@ -319,7 +319,7 @@ const destroyDeal = (id: number) => {
                   v-if="(!deal.price || deal.price == 0) && deal.original_price"
                   >GRATUIT</span
                 >
-                <span v-if="deal.price != 0">{{ deal.price }}€</span>
+                <span v-if="deal.price < 0">{{ deal.price }}€</span>
               </span>
               <span
                 v-if="deal.original_price"
