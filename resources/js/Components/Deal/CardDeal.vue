@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3"
-import { CalendarClock, Clock, Eye, ImageOff } from "lucide-vue-next"
+import {
+  CalendarClock,
+  Clock,
+  Eye,
+  ImageOff,
+  CircleAlert,
+} from "lucide-vue-next"
 import UpVote from "@/Components/Deal/UpVote.vue"
 import ShareSocial from "@/Components/common/ShareSocial.vue"
 import MessageSquare from "@/Components/common/MessageSquare.vue"
@@ -40,14 +46,19 @@ const since = timeAgo(new Date(deal.created_at)) // string
         />
         <div class="flex flex-col gap-3 md:hidden">
           <UpVote
+            :is-expired="deal.is_expired"
             :deal="deal"
             :votes="deal.votes"
             :vote="deal.user_vote ?? false"
           />
           <div class="flex flex-col gap-6 text-sm md:flex-row">
-            <div class="flex items-center gap-2">
+            <div v-if="!deal.is_expired" class="flex items-center gap-2">
               <CalendarClock />
               {{ expirationDate }}
+            </div>
+            <div v-else class="flex items-center gap-2">
+              <CircleAlert />
+              Le deal est expiré
             </div>
             <div class="flex items-center gap-2">
               <Clock />
@@ -61,14 +72,22 @@ const since = timeAgo(new Date(deal.created_at)) // string
           class="hidden flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between"
         >
           <UpVote
+            :is-expired="deal.is_expired"
             :deal="deal"
             :votes="deal.votes"
             :vote="deal.user_vote ?? false"
           />
           <div class="flex flex-col gap-6 text-sm md:flex-row">
-            <div class="flex items-center gap-2">
+            <div v-if="!deal.is_expired" class="flex items-center gap-2">
               <CalendarClock />
               {{ expirationDate }}
+            </div>
+            <div
+              v-else
+              class="flex items-center gap-1 font-bold !text-destructive"
+            >
+              <CircleAlert />
+              Le deal est expiré
             </div>
             <div class="flex items-center gap-2">
               <Clock />
@@ -81,7 +100,10 @@ const since = timeAgo(new Date(deal.created_at)) // string
           <!--          TODO: add route redirection-->
           <Link
             :href="route('deals.show', deal.slug)"
-            class="line-clamp-4 font-semibold text-foreground md:line-clamp-2"
+            class="line-clamp-4 font-semibold md:line-clamp-2"
+            :class="
+              deal.is_expired ? 'text-muted-foreground' : 'text-foreground'
+            "
             >{{ deal.title }}</Link
           >
         </strong>
@@ -115,7 +137,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
             <SaveBookmark type="deal" url="#" />
           </div>
           <Link :href="route('deals.show', deal.slug)" class="w-full md:w-fit">
-            <Button class="w-full">
+            <Button class="w-full" :disabled="deal.is_expired">
               <Eye class="mr-2" />
               Voir l'annonce
             </Button>

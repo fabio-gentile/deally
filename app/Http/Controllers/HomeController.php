@@ -40,16 +40,17 @@ class HomeController extends Controller
             // filter the vote of the user
             if ($user) {
                 $query->where('user_id', $user->id);
-            }
+            };
         }, 'images' => function ($query) {
             $query->limit(1);
-        }])->limit(10)->get();
+        }])->where('expiration_date' , '<', now())->limit(10)->get();
 
         // add the user vote to the deal
         if ($user) {
             $deals->each(function ($deal) use ($user) {
                 // associate the voteDeals to the deal
                 $deal->user_vote = $deal->voteDetails->first();
+                $deal->is_expired = $deal->isExpired(); // add is_expired to the deal
             });
         }
 //dd($deals);
