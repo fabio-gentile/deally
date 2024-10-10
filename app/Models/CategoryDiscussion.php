@@ -22,6 +22,16 @@ class CategoryDiscussion extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    /**
      * Get the options for generating the slug.
      */
     public function getSlugOptions() : SlugOptions

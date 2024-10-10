@@ -17,6 +17,17 @@ class ImageDeal extends Model
     protected $guarded = [];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'original_filename',
+    ];
+
+    /**
      * Get the deal that owns the image.
      */
     public function deal(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -29,6 +29,15 @@ class Discussion extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'original_filename',
+    ];
+
+    /**
      * Get the options for generating the slug.
      */
     public function getSlugOptions() : SlugOptions
