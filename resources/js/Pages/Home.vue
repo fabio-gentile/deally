@@ -40,7 +40,9 @@ defineProps<{
                 class="flex basis-auto"
               >
                 <!--                TODO: add route redirection-->
-                <Link href="#">
+                <Link
+                  :href="route('search.deals') + '?category=' + category.name"
+                >
                   <Button variant="outline" class="font-semibold lg:ml-3">
                     {{ category.name }}
                   </Button>
