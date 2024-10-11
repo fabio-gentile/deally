@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->text('description');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->decimal('original_price', 8, 2)->nullable();
             $table->decimal('price', 8, 2)->nullable();
             $table->dateTime('expiration_date');

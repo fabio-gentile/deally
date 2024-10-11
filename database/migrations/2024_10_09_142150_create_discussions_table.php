@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->text('content');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->onDelete('cascade');
             $table->string('thumbnail')->nullable();
             $table->string('original_filename')->nullable();

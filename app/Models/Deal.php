@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Deal extends Model
 {
-    use HasFactory, hasSlug;
+    use HasFactory, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -34,16 +34,32 @@ class Deal extends Model
         'user_id',
     ];
 
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => ['title', 'id'],
+            ],
+        ];
+    }
 
     /**
-     * Get the options for generating the slug.
+     * Slug generation event.
+     *
+     * @return string
      */
-    public function getSlugOptions() : SlugOptions
+    public function sluggableEvent(): string
     {
-        return SlugOptions::create()
-            ->generateSlugsFrom(['title', 'id'])
-            ->saveSlugsTo('slug')
-            ->slugsShouldBeNoLongerThan(50);
+        /**
+         * Optional behaviour -- generate slug after model is saved.
+         * This will likely become the new default in the next major release.
+         */
+        return SluggableObserver::SAVED;
     }
 
     /**

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 
 class CategoryDeal extends Model
 {
-    use HasFactory, hasSlug;
+    use HasFactory, Sluggable;
 
     protected $fillable = ['name', 'slug'];
 
@@ -20,19 +20,36 @@ class CategoryDeal extends Model
      */
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function deals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
     {
-        return $this->hasMany(Deal::class);
+        return [
+            'slug' => [
+                'source' => ['name'],
+            ],
+        ];
     }
 
     /**
-     * Get the options for generating the slug.
+     * Slug generation event.
+     *
+     * @return string
      */
-    public function getSlugOptions() : SlugOptions
+    public function sluggableEvent(): string
     {
-        return SlugOptions::create()
-            ->generateSlugsFrom(['name'])
-            ->saveSlugsTo('slug')
-            ->slugsShouldBeNoLongerThan(100);
+        /**
+         * Optional behaviour -- generate slug after model is saved.
+         * This will likely become the new default in the next major release.
+         */
+        return SluggableObserver::SAVED;
+    }
+
+    public function deals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Deal::class);
     }
 }
