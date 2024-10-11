@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import { FilterX, Frown } from "lucide-vue-next"
+import { FilterX, Frown, Filter } from "lucide-vue-next"
 import {
   Pagination,
   PaginationEllipsis,
@@ -37,6 +37,7 @@ import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import CardDeal from "@/Components/Deal/CardDeal.vue"
 import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
+import { cn } from "@/lib/utils"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -84,6 +85,11 @@ const changePage = (page: number) => {
 const resetFilters = () => {
   filters.value = {}
 }
+
+const isFiltersMenuOpen = ref(false)
+const toggleFiltersMenu = () => {
+  isFiltersMenuOpen.value = !isFiltersMenuOpen.value
+}
 </script>
 <template>
   <Head title="Rechercher un bon plan" />
@@ -109,114 +115,124 @@ const resetFilters = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div class="flex flex-row gap-6">
+
+      <div class="flex flex-col gap-6 lg:flex-row">
         <!--            filters-->
-        <aside
-          class="sticky top-20 grid h-fit gap-6 rounded-lg border bg-white p-4 lg:w-[350px]"
-        >
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-lg font-bold">Filtres</h2>
-            <Button
-              variant="ghost"
-              @click="resetFilters"
-              class="text-muted-foreground"
-            >
-              <FilterX class="mr-2 h-6 w-6" />
-              Réinitialiser
-            </Button>
-          </div>
-          <div>
-            <h3 class="mb-4 font-semibold">Trier par</h3>
-            <Select v-model="filters.filter_by">
-              <SelectTrigger v-model="filters.category" @change="search">
-                <SelectValue placeholder="Nouveauté" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel class="sr-only">Trier par</SelectLabel>
-                  <SelectItem value="newest"> Nouveauté </SelectItem>
-                  <SelectItem value="popular"> Popularité </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <h3 class="mb-4 font-semibold">Prix</h3>
-            <div class="flex justify-between">
-              <Label for="min_price" class="sr-only">Prix minimum</Label>
-              <Input
-                v-model="filters.price_min"
-                id="min_price"
-                type="number"
-                placeholder="Min"
-                class="w-[calc(50%-4px)]"
-                min="0"
-              />
-              <Label for="max_price" class="sr-only">Prix maximum</Label>
-              <Input
-                v-model="filters.price_max"
-                id="max_price"
-                type="number"
-                min="0"
-                placeholder="Max"
-                class="w-[calc(50%-4px)]"
-              />
+        <div>
+          <Button @click="toggleFiltersMenu" class="mb-4 lg:hidden">
+            <Filter class="mr-2" />
+            Filtres
+          </Button>
+          <aside
+            class="sticky h-fit gap-6 rounded-lg border bg-white p-4 lg:top-20 lg:grid xl:w-[350px]"
+            :class="{ hidden: !isFiltersMenuOpen, grid: isFiltersMenuOpen }"
+          >
+            <div class="flex items-center justify-between gap-4">
+              <h2 class="text-lg font-bold">Filtres</h2>
+              <Button
+                variant="ghost"
+                @click="resetFilters"
+                class="text-muted-foreground"
+              >
+                <FilterX class="mr-2 h-6 w-6" />
+                Réinitialiser
+              </Button>
             </div>
-          </div>
-          <div>
-            <h3 class="mb-4 font-semibold">Votes</h3>
-            <RadioGroup
-              v-model="filters.votes"
-              default-value="all"
-              class="grid gap-4"
-            >
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="all" value="all" />
-                <Label for="all">Tout</Label>
+            <div>
+              <h3 class="mb-4 font-semibold">Trier par</h3>
+              <Select v-model="filters.filter_by">
+                <SelectTrigger v-model="filters.category" @change="search">
+                  <SelectValue placeholder="Nouveauté" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel class="sr-only">Trier par</SelectLabel>
+                    <SelectItem value="newest"> Nouveauté </SelectItem>
+                    <SelectItem value="popular"> Popularité </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <h3 class="mb-4 font-semibold">Prix</h3>
+              <div class="flex justify-between">
+                <Label for="min_price" class="sr-only">Prix minimum</Label>
+                <Input
+                  v-model="filters.price_min"
+                  id="min_price"
+                  type="number"
+                  placeholder="Min"
+                  class="w-[calc(50%-4px)]"
+                  min="0"
+                />
+                <Label for="max_price" class="sr-only">Prix maximum</Label>
+                <Input
+                  v-model="filters.price_max"
+                  id="max_price"
+                  type="number"
+                  min="0"
+                  placeholder="Max"
+                  class="w-[calc(50%-4px)]"
+                />
               </div>
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="20" value="20" />
-                <Label for="20">20+</Label>
-              </div>
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="50" value="50" />
-                <Label for="50">50+</Label>
-              </div>
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="100" value="100" />
-                <Label for="100">100+</Label>
-              </div>
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="200" value="200" />
-                <Label for="200">200+</Label>
-              </div>
-              <div class="flex items-center space-x-2">
-                <RadioGroupItem id="500" value="500" />
-                <Label for="500">500+</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <div>
-            <h3 class="mb-4 font-semibold">Catégorie</h3>
-            <Select v-model="filters.category">
-              <SelectTrigger>
-                <SelectValue placeholder="Catégorie" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel class="sr-only">Catégorie</SelectLabel>
-                  <SelectItem
-                    :value="category.name"
-                    v-for="(category, index) in props.categories"
-                    :key="index"
-                  >
-                    {{ category.name }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </aside>
+            </div>
+            <div>
+              <h3 class="mb-4 font-semibold">Votes</h3>
+              <RadioGroup
+                v-model="filters.votes"
+                default-value="all"
+                class="grid gap-4"
+              >
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="all" value="all" />
+                  <Label for="all">Tout</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="20" value="20" />
+                  <Label for="20">20+</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="50" value="50" />
+                  <Label for="50">50+</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="100" value="100" />
+                  <Label for="100">100+</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="200" value="200" />
+                  <Label for="200">200+</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="500" value="500" />
+                  <Label for="500">500+</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div>
+              <h3 class="mb-4 font-semibold">Catégorie</h3>
+              <Select v-model="filters.category">
+                <SelectTrigger>
+                  <SelectValue placeholder="Tout" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel class="sr-only">Catégorie</SelectLabel>
+                    <SelectItem
+                      :value="category.name"
+                      v-for="category in props.categories"
+                      :key="category.id"
+                    >
+                      {{ category.name }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </aside>
+        </div>
+
         <div class="flex grow flex-col gap-3">
           <div
             v-if="deals.length < 1"
@@ -234,6 +250,7 @@ const resetFilters = () => {
           </div>
           <CardDeal v-for="deal in deals" :key="deal.id" :deal="deal" />
           <Pagination
+            class="mt-4"
             v-slot="{ page }"
             :total="pagination.total"
             :sibling-count="1"
@@ -242,7 +259,7 @@ const resetFilters = () => {
             <PaginationList
               v-if="pagination.total > 0"
               v-slot="{ items }"
-              class="flex items-center gap-1"
+              class="flex items-center justify-center gap-1"
             >
               <PaginationFirst @click="changePage(1)" />
               <PaginationPrev
