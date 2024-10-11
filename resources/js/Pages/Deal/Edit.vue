@@ -20,11 +20,10 @@ import {
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import { CategoryDeal } from "@/types/model/category-deal"
+import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
-import { Textarea } from "@/Components/ui/textarea"
 import { Deal } from "@/types/model/deal"
-import { ImageDeal } from "@/types/model/image-deal"
+import { ImageDeal } from "@/types/model/deal"
 import axios from "axios"
 import TipTap from "@/Components/TipTap.vue"
 import {
@@ -35,13 +34,18 @@ import {
   BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
 
+interface Image {
+  file: File
+  previewUrl: string
+}
+
 const props = defineProps<{
   categories: CategoryDeal[]
   deal: Deal
   current_category: string
   start_date: string
   expiration_date: string
-  uploaded_images: ImageDeal[]
+  uploaded_images: string[]
 }>()
 
 const form = useForm({
@@ -59,40 +63,54 @@ const form = useForm({
   _method: "patch",
 })
 
-const submit = () => {
+const images = ref<Image[]>([])
+const uploaded_images = ref<string[]>(props.uploaded_images)
+
+const submit = (): void => {
   const formData = new FormData()
+
   images.value.forEach((image) => {
     formData.append("images[]", image.file)
   })
+
   form.images = formData.getAll("images[]")
-  console.log(form.data())
+
+  if (form.price === "") {
+    form.price = 0
+  }
+
   form.post(route("deals.update", props.deal.id))
 }
 
-const images = ref([])
-const handleImageUpload = (event) => {
-  const files = Array.from(event.target.files)
+const handleImageUpload = (event: Event): void => {
+  const target = event.target as HTMLInputElement
+  if (!target.files) return
 
-  files.forEach((file) => {
+  const files = Array.from(target.files)
+
+  files.forEach((file: File) => {
     const reader = new FileReader()
-    reader.onload = (e) => {
-      images.value.push({
-        file,
-        previewUrl: e.target.result, // Génère un aperçu pour l'image
-      })
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && e.target.result) {
+        images.value.push({
+          file,
+          previewUrl: e.target.result as string, // Génère un aperçu pour l'image
+        })
+      }
     }
 
     reader.readAsDataURL(file)
   })
 }
 
-// Fonction pour supprimer une image de la liste
-const removeImage = (index) => {
+// Function to remove an image from the list
+const removeImage = (index: number): void => {
   images.value.splice(index, 1)
 }
 
-const uploaded_images = ref(props.uploaded_images)
-const deleteImage = async (filename, index) => {
+// Function to delete an uploaded image
+const deleteImage = async (filename: string, index: number): Promise<void> => {
   try {
     await axios.delete(route("deals.delete-image", filename))
     uploaded_images.value.splice(index, 1)
@@ -105,7 +123,7 @@ const deleteImage = async (filename, index) => {
   <div class="py-8">
     <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.deal.title" />
-    <Wrapper>
+    <Wrapper class="max-w-[800px]">
       <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -223,11 +241,15 @@ const deleteImage = async (filename, index) => {
                 <FormControl>
                   <Input type="file" multiple @change="handleImageUpload" />
                 </FormControl>
-                <div v-if="uploaded_images.length">
+
+                <div
+                  v-if="images.length || uploaded_images.length"
+                  class="flex flex-wrap gap-4 rounded-lg border bg-white p-4"
+                >
                   <div
                     v-for="(image, index) in uploaded_images"
                     :key="index"
-                    class="relative w-fit"
+                    class="relative w-fit rounded-lg border"
                   >
                     <img
                       class="h-64 w-64 object-contain"
@@ -236,22 +258,19 @@ const deleteImage = async (filename, index) => {
                     />
                     <Button
                       @click.prevent="deleteImage(image.filename, index)"
-                      variant="destructive"
-                      size="xs"
+                      variant="link"
                       method="delete"
                       :href="'/deals/image/' + image.filename"
-                      class="absolute right-2 top-2 rounded-full"
+                      class="w-full text-center font-semibold"
                     >
-                      <X class="h-4 w-4" />
+                      Supprimer
                     </Button>
                   </div>
-                </div>
 
-                <div v-if="images.length">
                   <div
                     v-for="(image, index) in images"
                     :key="index"
-                    class="relative w-fit"
+                    class="relative w-fit rounded-lg border"
                   >
                     <img
                       class="h-64 w-64 object-contain"
@@ -259,13 +278,16 @@ const deleteImage = async (filename, index) => {
                       alt="Image Preview"
                     />
                     <Button
+                      variant="link"
                       @click="removeImage(index)"
-                      variant="destructive"
-                      size="xs"
-                      class="absolute right-2 top-2 rounded-full"
-                    >
-                      <X class="h-4 w-4" />
+                      class="w-full text-center font-semibold"
+                      >Supprimer
                     </Button>
+                    <FormError
+                      class="text-center"
+                      v-if="form.errors[`images.${index}`]"
+                      :message="form.errors[`images.${index}`]"
+                    />
                   </div>
                 </div>
                 <FormError :message="form.errors.images" />

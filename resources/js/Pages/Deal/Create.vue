@@ -11,7 +11,7 @@ import {
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import { CategoryDeal } from "@/types/model/category-deal"
+import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
 import TipTap from "@/Components/TipTap.vue"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
@@ -60,6 +60,10 @@ const submit = () => {
 
   form.images = formData.getAll("images[]") as File[]
 
+  if (form.price === "") {
+    form.price = 0
+  }
+
   form.post(route("deals.store"), {
     preserveScroll: true,
   })
@@ -95,7 +99,7 @@ const removeImage = (index: number) => {
   <div class="py-8">
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
-    <Wrapper>
+    <Wrapper class="max-w-[800px]">
       <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>

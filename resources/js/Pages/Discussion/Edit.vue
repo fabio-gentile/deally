@@ -51,18 +51,31 @@ const submit = () => {
   })
 }
 
-const images = ref([])
-const handleImageUpload = (event) => {
-  const files = Array.from(event.target.files)
+interface Image {
+  file: File
+  previewUrl: string
+}
+
+const images = ref<Image[]>([])
+
+const handleImageUpload = (event: Event): void => {
+  const target = event.target as HTMLInputElement
+  if (!target.files) return
+
+  const files = Array.from(target.files)
   form.thumbnail = files[0]
-  files.forEach((file) => {
+
+  files.forEach((file: File) => {
     const reader = new FileReader()
-    reader.onload = (e) => {
-      images.value = []
-      images.value.push({
-        file,
-        previewUrl: e.target.result, // Génère un aperçu pour l'image
-      })
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && e.target.result) {
+        images.value = [] // Reset the images array
+        images.value.push({
+          file,
+          previewUrl: e.target.result as string, // Generates a preview for the image
+        })
+      }
     }
 
     reader.readAsDataURL(file)
@@ -70,7 +83,7 @@ const handleImageUpload = (event) => {
 }
 
 // Fonction pour supprimer une image de la liste
-const removeImage = (index) => {
+const removeImage = (index: number): void => {
   images.value.splice(index, 1)
 }
 
@@ -83,7 +96,7 @@ const handleRemoveThumbnail = () => {
   <div class="w-full bg-page py-8">
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
-    <Wrapper class="!max-w-[850px]">
+    <Wrapper class="!max-w-[800px]">
       <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>

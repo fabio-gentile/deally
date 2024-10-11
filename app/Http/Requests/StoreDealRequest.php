@@ -32,8 +32,18 @@ class StoreDealRequest extends FormRequest
             'deal_url' => ['required', 'string', 'max:255'],
             'category' => ['required', 'exists:category_deals,name'],
             'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Valide chaque image
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    protected function withValidator($validator): void
+    {
+        $validator->sometimes('original_price', 'required|numeric|min:0|gt:price', function ($input) {
+            return !is_null($input->price); // if price is not null, original_price is required and must be greater than price
+        });
     }
 
     /**

@@ -66,7 +66,8 @@ class DiscussionController extends Controller
     public function show(string $slug): \Inertia\Response
     {
         $discussion = Discussion::where('slug', $slug)->with('user')->firstOrFail();
-        $similarDeals = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
+        $similarDiscussions = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
+            ->with('user:id,name')->withCount('comments')
             ->where('id', '!=', $discussion->id)
             ->orderBy('created_at', 'desc')
             ->limit(6)
@@ -92,7 +93,7 @@ class DiscussionController extends Controller
         return Inertia::render('Discussion/Show', [
             'discussion' => $discussion,
             'category' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
-            'similarDiscussions' => $similarDeals ?? [],
+            'similarDiscussions' => $similarDiscussions ?? [],
             'allComments' => $allComments,
             'allCommentsCount' => CommentDiscussion::where('discussion_id', $discussion->id)->count(),
         ]);

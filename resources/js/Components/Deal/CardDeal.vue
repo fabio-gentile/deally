@@ -46,7 +46,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
         />
         <div class="flex flex-col gap-3 md:hidden">
           <UpVote
-            :is-expired="deal.is_expired"
+            :is-expired="deal.is_expired ?? false"
             :deal="deal"
             :votes="deal.votes"
             :vote="deal.user_vote ?? false"
@@ -72,7 +72,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
           class="hidden flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between"
         >
           <UpVote
-            :is-expired="deal.is_expired"
+            :is-expired="deal.is_expired ?? false"
             :deal="deal"
             :votes="deal.votes"
             :vote="deal.user_vote ?? false"

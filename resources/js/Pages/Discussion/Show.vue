@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ellipsis, Reply, Pencil, Trash2 } from "lucide-vue-next"
+import { Ellipsis, Reply, Pencil, Trash2, MessageSquare } from "lucide-vue-next"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,7 +22,6 @@ import { Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import { timeAgo } from "@/lib/time-ago"
-import MessageSquare from "@/Components/common/MessageSquare.vue"
 import Report from "@/Components/common/Report.vue"
 import SaveBookmark from "@/Components/common/SaveBookmark.vue"
 import ShareSocial from "@/Components/common/ShareSocial.vue"
@@ -35,18 +34,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
-import { Discussion } from "@/types/model/discussion"
+import { CommentDiscussion, Discussion } from "@/types/model/discussion"
+import { calculatePercentage } from "@/lib/utils"
+import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
 
 const { discussion, category, similarDiscussions, allCommentsCount } =
   defineProps<{
     discussion: Discussion
     category: string
     similarDiscussions: Discussion[]
-    allComments: any
+    allComments: CommentDiscussion[]
     allCommentsCount: number
   }>()
 
-const since = timeAgo(new Date(discussion.created_at)) // string
+const since = timeAgo(new Date(discussion.created_at as string)) // string
 
 const activeCommentId = ref<number | null>(null) // stocke l'ID du commentaire auquel on répond
 
@@ -250,21 +251,48 @@ const discussionDestroy = (id: number) => {
           class="mt-6 grid gap-4 rounded-lg bg-white p-4 dark:bg-primary-foreground"
         >
           <h2 class="text-xl font-semibold">Discussions similaires</h2>
-          <div class="flex shrink-0 flex-row flex-nowrap gap-6 overflow-x-auto">
-            <article
-              v-for="(similarDiscussion, index) in similarDiscussions"
-              :key="index"
-            >
-              <Link
-                :href="route('deals.show', similarDiscussion.slug)"
-                class="grid w-[160px] gap-2"
+          <ScrollArea>
+            <div class="flex shrink-0 flex-row flex-nowrap gap-6 pb-6">
+              <article
+                v-for="(similarDiscussion, index) in similarDiscussions"
+                :key="index"
+                class="grid w-[200px] gap-3"
               >
-                <h3 class="line-clamp-1 text-sm font-semibold text-foreground">
-                  {{ similarDiscussion.title }}
-                </h3>
-              </Link>
-            </article>
-          </div>
+                <Link :href="route('discussions.show', similarDiscussion.slug)">
+                  <h3
+                    class="line-clamp-2 text-sm font-semibold text-foreground hover:underline"
+                  >
+                    {{ similarDiscussion.title }}
+                  </h3>
+                </Link>
+                <div
+                  class="flex flex-row justify-between gap-6 text-sm text-muted-foreground"
+                >
+                  <!-- TODO: redirection -->
+                  <Link
+                    :href="'#'"
+                    class="flex min-w-0 flex-row items-center gap-2"
+                  >
+                    <img
+                      src="/images/avatar.jpg"
+                      :alt="'Avatar de ' + similarDiscussion.user.name"
+                      class="avatar h-[32px] rounded-full object-contain"
+                    />
+                    <p class="truncate text-sm font-medium hover:underline">
+                      {{ similarDiscussion.user.name }}
+                    </p>
+                  </Link>
+                  <div
+                    class="flex shrink-0 flex-row items-center gap-1 text-sm text-muted-foreground"
+                  >
+                    <MessageSquare class="h-4 w-4" />
+                    {{ similarDiscussion.comments_count }}
+                  </div>
+                </div>
+              </article>
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
 
         <!-- comments -->

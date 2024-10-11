@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from "@inertiajs/vue3"
-import { ref } from "vue"
 import {
   Form,
   FormControl,
@@ -12,7 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
 import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import { CategoryDeal } from "@/types/model/category-deal"
+import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
 import TipTap from "@/Components/TipTap.vue"
 import {
@@ -22,6 +21,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
+import { ref } from "vue"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -41,16 +41,23 @@ const submit = () => {
 }
 
 const images = ref([])
-const handleImageUpload = (event) => {
-  const files = Array.from(event.target.files)
+const handleImageUpload = (event: Event): void => {
+  const target = event.target as HTMLInputElement
+  if (!target.files) return
+
+  const files = Array.from(target.files)
   form.thumbnail = files[0]
-  files.forEach((file) => {
+
+  files.forEach((file: File) => {
     const reader = new FileReader()
-    reader.onload = (e) => {
-      images.value.push({
-        file,
-        previewUrl: e.target.result, // Génère un aperçu pour l'image
-      })
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && e.target.result) {
+        images.value.push({
+          file,
+          previewUrl: e.target.result as string, // Génère un aperçu pour l'image
+        })
+      }
     }
 
     reader.readAsDataURL(file)
@@ -58,7 +65,7 @@ const handleImageUpload = (event) => {
 }
 
 // Fonction pour supprimer une image de la liste
-const removeImage = (index) => {
+const removeImage = (index: number): void => {
   images.value.splice(index, 1)
 }
 </script>
@@ -66,7 +73,7 @@ const removeImage = (index) => {
   <div class="w-full bg-page py-8">
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
-    <Wrapper class="!max-w-[850px]">
+    <Wrapper class="!max-w-[800px]">
       <Breadcrumb class="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -180,29 +187,6 @@ const removeImage = (index) => {
                 <FormError :message="form.errors.content" />
               </FormItem>
             </FormField>
-
-            <!--              <FormField name="category">-->
-            <!--                <FormItem>-->
-            <!--                  <FormLabel>Catégorie</FormLabel>-->
-            <!--                  <Select v-model="form.category">-->
-            <!--                    <FormControl>-->
-            <!--                      <SelectTrigger v-model="form.category">-->
-            <!--                        <SelectValue placeholder="Choisissez une catégorie" />-->
-            <!--                      </SelectTrigger>-->
-            <!--                    </FormControl>-->
-            <!--                    <SelectContent>-->
-            <!--                      <SelectGroup>-->
-            <!--                        <SelectItem-->
-            <!--                          v-for="category in props.categories"-->
-            <!--                          :value="category.name"-->
-            <!--                          >{{ category.name }}-->
-            <!--                        </SelectItem>-->
-            <!--                      </SelectGroup>-->
-            <!--                    </SelectContent>-->
-            <!--                  </Select>-->
-            <!--                  <FormError :message="form.errors.category" />-->
-            <!--                </FormItem>-->
-            <!--              </FormField>-->
           </div>
 
           <div class="mt-4 flex items-center justify-between">

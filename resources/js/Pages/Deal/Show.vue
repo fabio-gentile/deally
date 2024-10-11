@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Deal } from "@/types/model/deal"
-import { ImageDeal } from "@/types/model/image-deal"
+import { CommentDeal, Deal } from "@/types/model/deal"
+import { ImageDeal } from "@/types/model/deal"
 import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
 import {
   CalendarClock,
@@ -69,7 +69,7 @@ const { deal, images, category, userDealsCount, allCommentsCount, isExpired } =
     category: string
     userDealsCount: number
     similarDeals: Deal[]
-    allComments: any
+    allComments: CommentDeal[]
     allCommentsCount: number
     isExpired: boolean
   }>()
@@ -98,9 +98,12 @@ watchOnce(emblaMainApi, (emblaMainApi) => {
 })
 
 const expirationDate = useDateFormat(deal.expiration_date, "DD/MM/YYYY")
-const since = timeAgo(new Date(deal.created_at)) // string
+const since = timeAgo(new Date(deal.created_at as string)) // string
 
-const discountPercentage = calculatePercentage(deal.price, deal.original_price)
+const discountPercentage = calculatePercentage(
+  deal.price || 0,
+  deal.original_price || 0
+)
 
 const activeCommentId = ref<number | null>(null) // stocke l'ID du commentaire auquel on répond
 
@@ -137,7 +140,7 @@ function getAllSubReplies(reply, replies) {
   }
 }
 
-const handleRemoveComment = (id) => {
+const handleRemoveComment = (id: number) => {
   router.delete(
     route(
       "deals.comments.destroy",
@@ -145,8 +148,8 @@ const handleRemoveComment = (id) => {
       {
         preserveScroll: true,
         onSuccess: () => {
-          console.log("Remove comment with id:", id)
-          console.log("Comment removed")
+          // console.log("Remove comment with id:", id)
+          // console.log("Comment removed")
         },
       }
     )
@@ -161,7 +164,7 @@ const destroyDeal = (id: number) => {
       {
         preserveScroll: true,
         onSuccess: () => {
-          console.log("Deal removed")
+          // console.log("Deal removed")
         },
       }
     )
@@ -342,7 +345,7 @@ const { copy, copied } = useClipboard({ source })
                   v-if="(!deal.price || deal.price == 0) && deal.original_price"
                   >GRATUIT</span
                 >
-                <span v-if="deal.price < 0">{{ deal.price }}€</span>
+                <span v-if="deal.price > 0">{{ deal.price }}€</span>
               </span>
               <span
                 v-if="deal.original_price"

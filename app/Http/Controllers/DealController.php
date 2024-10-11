@@ -49,7 +49,7 @@ class DealController extends Controller
             ->where('expiration_date', '>', now())
             ->where('votes', '>', -5)
             ->inRandomOrder()
-            ->limit(1)
+            ->limit(10)
             ->get();
 
         $allComments = $deal->comments()

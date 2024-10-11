@@ -4,7 +4,7 @@ import { ArrowDown, ArrowUp } from "lucide-vue-next"
 import { Deal } from "@/types/model/deal"
 import axios from "axios"
 import { ref } from "vue"
-import { VoteDeals } from "@/types/model/vote-deal"
+import { VoteDeals } from "@/types/model/deal"
 const { votes, vote, deal, isExpired } = defineProps<{
   votes: number
   vote?: VoteDeals | boolean
