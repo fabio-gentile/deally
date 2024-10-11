@@ -58,7 +58,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
             </div>
             <div v-else class="flex items-center gap-2">
               <CircleAlert />
-              Le deal est expiré
+              Le deal a expiré
             </div>
             <div class="flex items-center gap-2">
               <Clock />
@@ -87,7 +87,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
               class="flex items-center gap-1 font-bold !text-destructive"
             >
               <CircleAlert />
-              Le deal est expiré
+              Le deal a expiré
             </div>
             <div class="flex items-center gap-2">
               <Clock />
