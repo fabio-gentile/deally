@@ -58,7 +58,9 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 const updateResultsWidth = () => {
-  if (searchBar.value) {
+  if (window.innerWidth < 768) {
+    resultsWidth.value = `${window.innerWidth * 0.7}px` // 80% of the screen width on mobile
+  } else if (searchBar.value) {
     resultsWidth.value = `${searchBar.value.offsetWidth}px`
   }
 }
@@ -90,6 +92,14 @@ onBeforeUnmount(() => {
       />
     </div>
     <div
+      v-if="showResults && results.length === 0"
+      :style="{ width: resultsWidth }"
+      class="absolute top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground"
+    >
+      <p class="font-semibold">Aucun résultat</p>
+      <p>Essayez de modifier votre recherche</p>
+    </div>
+    <div
       v-if="showResults && results.length"
       :style="{ width: resultsWidth }"
       class="absolute top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground"
@@ -98,7 +108,7 @@ onBeforeUnmount(() => {
         v-if="deals"
         v-for="(deal, index) in deals"
         :key="deal.id"
-        class="suggestion-item truncate"
+        class="truncate"
       >
         <p v-if="index === 0" class="mb-1 font-semibold">Deals</p>
         <Button variant="ghost" as-child>
@@ -130,7 +140,7 @@ onBeforeUnmount(() => {
         v-if="discussions"
         v-for="(discussion, index) in discussions"
         :key="discussion.id"
-        class="suggestion-item truncate"
+        class="truncate"
       >
         <p v-if="index === 0" class="mb-1 font-semibold">Discussions</p>
         <Button variant="ghost" as-child>
@@ -146,7 +156,7 @@ onBeforeUnmount(() => {
         v-if="users"
         v-for="(user, index) in users"
         :key="user.id"
-        class="suggestion-item truncate"
+        class="truncate"
       >
         <p v-if="index === 0" class="mb-1 font-semibold">Utilisateurs</p>
         <Button variant="ghost" as-child>
