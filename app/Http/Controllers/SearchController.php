@@ -16,6 +16,18 @@ class SearchController extends Controller
 
         $deals->where('expiration_date', '>', now()); // Do not show expired deals
 
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $date = new \DateTime();
+            if ($period === 'today') {
+                $deals->where('created_at', '>=', $date->modify('-1 day'));
+            } elseif ($period === 'week') {
+                $deals->where('created_at', '>=', $date->modify('-1 week'));
+            } elseif ($period === 'month') {
+                $deals->where('created_at', '>=', $date->modify('-1 month'));
+            }
+        }
+
         if ($request->filled('price_min')) {
             $deals->where('price', '>=', $request->input('price_min'));
         }

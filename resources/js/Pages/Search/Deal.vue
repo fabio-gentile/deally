@@ -53,6 +53,7 @@ interface Filters {
   price_max?: number
   votes?: string
   page?: number
+  period?: "today" | "week" | "month" | "all"
 }
 
 const filters = ref({ ...props.filters })
@@ -141,7 +142,7 @@ const toggleFiltersMenu = () => {
             <div>
               <h3 class="mb-4 font-semibold">Trier par</h3>
               <Select v-model="filters.filter_by">
-                <SelectTrigger v-model="filters.category" @change="search">
+                <SelectTrigger v-model="filters.filter_by" @change="search">
                   <SelectValue placeholder="Nouveauté" />
                 </SelectTrigger>
                 <SelectContent>
@@ -149,6 +150,23 @@ const toggleFiltersMenu = () => {
                     <SelectLabel class="sr-only">Trier par</SelectLabel>
                     <SelectItem value="newest"> Nouveauté </SelectItem>
                     <SelectItem value="popular"> Popularité </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <h3 class="mb-4 font-semibold">Période</h3>
+              <Select v-model="filters.period">
+                <SelectTrigger v-model="filters.period" @change="search">
+                  <SelectValue placeholder="Tout" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel class="sr-only">Période</SelectLabel>
+                    <SelectItem value="all"> Tout </SelectItem>
+                    <SelectItem value="today">Aujourd'hui</SelectItem>
+                    <SelectItem value="week">7 derniers jours</SelectItem>
+                    <SelectItem value="month">30 derniers jours</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -175,6 +193,27 @@ const toggleFiltersMenu = () => {
                   class="w-[calc(50%-4px)]"
                 />
               </div>
+            </div>
+
+            <div>
+              <h3 class="mb-4 font-semibold">Catégorie</h3>
+              <Select v-model="filters.category">
+                <SelectTrigger>
+                  <SelectValue placeholder="Tout" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel class="sr-only">Catégorie</SelectLabel>
+                    <SelectItem
+                      :value="category.name"
+                      v-for="category in props.categories"
+                      :key="category.id"
+                    >
+                      {{ category.name }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <h3 class="mb-4 font-semibold">Votes</h3>
@@ -209,27 +248,6 @@ const toggleFiltersMenu = () => {
                 </div>
               </RadioGroup>
             </div>
-
-            <div>
-              <h3 class="mb-4 font-semibold">Catégorie</h3>
-              <Select v-model="filters.category">
-                <SelectTrigger>
-                  <SelectValue placeholder="Tout" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel class="sr-only">Catégorie</SelectLabel>
-                    <SelectItem
-                      :value="category.name"
-                      v-for="category in props.categories"
-                      :key="category.id"
-                    >
-                      {{ category.name }}
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
           </aside>
         </div>
 
@@ -255,13 +273,14 @@ const toggleFiltersMenu = () => {
             :total="pagination.total"
             :sibling-count="1"
             :default-page="1"
+            show-edges
           >
             <PaginationList
               v-if="pagination.total > 0"
               v-slot="{ items }"
               class="flex items-center justify-center gap-1"
             >
-              <PaginationFirst @click="changePage(1)" />
+              <!--              <PaginationFirst @click="changePage(1)" />-->
               <PaginationPrev
                 @click="changePage(pagination.current_page - 1)"
               />
@@ -287,7 +306,7 @@ const toggleFiltersMenu = () => {
               <PaginationNext
                 @click="changePage(pagination.current_page + 1)"
               />
-              <PaginationLast @click="changePage(pagination.last_page)" />
+              <!--              <PaginationLast @click="changePage(pagination.last_page)" />-->
             </PaginationList>
           </Pagination>
         </div>

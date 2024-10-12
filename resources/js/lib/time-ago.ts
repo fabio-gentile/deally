@@ -84,7 +84,7 @@ export function timeAgo(date: Date, now?: Date): string {
   for (const [name, size] of units) {
     const value = Math.floor(elapsed / size)
     if (value > 0) {
-      const plural = value > 1 ? "s" : ""
+      const plural = value > 1 && name !== "mois" ? "s" : ""
       const description = `${value} ${name}${plural}`
       return diff > 0 ? `${description}` : `dans ${description}`
     }
