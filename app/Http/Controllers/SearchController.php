@@ -6,12 +6,20 @@ use App\Models\CategoryDeal;
 use App\Models\CategoryDiscussion;
 use App\Models\Deal;
 use App\Models\Discussion;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SearchController extends Controller
 {
-    public function searchDeal(Request $request): \Inertia\Response
+    /**
+     * Search for deals
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function searchDeal(Request $request): Response
     {
         $user = auth()->user();
         $deals = Deal::query();
@@ -114,7 +122,13 @@ class SearchController extends Controller
         ]);
     }
 
-    public function searchDiscussion(Request $request): \Inertia\Response
+    /**
+     * Search for discussions
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function searchDiscussion(Request $request): Response
     {
         $discussions = Discussion::query();
 
@@ -179,6 +193,27 @@ class SearchController extends Controller
             'discussions' => $discussions->items(),
             'filters' => $request->all(),
             'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * Search for users
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function search(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $query = $request->input('q');
+
+        $deals = Deal::where('title', 'like', '%' . $query . '%')->limit(3)->get();
+        $users = User::where('name', 'like', '%' . $query . '%')->limit(3)->get();
+        $discussions = Discussion::where('title', 'like', '%' . $query . '%')->limit(3)->get();
+
+        return response()->json([
+                'deals' => $deals,
+                'users' => $users,
+                'discussions' => $discussions
         ]);
     }
 }

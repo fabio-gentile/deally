@@ -24,6 +24,7 @@ Route::get('/dashboard', function () {
 // Search
 Route::get('/rechercher/deals', [\App\Http\Controllers\SearchController::class, 'searchDeal'])->name('search.deals');
 Route::get('/rechercher/discussions', [\App\Http\Controllers\SearchController::class, 'searchDiscussion'])->name('search.discussions');
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -66,7 +67,7 @@ Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('
 
 //Vote
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('/deals/{id}/vote', [VoteController::class, 'store'])->name('deals.vote.store');
+    Route::post('/deals/vote/{id}', [VoteController::class, 'store'])->name('deals.vote.store');
 //    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');
 });
 
