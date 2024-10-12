@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/vue3"
 
 const props = defineProps<{
   url: string
-  type: "deal" | "discussion | comment"
+  type: "deal" | "discussion" | "comment"
 }>()
 </script>
 <template>

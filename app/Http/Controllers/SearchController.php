@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoryDeal;
+use App\Models\CategoryDiscussion;
 use App\Models\Deal;
+use App\Models\Discussion;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -83,8 +85,10 @@ class SearchController extends Controller
             // Limit the number of images to 1
             $query->limit(1);
         }]);
-        $deals = $deals->paginate(10);
 
+        $deals->withCount('comments');
+
+        $deals = $deals->paginate(10);
 
         if ($user) {
             $deals->each(function ($deal) use ($user) {
@@ -92,6 +96,7 @@ class SearchController extends Controller
                 $deal->is_expired = $deal->isExpired();
             });
         }
+
 
         $pagination = [
             'current_page' => $deals->currentPage(),
@@ -104,6 +109,74 @@ class SearchController extends Controller
         return Inertia::render('Search/Deal', [
             'categories' => CategoryDeal::all(),
             'deals' => $deals->items(),
+            'filters' => $request->all(),
+            'pagination' => $pagination
+        ]);
+    }
+
+    public function searchDiscussion(Request $request): \Inertia\Response
+    {
+        $discussions = Discussion::query();
+
+        if ($request->filled('period')) {
+            $period = $request->input('period');
+            $date = new \DateTime();
+            if ($period === 'today') {
+                $discussions->where('created_at', '>=', $date->modify('-1 day'));
+            } elseif ($period === 'week') {
+                $discussions->where('created_at', '>=', $date->modify('-1 week'));
+            } elseif ($period === 'month') {
+                $discussions->where('created_at', '>=', $date->modify('-1 month'));
+            }
+        }
+
+        if ($request->filled('category')) {
+            $category = CategoryDiscussion::where('name', $request->input('category'))->first();
+            if ($category) {
+                $discussions->where('category_discussion_id', $category->id);
+            }
+        }
+
+        if ($request->filled('comments')) {
+            $comments = $request->input('comments');
+            if ($comments === 'all') {
+                $discussions->having('comments_count', '>=', 0);
+            } elseif ($comments == 5) {
+                $discussions->having('comments_count', '>=', 5);
+            } elseif ($comments == 10) {
+                $discussions->having('comments_count', '>=', 10);
+            } elseif ($comments == 20) {
+                $discussions->having('comments_count', '>=', 20);
+            } elseif ($comments == 50) {
+                $discussions->having('comments_count', '>=', 50);
+            }
+        }
+
+        if ($request->filled('filter_by')) {
+            if ($request->input('filter_by') === 'popular') {
+                $discussions->orderBy('comments_count', 'desc');
+            } elseif ($request->input('filter_by') === 'newest') {
+                $discussions->orderBy('created_at', 'desc');
+            }
+        }
+
+        if (!$request->filled('filter_by')) {
+            $discussions->orderBy('created_at', 'desc');
+        }
+
+        $discussions->withCount('comments');
+        $discussions = $discussions->paginate(10);
+
+        $pagination = [
+            'current_page' => $discussions->currentPage(),
+            'last_page' => $discussions->lastPage(),
+            'per_page' => $discussions->perPage(),
+            'total' => $discussions->total(),
+        ];
+
+        return Inertia::render('Search/Discussion', [
+            'categories' => CategoryDiscussion::all(),
+            'discussions' => $discussions->items(),
             'filters' => $request->all(),
             'pagination' => $pagination
         ]);

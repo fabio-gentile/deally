@@ -23,6 +23,7 @@ Route::get('/dashboard', function () {
 
 // Search
 Route::get('/rechercher/deals', [\App\Http\Controllers\SearchController::class, 'searchDeal'])->name('search.deals');
+Route::get('/rechercher/discussions', [\App\Http\Controllers\SearchController::class, 'searchDiscussion'])->name('search.discussions');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

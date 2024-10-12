@@ -121,7 +121,9 @@ const since = timeAgo(new Date(deal.created_at)) // string
           >
           <!--        <span></span>-->
         </div>
-        <p class="line-clamp-3 text-sm text-muted-foreground md:line-clamp-2">
+        <p
+          class="line-clamp-3 break-all text-sm text-muted-foreground md:line-clamp-2"
+        >
           {{ striptags(deal.description) }}
         </p>
         <div
@@ -132,7 +134,10 @@ const since = timeAgo(new Date(deal.created_at)) // string
               :url="route('deals.show', deal.slug)"
               title="Jordan 1 Mid"
             />
-            <MessageSquare :count="12" :url="route('deals.show', deal.slug)" />
+            <MessageSquare
+              :count="deal?.comments_count"
+              :url="route('deals.show', deal.slug)"
+            />
             <Report type="deal" url="#" />
             <SaveBookmark type="deal" url="#" />
           </div>
