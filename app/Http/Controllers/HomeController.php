@@ -43,6 +43,10 @@ class HomeController extends Controller
             };
         }, 'images' => function ($query) {
             $query->limit(1);
+        }, 'favorites' => function ($query) use ($user) {
+            if ($user) {
+                $query->where('user_id', $user->id);
+            }
         }])->limit(10)->get();
 
         // add the user vote to the deal
@@ -50,7 +54,8 @@ class HomeController extends Controller
             $deals->each(function ($deal) use ($user) {
                 // associate the voteDeals to the deal
                 $deal->user_vote = $deal->voteDetails->first();
-                $deal->is_expired = $deal->isExpired(); // add is_expired to the deal
+                $deal->is_expired = $deal->isExpired();
+                $deal->user_favorite = $deal->favorites->isNotEmpty();
             });
         }
 //dd($deals);

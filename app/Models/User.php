@@ -77,4 +77,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function socials(): HasMany {
         return $this->hasMany(Social::class);
     }
+
+    /**
+     * Get all the favorites for the User
+     *
+     * @return HasMany
+     */
+    public function favorites(): HasMany {
+        return $this->hasMany(Favorite::class);
+    }
 }

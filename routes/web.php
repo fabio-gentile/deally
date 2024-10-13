@@ -82,4 +82,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');
 });
 
+// favorite
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('favorite', [\App\Http\Controllers\FavoriteController::class, 'store'])->name('favorite.store');
+    Route::delete('favorite', [\App\Http\Controllers\FavoriteController::class, 'destroy'])->name('favorite.destroy');
+});
+
+
 require __DIR__.'/auth.php';

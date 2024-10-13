@@ -115,6 +115,14 @@ class Deal extends Model
     }
 
     /**
+     * Get the favorites for the deal.
+     */
+    public function favorites(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Favorite::class,'favoritable');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

@@ -37,11 +37,12 @@ class DealController extends Controller
     {
         $deal = Deal::where('slug', $slug)->with('user')->firstOrFail();
         $user = auth()->user();
-//        dd($deal);
         if ($user) {
             // associate the voteDeals to the deal
             $deal->user_vote = $deal->voteDetails->first();
+            $deal->user_favorite = !!$deal->favorites->first();
         }
+//        dd($deal);
 
         $similarDeals = Deal::where('category_deal_id', $deal->category_deal_id)
             ->with('images')

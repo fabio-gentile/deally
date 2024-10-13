@@ -1,16 +1,37 @@
 <script setup lang="ts">
-import { BookmarkPlus, Flag } from "lucide-vue-next"
-import { Link } from "@inertiajs/vue3"
+import { BookmarkPlus } from "lucide-vue-next"
+import { router } from "@inertiajs/vue3"
 
 const props = defineProps<{
-  url: string
   type: "deal" | "discussion"
+  id: number
+  isBookmarked: boolean
 }>()
+
+const saveBookmark = () => {
+  router.post(
+    route("favorite.store"),
+    {
+      type: props.type,
+      id: props.id,
+    },
+    {
+      preserveState: true,
+      preserveScroll: true,
+    }
+  )
+}
 </script>
 <template>
   <!--    TODO: add route-->
-  <Link href="#" class="flex w-fit items-center gap-1 text-sm">
-    <BookmarkPlus class="h-5 w-5 object-contain" />
+  <div
+    @click="saveBookmark"
+    class="flex w-fit cursor-pointer items-center gap-1 text-sm"
+  >
+    <BookmarkPlus
+      class="h-5 w-5 object-contain"
+      :class="{ '!text-primary': isBookmarked }"
+    />
     <slot />
-  </Link>
+  </div>
 </template>

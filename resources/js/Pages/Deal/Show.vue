@@ -386,7 +386,19 @@ const { copy, copied } = useClipboard({ source })
               </div>
               <div class="flex flex-col gap-4">
                 <MessageSquare url="#comments">Commentaires </MessageSquare>
-                <SaveBookmark type="deal" url="#">Sauvegarder</SaveBookmark>
+                <SaveBookmark
+                  :is-bookmarked="deal.user_favorite"
+                  type="deal"
+                  :id="deal.id"
+                >
+                  <p
+                    v-if="deal.user_favorite"
+                    :class="{ '!text-primary': deal.user_favorite }"
+                  >
+                    Ajouté aux favoris
+                  </p>
+                  <p v-else>Sauvegarder</p>
+                </SaveBookmark>
               </div>
             </div>
 

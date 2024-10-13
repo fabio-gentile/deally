@@ -92,19 +92,25 @@ class SearchController extends Controller
         }, 'images' => function ($query) {
             // Limit the number of images to 1
             $query->limit(1);
-        }]);
+        }, 'favorites' => function ($query) use ($user) {
+                if ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            }
+        ]);
 
         $deals->withCount('comments');
 
         $deals = $deals->paginate(10);
 
         if ($user) {
+            // Associate user_vote and favorite in one pass
             $deals->each(function ($deal) use ($user) {
                 $deal->user_vote = $deal->voteDetails->first();
                 $deal->is_expired = $deal->isExpired();
+                $deal->user_favorite = $deal->favorites->isNotEmpty();
             });
         }
-
 
         $pagination = [
             'current_page' => $deals->currentPage(),
@@ -178,8 +184,22 @@ class SearchController extends Controller
             $discussions->orderBy('created_at', 'desc');
         }
 
+        $user = auth()->user();
+        $discussions->with(['favorites' => function ($query) use ($user) {
+            if ($user) {
+                $query->where('user_id', $user->id);
+            }}
+        ]);
+
         $discussions->withCount('comments');
+
         $discussions = $discussions->paginate(10);
+
+        if ($user) {
+            $discussions->each(function ($discussion) use ($user) {
+                $discussion->user_favorite = $discussion->favorites->isNotEmpty();
+            });
+        }
 
         $pagination = [
             'current_page' => $discussions->currentPage(),

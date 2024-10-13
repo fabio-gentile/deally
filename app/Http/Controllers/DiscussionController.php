@@ -66,6 +66,13 @@ class DiscussionController extends Controller
     public function show(string $slug): \Inertia\Response
     {
         $discussion = Discussion::where('slug', $slug)->with('user')->firstOrFail();
+
+        $user = auth()->user();
+        if ($user) {
+            // associate the voteDeals to the deal
+            $discussion->user_favorite = !!$discussion->favorites->first();
+        }
+
         $similarDiscussions = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
             ->with('user:id,name')->withCount('comments')
             ->where('id', '!=', $discussion->id)

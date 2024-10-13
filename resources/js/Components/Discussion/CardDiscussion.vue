@@ -78,7 +78,11 @@ const since = timeAgo(new Date(discussion.created_at)) // string
               :url="route('discussions.show', discussion.slug)"
             />
             <Report type="discussion" url="#" />
-            <SaveBookmark type="discussion" url="#" />
+            <SaveBookmark
+              type="discussion"
+              :is-bookmarked="discussion.user_favorite"
+              :id="discussion.id"
+            />
             <div class="flex items-center gap-2 text-sm">
               <Clock class="h-5 w-5" />
               {{ since }}

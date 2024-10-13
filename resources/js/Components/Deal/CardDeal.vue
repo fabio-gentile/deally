@@ -139,7 +139,11 @@ const since = timeAgo(new Date(deal.created_at)) // string
               :url="route('deals.show', deal.slug)"
             />
             <Report type="deal" url="#" />
-            <SaveBookmark type="deal" url="#" />
+            <SaveBookmark
+              type="deal"
+              :is-bookmarked="deal.user_favorite"
+              :id="deal.id"
+            />
           </div>
           <Link :href="route('deals.show', deal.slug)" class="w-full md:w-fit">
             <Button class="w-full" :disabled="deal.is_expired">

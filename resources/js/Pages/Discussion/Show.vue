@@ -241,7 +241,19 @@ const discussionDestroy = (id: number) => {
             >
             <MessageSquare url="#comments">Commentaires </MessageSquare>
             <Report type="deal" url="#"> Signaler la discussion</Report>
-            <SaveBookmark type="deal" url="#">Sauvegarder</SaveBookmark>
+            <SaveBookmark
+              :is-bookmarked="discussion.user_favorite"
+              type="discussion"
+              :id="discussion.id"
+            >
+              <p
+                v-if="discussion.user_favorite"
+                :class="{ '!text-primary': discussion.user_favorite }"
+              >
+                Ajouté aux favoris
+              </p>
+              <p v-else>Sauvegarder</p>
+            </SaveBookmark>
           </div>
         </div>
 

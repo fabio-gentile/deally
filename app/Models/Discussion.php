@@ -106,4 +106,12 @@ class Discussion extends Model
     {
         return $this->hasMany(CommentDiscussion::class);
     }
+
+    /**
+     * Get the favorites for the deal.
+     */
+    public function favorites(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Favorite::class,'favoritable');
+    }
 }
