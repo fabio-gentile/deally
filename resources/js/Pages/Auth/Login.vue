@@ -100,7 +100,7 @@ const submit = () => {
               </Button>
               <Separator label="OU" class="!dark:bg-primary-foreground" />
               <div>
-                <Link href="#">
+                <Link :href="route('social.redirect', 'google')">
                   <Button variant="outline" class="w-full">
                     <svg
                       class="mr-2 h-4 w-4"

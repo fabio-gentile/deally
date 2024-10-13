@@ -22,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'remember_token',
     ];
 
     /**
@@ -65,5 +67,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Get all the socials for the User
+     *
+     * @return HasMany
+     */
+    public function socials(): HasMany {
+        return $this->hasMany(Social::class);
     }
 }

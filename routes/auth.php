@@ -9,8 +9,18 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\SocialController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
+
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/{provider}/redirect', [SocialController::class, 'redirect'])
+        ->where('provider', 'google|facebook')->name('social.redirect');
+
+    Route::get('/auth/{provider}/callback', [SocialController::class, 'callback'])
+        ->where('provider', 'google|facebook')->name('social.callback');
+});
+
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])

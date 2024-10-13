@@ -34,7 +34,7 @@ const submit = () => {
   <Head>
     <title>Mot de passe oublié</title>
   </Head>
-  <div class="grid w-full grid-cols-1 place-items-center">
+  <div class="grid w-full grid-cols-1 place-items-center py-8">
     <Wrapper>
       <form
         @submit.prevent="submit"
@@ -51,7 +51,7 @@ const submit = () => {
               </p>
               <p
                 v-if="status"
-                class="text-success text-sm font-semibold text-muted-foreground"
+                class="text-sm font-semibold text-muted-foreground text-success"
               >
                 {{ status }}
               </p>
