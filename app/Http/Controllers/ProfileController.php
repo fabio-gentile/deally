@@ -61,6 +61,13 @@ class ProfileController extends Controller
 
         return Inertia::render('Profile/Favorite', [
             'latestFavorites' => $latestFavorites,
+            'user' => [
+                'name' => $user->name,
+//                'avatar' => $user->avatar,
+            ],
+            'dealsCount' => Deal::where('user_id', $user->id)->count(),
+            'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
         ]);
     }
 }

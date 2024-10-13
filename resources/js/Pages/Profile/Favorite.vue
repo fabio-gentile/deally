@@ -13,10 +13,22 @@ interface Favorite {
 
 const props = defineProps<{
   latestFavorites: Favorite[]
+  user: {
+    name: string
+    avatar: string
+  }
+  dealsCount: number
+  discussionsCount: number
+  commentsCount: number
 }>()
 </script>
 <template>
-  <UserProfile />
+  <UserProfile
+    :user="user"
+    :deals-count="dealsCount"
+    :discussions-count="discussionsCount"
+    :comments-count="commentsCount"
+  />
   <Wrapper class="!max-w-[calc(800px+64px)]">
     <div>
       <div v-if="props.latestFavorites.length === 0">

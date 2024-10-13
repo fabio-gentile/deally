@@ -3,7 +3,7 @@ import { Handshake, MessageSquareText, PencilLine } from "lucide-vue-next"
 import { Link, usePage } from "@inertiajs/vue3"
 
 const page = usePage()
-defineProps<{
+const props = defineProps<{
   user: {
     name: string
     avatar: string
@@ -22,22 +22,24 @@ defineProps<{
         :alt="'Avatar de Marc'"
         class="avatar h-24 rounded-full object-contain"
       />
-      <h2 class="text-2xl font-semibold text-foreground">Marc</h2>
+      <h2 class="text-2xl font-semibold text-foreground">{{ user.name }}</h2>
     </div>
     <div
       class="flex flex-col flex-wrap gap-8 font-medium text-muted-foreground sm:flex-row"
     >
       <div class="flex flex-wrap items-center gap-2">
         <Handshake />
-        <p>15 deals</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <MessageSquareText />
-        <p>66 commentaires</p>
+        <p>{{ dealsCount }} deal{{ dealsCount > 1 ? "s" : "" }}</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <PencilLine />
-        <p>10 discussions</p>
+        <p>
+          {{ discussionsCount }} discussion{{ discussionsCount > 1 ? "s" : "" }}
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <MessageSquareText />
+        <p>{{ commentsCount }} commentaire{{ commentsCount > 1 ? "s" : "" }}</p>
       </div>
     </div>
     <p class="max-w-[800px] text-muted-foreground">
