@@ -1,6 +1,35 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
+import CardDeal from "@/Components/Deal/CardDeal.vue"
+import { Deal } from "@/types/model/deal"
+import { Discussion } from "@/types/model/discussion"
+import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
+import Wrapper from "@/Components/layout/Wrapper.vue"
+
+interface Favorite {
+  type: "deal" | "discussion"
+  item: Deal | Discussion
+}
+
+const props = defineProps<{
+  latestFavorites: Favorite[]
+}>()
 </script>
 <template>
   <UserProfile />
+  <Wrapper class="!max-w-[calc(800px+64px)]">
+    <div>
+      <div v-if="props.latestFavorites.length === 0">
+        <p class="text-center text-muted-foreground">
+          Aucun favori pour le moment
+        </p>
+      </div>
+      <div v-else class="flex flex-col gap-3 py-8">
+        <div v-for="favorite in props.latestFavorites" :key="favorite.item.id">
+          <CardDeal v-if="favorite.type === 'deal'" :deal="favorite.item" />
+          <CardDiscussion v-else :discussion="favorite.item" />
+        </div>
+      </div>
+    </div>
+  </Wrapper>
 </template>

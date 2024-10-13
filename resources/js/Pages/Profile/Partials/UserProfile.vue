@@ -3,6 +3,15 @@ import { Handshake, MessageSquareText, PencilLine } from "lucide-vue-next"
 import { Link, usePage } from "@inertiajs/vue3"
 
 const page = usePage()
+defineProps<{
+  user: {
+    name: string
+    avatar: string
+  }
+  dealsCount: number
+  discussionsCount: number
+  commentsCount: number
+}>()
 </script>
 
 <template>
