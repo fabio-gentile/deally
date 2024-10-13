@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Search } from "lucide-vue-next"
 import { Input } from "@/Components/ui/input"
 import { ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { Link } from "@inertiajs/vue3"
@@ -18,8 +19,8 @@ const showResults = ref(false)
 const searchBar = ref<HTMLElement | null>(null)
 const resultsWidth = ref("")
 
-const resetSearch = () => {
-  query.value = ""
+const resetSearch = (resetQuery: boolean = false) => {
+  if (resetQuery) query.value = ""
   results.value = []
   users.value = []
   deals.value = []
@@ -92,7 +93,7 @@ onBeforeUnmount(() => {
       />
     </div>
     <div
-      v-if="showResults && results.length === 0"
+      v-if="showResults && results.length === 0 && query.length > 2"
       :style="{ width: resultsWidth }"
       class="absolute top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground"
     >
@@ -115,7 +116,7 @@ onBeforeUnmount(() => {
           <Link
             class="flex !h-auto flex-col !items-start gap-2 !py-1"
             :href="route('deals.show', deal.slug)"
-            @click="resetSearch"
+            @click="resetSearch(true)"
             >{{ deal.title }}
             <div class="flex gap-2 text-sm">
               <span class="font-semibold text-primary">
@@ -147,7 +148,7 @@ onBeforeUnmount(() => {
           <Link
             class="flex !h-auto flex-col !items-start gap-2 !py-1"
             :href="route('discussions.show', discussion.slug)"
-            @click="resetSearch"
+            @click="resetSearch(true)"
             >{{ discussion.title }}</Link
           >
         </Button>
@@ -164,7 +165,7 @@ onBeforeUnmount(() => {
           <Link
             class="flex !h-auto flex-col !items-start gap-2 !py-1"
             href="#"
-            @click="resetSearch"
+            @click="resetSearch(true)"
             >{{ user.name }}</Link
           >
         </Button>
