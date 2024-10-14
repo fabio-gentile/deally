@@ -129,6 +129,51 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function discussions(Request $request)
+    {
+        $user = auth()->user();
+        $discussions = Discussion::query();
+
+        $discussions->where('user_id', $user->id);
+        $discussions->orderBy('created_at', 'desc');
+
+        $discussions->with(['favorites' => function ($query) use ($user) {
+            if ($user) {
+                $query->where('user_id', $user->id);
+            }}
+        ]);
+
+        $discussions->withCount('comments');
+
+        $discussions = $discussions->paginate(10);
+
+        if ($user) {
+            $discussions->each(function ($discussion) use ($user) {
+                $discussion->user_favorite = $discussion->favorites->isNotEmpty();
+            });
+        }
+
+        $pagination = [
+            'current_page' => $discussions->currentPage(),
+            'last_page' => $discussions->lastPage(),
+            'per_page' => $discussions->perPage(),
+            'total' => $discussions->total(),
+        ];
+
+        return Inertia::render('Profile/Discussions', [
+            'user' => [
+                'name' => auth()->user()->name,
+                'avatar' => auth()->user()->avatar ?? null,
+            ],
+            'filters' => $request->all(),
+            'pagination' => $pagination,
+            'discussions' => $discussions->items(),
+            'dealsCount' => Deal::where('user_id', auth()->id())->count(),
+            'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
+            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+        ]);
+    }
+
     public function settings(): \Inertia\Response
     {
         return Inertia::render('Profile/Settings', [
