@@ -211,9 +211,8 @@ class ProfileController extends Controller
      *
      * @return Response
      */
-    public function statistics(): Response
+    public function statistics(User $user): Response
     {
-        $user = auth()->user();
         $deals = Deal::where('user_id', $user->id)
             ->withCount('comments')
             ->get();
@@ -246,10 +245,7 @@ class ProfileController extends Controller
             : 0;
 
         return Inertia::render('Profile/Statistics', [
-            'user' => [
-                'name' => auth()->user()->name,
-                'avatar' => auth()->user()->avatar ?? null,
-            ],
+            'user' => $user,
             'mostUpvotedDealCount' => $mostUpvotedDeal ? $mostUpvotedDeal->votes : 0,
             'averageVotesPerDeal' => $averageVotesPerDeal,
             'commentsDealsCount' => $commentsDealsCount,
@@ -257,7 +253,8 @@ class ProfileController extends Controller
             'averageCommentsPerDiscussion' => $averageCommentsPerDiscussion,
             'commentsDiscussionsCount' => $commentsDiscussionsCount,
             'discussionsCount' => $discussionCount,
-            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
+            'isCurrentUser' => auth()->id() === $user->id,
         ]);
     }
 

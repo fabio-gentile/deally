@@ -13,8 +13,10 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])
     ->name('home.index');
 
-Route::get('/pour-vous', [HomeController::class, 'forYou'])
-    ->name('home.for-you');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/pour-vous', [HomeController::class, 'forYou'])
+        ->name('home.for-you');
+});
 
 Route::get('/nouveaux', [HomeController::class, 'new'])
     ->name('home.new');
@@ -35,13 +37,14 @@ Route::middleware('auth')->group(function () {
 });
 
 //Profile
+Route::get('/profil/{user}', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/profil/{user}/favoris', [ProfileController::class, 'index'])->name('profile.favorite');
+Route::get('/profil/{user}/deals', [ProfileController::class, 'deals'])->name('profile.deals');
+Route::get('/profil/{user}/discussions', [ProfileController::class, 'discussions'])->name('profile.discussions');
+Route::get('/profil/{user}/statistiques', [ProfileController::class, 'statistics'])->name('profile.statistics');
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/profil/{user}', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/profil/{user}/favoris', [ProfileController::class, 'index'])->name('profile.favorite');
-    Route::get('/profil/{user}/deals', [ProfileController::class, 'deals'])->name('profile.deals');
-    Route::get('/profil/{user}/discussions', [ProfileController::class, 'discussions'])->name('profile.discussions');
     Route::get('/profil/{user}/newsletter', [ProfileController::class, 'newsletter'])->name('profile.newsletter');
-    Route::get('/profil/{user}/statistiques', [ProfileController::class, 'statistics'])->name('profile.statistics');
     Route::get('/profil/{user}/parametres', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::patch('/profil/{user}/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');

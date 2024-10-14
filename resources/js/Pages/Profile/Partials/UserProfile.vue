@@ -58,7 +58,7 @@ const props = defineProps<{
       >
         <li>
           <Link
-            :href="route('profile.favorite', { user })"
+            :href="route('profile.favorite', { user: user.name })"
             :class="[
               page.url.includes('favoris')
                 ? 'font-semibold text-primary'
@@ -70,7 +70,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.deals', { user })"
+            :href="route('profile.deals', { user: user.name })"
             :class="[
               page.url.includes('deals')
                 ? 'font-semibold text-primary'
@@ -82,7 +82,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.discussions', { user })"
+            :href="route('profile.discussions', { user: user.name })"
             :class="[
               page.url.includes('discussions')
                 ? 'font-semibold text-primary'
@@ -94,7 +94,7 @@ const props = defineProps<{
         </li>
         <li v-if="isCurrentUser">
           <Link
-            :href="route('profile.newsletter', { user })"
+            :href="route('profile.newsletter', { user: user.name })"
             :class="[
               page.url.includes('newsletter')
                 ? 'font-semibold text-primary'
@@ -106,7 +106,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.statistics', { user })"
+            :href="route('profile.statistics', { user: user.name })"
             :class="[
               page.url.includes('statistiques')
                 ? 'font-semibold text-primary'
@@ -118,7 +118,7 @@ const props = defineProps<{
         </li>
         <li v-if="isCurrentUser">
           <Link
-            :href="route('profile.settings', { user })"
+            :href="route('profile.settings', { user: user.name })"
             :class="[
               page.url.includes('parametres')
                 ? 'font-semibold text-primary'

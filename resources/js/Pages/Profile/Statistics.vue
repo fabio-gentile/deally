@@ -10,13 +10,11 @@ import {
   Flame,
   ChartNoAxesColumn,
 } from "lucide-vue-next"
+import { User } from "@/types/model/user"
 
 defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   mostUpvotedDealCount: number
   averageVotesPerDeal: number
   dealsCount: number
@@ -25,12 +23,14 @@ const props = defineProps<{
   commentsDealsCount: number
   averageCommentsPerDiscussion: number
   commentsDiscussionsCount: number
+  isCurrentUser: boolean
 }>()
 </script>
 <template>
   <Head title="Statistiques" />
   <UserProfile
     :user="user"
+    :is-current-user="isCurrentUser"
     :deals-count="dealsCount"
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"
