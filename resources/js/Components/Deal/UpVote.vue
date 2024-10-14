@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Link } from "@inertiajs/vue3"
+import { Link, router } from "@inertiajs/vue3"
 import { ArrowDown, ArrowUp } from "lucide-vue-next"
 import { Deal } from "@/types/model/deal"
-import axios from "axios"
 import { ref } from "vue"
 import { VoteDeals } from "@/types/model/deal"
 const { votes, vote, deal, isExpired } = defineProps<{
@@ -31,18 +30,20 @@ const handleVote = (type: "up" | "down") => {
 
   currentVote.value.type = type
 
-  try {
-    axios
-      .post(route("deals.vote.store", { id: deal.id }), { type })
-      .then((response) => {
+  router.post(
+    route("deals.vote.store", { id: deal.id }),
+    { type },
+    {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
         currentVote.value.hasVoted = true
         currentVote.value.type = type
         voteCount.value =
           type === "up" ? voteCount.value + 1 : voteCount.value - 1
-      })
-  } catch (error) {
-    console.error(error)
-  }
+      },
+    }
+  )
 }
 </script>
 

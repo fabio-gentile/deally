@@ -33,7 +33,7 @@ class VoteController extends Controller
         $deal = Deal::findOrFail($id);
 
         if ($deal->isExpired()) {
-            return response()->json(['error' => 'Cette offre a expiré'])->setStatusCode(403);
+            return back()->with('error', 'Cette offre a expiré');
         }
 
         $type = $request->type;
@@ -44,7 +44,7 @@ class VoteController extends Controller
 
         // If the user has already voted for this deal, return an error message
         if ($vote) {
-            return response()->json(['error' => 'Vous avez déjà voté pour cette offre'])->setStatusCode(403);
+            return back()->with('error', 'Vous avez déjà voté pour cette offre');
         }
 
         // If the user has not voted for this deal, create a new vote
@@ -64,7 +64,7 @@ class VoteController extends Controller
         }
 
 //        dd('here');
-        return response()->json(['success' => 'Vote ajouté']);
+        return back()->with('success', 'Votre vote a été enregistré');
     }
 
     /**

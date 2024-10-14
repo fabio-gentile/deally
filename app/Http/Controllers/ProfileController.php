@@ -22,51 +22,59 @@ class ProfileController extends Controller
     {
 //        dd($user);
         $currentUser = auth()->user();
-        $favorites = $user->favorites()->whereIn('favoritable_type', [Deal::class, Discussion::class])->get();
 
-        // Separate deal and discussion favorites
+        $favorites = $user->favorites()->whereIn('favoritable_type', [Deal::class, Discussion::class])->get();
         $favoriteDealIds = $favorites->where('favoritable_type', Deal::class)->pluck('favoritable_id');
         $favoriteDiscussionIds = $favorites->where('favoritable_type', Discussion::class)->pluck('favoritable_id');
 
-        // Load deal and discussion details
         $deals = Deal::with([
             'voteDetails' => function ($query) use ($currentUser) {
-                // Load only the votes for this user
-                $query->when($currentUser, fn($q) => $q->where('user_id', $currentUser->id));
+                // Load the user's vote details if the user is authenticated
+                if ($currentUser) {
+                    $query->where('user_id', $currentUser->id);
+                }
             },
             'images' => function ($query) {
-                // Limit to 1 image
                 $query->limit(1);
             }
         ])
             ->whereIn('id', $favoriteDealIds)
             ->withCount('comments')
-            ->withExists(['favorites' => function ($query) use ($currentUser) {
-                // Load only the favorites of this user
-                $query->where('user_id', $currentUser->id);
-            }])
+            ->when($currentUser, function ($query) use ($currentUser) {
+                // Load the user's favorite if the user is authenticated
+                $query->withExists(['favorites' => function ($subQuery) use ($currentUser) {
+                    $subQuery->where('user_id', $currentUser->id);
+                }]);
+            })
             ->withExists(['voteDetails' => function ($query) use ($currentUser) {
-                // Load only the votes of this user
-                $query->where('user_id', $currentUser->id);
+                if ($currentUser) {
+                    $query->where('user_id', $currentUser->id);
+                }
             }])
             ->get()
-            ->map(function ($deal) {
-                // Associate user_vote and favorite in one pass
-                $deal->user_vote = $deal->vote_details_exists;
+            ->map(function ($deal) use ($currentUser) {
+                $deal->user_vote = $currentUser ? $deal->vote_details_exists : false;
                 $deal->is_expired = $deal->isExpired();
-                $deal->user_favorite = $deal->favorites_exists;
+                $deal->user_favorite = $currentUser ? $deal->favorites_exists : false;
 
                 return $deal;
             });
 
-        $discussions = Discussion::with(['favorites' => function ($query) use ($user, $currentUser) {
-            $query->when($user, fn($q) => $q->where('user_id', $currentUser->id));
+        $discussions = Discussion::with(['favorites' => function ($query) use ($currentUser) {
+            if ($currentUser) {
+                $query->where('user_id', $currentUser->id);
+            }
         }])
             ->whereIn('id', $favoriteDiscussionIds)
             ->withCount('comments')
+            ->when($currentUser, function ($query) use ($currentUser) {
+                $query->withExists(['favorites' => function ($subQuery) use ($currentUser) {
+                    $subQuery->where('user_id', $currentUser->id);
+                }]);
+            })
             ->get()
-            ->map(function ($discussion) {
-                $discussion->user_favorite = $discussion->favorites->isNotEmpty();
+            ->map(function ($discussion) use ($currentUser) {
+                $discussion->user_favorite = $currentUser ? $discussion->favorites_exists : false;
 
                 return $discussion;
             });
