@@ -34,7 +34,7 @@ const props = defineProps<{
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"
   />
-  <Wrapper class="!max-w-[calc(800px+64px)]">
+  <Wrapper class="!max-w-[calc(800px+64px)] py-8">
     <div>
       <div v-if="props.latestFavorites.length === 0">
         <p class="text-center text-muted-foreground">
