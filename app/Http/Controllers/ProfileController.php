@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Deal;
 use App\Models\Discussion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -69,5 +71,64 @@ class ProfileController extends Controller
             'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
             'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
         ]);
+    }
+
+    public function settings(): \Inertia\Response
+    {
+        return Inertia::render('Profile/Settings', [
+            'user' => [
+                'name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+            ],
+            'dealsCount' => Deal::where('user_id', auth()->id())->count(),
+            'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
+            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+        ]);
+    }
+
+    /**
+     * Update the user's profile information.
+     */
+    public function updateProfileInformations(ProfileUpdateRequest $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validated();
+        $user = auth()->user();
+
+        // Check if the user can change their name (once every 30 days)
+        $isNameChangeable = $user->name_updated_at === null || $user->name_updated_at->diffInDays(now()) >= 30;
+        if (!$isNameChangeable && $user->name !== $request->name) {
+            return back()->with('error', 'Vous ne pouvez pas modifier votre nom plus d\'une fois par mois.');
+        }
+
+        $currentAvatar = $user->avatar;
+        if ($request->hasFile('avatar')) {
+            // delete the current avatar
+            try {
+                Storage::delete('uploads/avatar/' . $currentAvatar);
+                $user->update([
+                    'avatar' => null,
+                ]);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
+            }
+
+            // store the new avatar
+            $avatar = $request->file('avatar');
+            $extension = $avatar->extension();
+            $avatarName = uniqid('avatar-', true) . '.' . $extension;
+
+            $avatar->storeAs('uploads/avatar/', $avatarName, 'public');
+            $user->avatar = $avatarName;
+        }
+
+
+        $user->update([
+            'name' => $request->name,
+            'biography' => $request->biography,
+            'avatar' => $avatarName ?? $currentAvatar,
+            'name_updated_at' => $request->name !== $user->name ? now() : $user->name_updated_at,
+        ]);
+
+        return back()->with('success', 'Le profil a été mis à jour avec succès.');
     }
 }

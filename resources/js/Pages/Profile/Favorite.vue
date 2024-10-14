@@ -5,6 +5,10 @@ import { Deal } from "@/types/model/deal"
 import { Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
+import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
+import { Head } from "@inertiajs/vue3"
+
+defineOptions({ layout: ProfileLayout })
 
 interface Favorite {
   type: "deal" | "discussion"
@@ -23,6 +27,7 @@ const props = defineProps<{
 }>()
 </script>
 <template>
+  <Head title="Favoris" />
   <UserProfile
     :user="user"
     :deals-count="dealsCount"

@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\BreezeProfileController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,11 +28,11 @@ Route::get('/rechercher/deals', [\App\Http\Controllers\SearchController::class, 
 Route::get('/rechercher/discussions', [\App\Http\Controllers\SearchController::class, 'searchDiscussion'])->name('search.discussions');
 Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
-//Route::middleware('auth')->group(function () {
-//    Route::get('/profile', [BreezeProfileController::class, 'edit'])->name('profile.edit');
-//    Route::patch('/profile', [BreezeProfileController::class, 'update'])->name('profile.update');
-//    Route::delete('/profile', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
-//});
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [BreezeProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [BreezeProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 //Profile
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil/favoris', [ProfileController::class, 'index'])->name('profile.favorite');
     Route::get('/profil/deals', [ProfileController::class, 'deals'])->name('profile.deals');
     Route::get('/profil/discussions', [ProfileController::class, 'discussions'])->name('profile.discussions');
+    Route::get('/profil/parametres', [ProfileController::class, 'settings'])->name('profile.settings');
+    Route::patch('/profil/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profil', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
 });

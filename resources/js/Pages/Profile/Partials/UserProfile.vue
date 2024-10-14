@@ -56,8 +56,7 @@ const props = defineProps<{
           <Link
             :href="route('profile.favorite')"
             :class="[
-              page.url.includes('/profil') ||
-              page.url.includes('/profil/favoris')
+              page.url.includes('favoris')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
@@ -69,7 +68,7 @@ const props = defineProps<{
           <Link
             :href="route('profile.deals')"
             :class="[
-              page.url.includes('/profil/deals')
+              page.url.includes('deals')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
@@ -81,7 +80,7 @@ const props = defineProps<{
           <Link
             :href="route('profile.discussions')"
             :class="[
-              page.url.includes('/profil/discussions')
+              page.url.includes('discussions')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
@@ -93,7 +92,7 @@ const props = defineProps<{
           <Link
             :href="route('profile.discussions')"
             :class="[
-              page.url.includes('/profil/newsletter')
+              page.url.includes('newsletter')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
@@ -105,7 +104,7 @@ const props = defineProps<{
           <Link
             :href="route('profile.discussions')"
             :class="[
-              page.url.includes('/profil/statistiques')
+              page.url.includes('statistiques')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
@@ -115,9 +114,9 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.discussions')"
+            :href="route('profile.settings')"
             :class="[
-              page.url.includes('/profil/parametres')
+              page.url.includes('parametres')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"

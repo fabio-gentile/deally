@@ -42,6 +42,7 @@ const submit = () => {
 
 const images = ref([])
 const handleImageUpload = (event: Event): void => {
+  images.value = []
   const target = event.target as HTMLInputElement
   if (!target.files) return
 
