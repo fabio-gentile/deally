@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Social;
 use App\Models\User;
+use App\Rules\NoSpaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -88,6 +89,8 @@ class SocialController extends Controller
                 'string',
                 'min:3',
                 'max:16',
+                'regex:/^[a-zA-Z0-9 ]+$/',
+                new NoSpaces(),
                 Rule::unique('users'),
             ],
         ];

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Rules\NoSpaces;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,6 +32,8 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'min:3',
                 'max:16',
+                'regex:/^[a-zA-Z0-9 ]+$/',
+                new NoSpaces(),
                 Rule::unique('users'),
             ],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -56,6 +59,7 @@ class StoreUserRequest extends FormRequest
             'name.string' => 'Le nom d\'utilisateur doit être une chaîne de caractères.',
             'name.min' => 'Le nom d\'utilisateur doit contenir au moins 3 caractères.',
             'name.max' => 'Le nom d\'utilisateur ne peut pas dépasser 16 caractères.',
+            'name.no_spaces' => 'Le nom d\'utilisateur ne doit pas contenir d\'espaces.',
             'name.unique' => 'Le nom d\'utilisateur est déjà pris.',
             'email.required' => 'L\'adresse e-mail est requise.',
             'email.string' => 'L\'adresse e-mail doit être une chaîne de caractères.',
@@ -67,6 +71,7 @@ class StoreUserRequest extends FormRequest
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
             'password.uncompromised' => 'Le mot de passe a été compromis dans une fuite de données.',
+            'regex' => 'Le nom d\'utilisateur ne doit contenir que des lettres et des chiffres.',
         ];
     }
 }
