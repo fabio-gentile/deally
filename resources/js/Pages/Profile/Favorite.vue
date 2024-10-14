@@ -7,6 +7,7 @@ import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head } from "@inertiajs/vue3"
+import { User } from "@/types/model/user"
 
 defineOptions({ layout: ProfileLayout })
 
@@ -17,13 +18,11 @@ interface Favorite {
 
 const props = defineProps<{
   latestFavorites: Favorite[]
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   dealsCount: number
   discussionsCount: number
   commentsCount: number
+  isCurrentUser: boolean
 }>()
 </script>
 <template>
@@ -33,6 +32,7 @@ const props = defineProps<{
     :deals-count="dealsCount"
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"
+    :is-current-user="isCurrentUser"
   />
   <Wrapper class="!max-w-[calc(800px+64px)] py-8">
     <div>

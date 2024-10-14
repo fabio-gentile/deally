@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { Handshake, MessageSquareText, PencilLine } from "lucide-vue-next"
 import { Link, usePage } from "@inertiajs/vue3"
+import { User } from "@/types/model/user"
 
 const page = usePage()
 const props = defineProps<{
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   dealsCount: number
   discussionsCount: number
   commentsCount: number
+  isCurrentUser: boolean
 }>()
 </script>
 
@@ -49,10 +48,8 @@ const props = defineProps<{
         <p>{{ commentsCount }} commentaire{{ commentsCount > 1 ? "s" : "" }}</p>
       </div>
     </div>
-    <p class="max-w-[800px] text-muted-foreground">
-      Lorem ipsum dolor sit amet consectetur. Pharetra nisl velit nibh enim duis
-      venenatis. Fames eget cras blandit maecenas. In integer gravida viverra
-      eget odio egestas hac semper vitae commodo vestibulum.
+    <p v-if="user.biography" class="max-w-[800px] text-muted-foreground">
+      « {{ user.biography }} »
     </p>
 
     <nav class="flex flex-wrap justify-center">
@@ -61,7 +58,7 @@ const props = defineProps<{
       >
         <li>
           <Link
-            :href="route('profile.favorite')"
+            :href="route('profile.favorite', { user })"
             :class="[
               page.url.includes('favoris')
                 ? 'font-semibold text-primary'
@@ -73,7 +70,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.deals')"
+            :href="route('profile.deals', { user })"
             :class="[
               page.url.includes('deals')
                 ? 'font-semibold text-primary'
@@ -85,7 +82,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.discussions')"
+            :href="route('profile.discussions', { user })"
             :class="[
               page.url.includes('discussions')
                 ? 'font-semibold text-primary'
@@ -95,9 +92,9 @@ const props = defineProps<{
             Discussions
           </Link>
         </li>
-        <li>
+        <li v-if="isCurrentUser">
           <Link
-            :href="route('profile.newsletter')"
+            :href="route('profile.newsletter', { user })"
             :class="[
               page.url.includes('newsletter')
                 ? 'font-semibold text-primary'
@@ -109,7 +106,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.statistics')"
+            :href="route('profile.statistics', { user })"
             :class="[
               page.url.includes('statistiques')
                 ? 'font-semibold text-primary'
@@ -119,9 +116,9 @@ const props = defineProps<{
             Statistiques
           </Link>
         </li>
-        <li>
+        <li v-if="isCurrentUser">
           <Link
-            :href="route('profile.settings')"
+            :href="route('profile.settings', { user })"
             :class="[
               page.url.includes('parametres')
                 ? 'font-semibold text-primary'

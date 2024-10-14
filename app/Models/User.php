@@ -58,6 +58,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'name';
+    }
+
+    /**
      * Get the deals for the user.
      *
      * @return HasMany

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Deal;
 use App\Models\Discussion;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -17,10 +18,10 @@ class ProfileController extends Controller
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(User $user): Response
     {
-        $user = auth()->user();
-
+//        dd($user);
+        $currentUser = auth()->user();
         $favorites = $user->favorites()->whereIn('favoritable_type', [Deal::class, Discussion::class])->get();
 
         // Separate deal and discussion favorites
@@ -28,24 +29,38 @@ class ProfileController extends Controller
         $favoriteDiscussionIds = $favorites->where('favoritable_type', Discussion::class)->pluck('favoritable_id');
 
         // Load deal and discussion details
-        $deals = Deal::with(['voteDetails' => function ($query) use ($user) {
-            $query->when($user, fn($q) => $q->where('user_id', $user->id));
-        }, 'images' => function ($query) {
-            $query->limit(1);
-        }])
+        $deals = Deal::with([
+            'voteDetails' => function ($query) use ($currentUser) {
+                // Load only the votes for this user
+                $query->when($currentUser, fn($q) => $q->where('user_id', $currentUser->id));
+            },
+            'images' => function ($query) {
+                // Limit to 1 image
+                $query->limit(1);
+            }
+        ])
             ->whereIn('id', $favoriteDealIds)
             ->withCount('comments')
+            ->withExists(['favorites' => function ($query) use ($currentUser) {
+                // Load only the favorites of this user
+                $query->where('user_id', $currentUser->id);
+            }])
+            ->withExists(['voteDetails' => function ($query) use ($currentUser) {
+                // Load only the votes of this user
+                $query->where('user_id', $currentUser->id);
+            }])
             ->get()
-            ->map(function ($deal) use ($user) {
-                $deal->user_vote = $deal->voteDetails->first();
+            ->map(function ($deal) {
+                // Associate user_vote and favorite in one pass
+                $deal->user_vote = $deal->vote_details_exists;
                 $deal->is_expired = $deal->isExpired();
-                $deal->user_favorite = $deal->favorites->isNotEmpty();
+                $deal->user_favorite = $deal->favorites_exists;
 
                 return $deal;
             });
 
-        $discussions = Discussion::with(['favorites' => function ($query) use ($user) {
-            $query->when($user, fn($q) => $q->where('user_id', $user->id));
+        $discussions = Discussion::with(['favorites' => function ($query) use ($user, $currentUser) {
+            $query->when($user, fn($q) => $q->where('user_id', $currentUser->id));
         }])
             ->whereIn('id', $favoriteDiscussionIds)
             ->withCount('comments')
@@ -64,13 +79,11 @@ class ProfileController extends Controller
 
         return Inertia::render('Profile/Favorite', [
             'latestFavorites' => $latestFavorites,
-            'user' => [
-                'name' => $user->name,
-                'avatar' => $user->avatar ?? null,
-            ],
+            'user' => $user,
             'dealsCount' => Deal::where('user_id', $user->id)->count(),
             'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
             'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
+            'isCurrentUser' => $currentUser && $currentUser->id === $user->id,
         ]);
     }
 
