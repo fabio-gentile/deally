@@ -18,13 +18,11 @@ import {
 } from "@/Components/ui/pagination"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
+import { User } from "@/types/model/user"
 
 defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   filters: {
     page: number
   }
@@ -33,6 +31,7 @@ const props = defineProps<{
   dealsCount: number
   discussionsCount: number
   commentsCount: number
+  isCurrentUser: boolean
 }>()
 
 const deals = ref(props.deals)
@@ -65,6 +64,7 @@ const changePage = (page: number) => {
   <Head :title="'Deals de ' + user.name" />
   <UserProfile
     :user="user"
+    :is-current-user="isCurrentUser"
     :deals-count="dealsCount"
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"

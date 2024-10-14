@@ -16,6 +16,7 @@ class ProfileController extends Controller
     /**
      * Display the user's favorite deals and discussions
      *
+     * @param User $user
      * @return Response
      */
     public function index(User $user): Response
@@ -101,40 +102,39 @@ class ProfileController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function deals(Request $request): Response
+    public function deals(Request $request, User $user): Response
     {
-        $user = auth()->user();
-        $deals = Deal::query();
+        $currentUser = auth()->user();
 
-        $deals->where('user_id', $user->id);
-        $deals->orderBy('created_at', 'desc');
+        $deals = Deal::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->with([
+                'voteDetails' => function ($query) use ($currentUser) {
+                    // Load the user's vote details if the user is authenticated
+                    if ($currentUser) {
+                        $query->where('user_id', $currentUser->id);
+                    }
+                },
+                'images' => function ($query) {
+                    $query->limit(1);
+                },
+                'favorites' => function ($query) use ($currentUser) {
+                    if ($currentUser) {
+                        $query->where('user_id', $currentUser->id);
+                    }
+                }
+            ])
+            ->withCount('comments')
+            ->paginate(10);
 
-        $deals->with(['voteDetails' => function ($query) use ($user) {
-            if ($user) {
-                $query->where('user_id', $user->id);
-            }
-        }, 'images' => function ($query) {
-            // Limit the number of images to 1
-            $query->limit(1);
-        }, 'favorites' => function ($query) use ($user) {
-            if ($user) {
-                $query->where('user_id', $user->id);
-            }
-        }
-        ]);
-
-        $deals->withCount('comments');
-
-        $deals = $deals->paginate(10);
-
-        if ($user) {
-            // Associate user_vote and favorite in one pass
-            $deals->each(function ($deal) use ($user) {
+        // Associate the user's vote and favorite with each deal
+        $deals->each(function ($deal) use ($currentUser) {
+            $deal->is_expired = $deal->isExpired();
+            if ($currentUser) {
                 $deal->user_vote = $deal->voteDetails->first();
-                $deal->is_expired = $deal->isExpired();
                 $deal->user_favorite = $deal->favorites->isNotEmpty();
-            });
-        }
+            }
+        });
 
         $pagination = [
             'current_page' => $deals->currentPage(),
@@ -142,18 +142,17 @@ class ProfileController extends Controller
             'per_page' => $deals->perPage(),
             'total' => $deals->total(),
         ];
+
 //dd($deals, $pagination);
         return Inertia::render('Profile/Deals', [
-            'user' => [
-                'name' => auth()->user()->name,
-                'avatar' => auth()->user()->avatar ?? null,
-            ],
+            'user' => $user,
             'filters' => $request->all(),
             'pagination' => $pagination,
             'deals' => $deals->items(),
-            'dealsCount' => Deal::where('user_id', auth()->id())->count(),
-            'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
-            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+            'dealsCount' => Deal::where('user_id', $user->id)->count(),
+            'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
+            'isCurrentUser' => $currentUser && $currentUser->id === $user->id,
         ]);
     }
 
