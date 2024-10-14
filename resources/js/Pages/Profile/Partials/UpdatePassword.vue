@@ -14,7 +14,7 @@ const form = useForm({
 })
 
 const updatePassword = () => {
-  form.put(route("password.update"), {
+  form.put(route("password.update", { user: $page.props.auth.user.name }), {
     preserveScroll: true,
     onSuccess: () => {
       form.reset()

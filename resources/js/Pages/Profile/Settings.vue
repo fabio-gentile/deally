@@ -7,23 +7,23 @@ import { Head } from "@inertiajs/vue3"
 import DeleteAccount from "@/Pages/Profile/Partials/DeleteAccount.vue"
 import UpdatePassword from "@/Pages/Profile/Partials/UpdatePassword.vue"
 import UpdateProfile from "@/Pages/Profile/Partials/UpdateProfile.vue"
+import { User } from "@/types/model/user"
 
 defineOptions({ layout: ProfileLayout })
 
 const props = defineProps<{
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   dealsCount: number
   discussionsCount: number
   commentsCount: number
+  isCurrentUser: boolean
 }>()
 </script>
 <template>
   <Head title="Paramètres" />
   <UserProfile
     :user="user"
+    :is-current-user="isCurrentUser"
     :deals-count="dealsCount"
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"

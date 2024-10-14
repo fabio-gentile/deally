@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Deal;
 use App\Models\Discussion;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -100,6 +101,7 @@ class ProfileController extends Controller
      * Display the user's deals
      *
      * @param Request $request
+     * @param User $user
      * @return Response
      */
     public function deals(Request $request, User $user): Response
@@ -160,6 +162,7 @@ class ProfileController extends Controller
      * Display the user's discussions
      *
      * @param Request $request
+     * @param User $user
      * @return Response
      */
     public function discussions(Request $request, User $user): Response
@@ -209,6 +212,7 @@ class ProfileController extends Controller
     /**
      * Display the user's statistics
      *
+     * @param User $user
      * @return Response
      */
     public function statistics(User $user): Response
@@ -261,18 +265,21 @@ class ProfileController extends Controller
     /**
      * Display the user's settings
      *
-     * @return Response
+     * @param User $user
+     * @return Response|RedirectResponse
      */
-    public function settings(): Response
+    public function settings(User $user): Response | \Illuminate\Http\RedirectResponse
     {
+        if (auth()->id() !== $user->id) {
+            return redirect()->route('home.index')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
+
         return Inertia::render('Profile/Settings', [
-            'user' => [
-                'name' => auth()->user()->name,
-                'avatar' => auth()->user()->avatar ?? null,
-            ],
+            'user' => $user,
+            'isCurrentUser' => true,
             'dealsCount' => Deal::where('user_id', auth()->id())->count(),
             'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
-            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
         ]);
     }
 
@@ -280,10 +287,13 @@ class ProfileController extends Controller
      * Update the user's profile information.
      * @param ProfileUpdateRequest $request
      */
-    public function updateProfileInformations(ProfileUpdateRequest $request): \Illuminate\Http\RedirectResponse
+    public function updateProfileInformations(ProfileUpdateRequest $request, User $user): \Illuminate\Http\RedirectResponse
     {
+        if (auth()->id() !== $user->id) {
+            return redirect()->route('home.index')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
+        
         $request->validated();
-        $user = auth()->user();
 
         // Check if the user can change their name (once every 30 days)
         $isNameChangeable = $user->name_updated_at === null || $user->name_updated_at->diffInDays(now()) >= 30;

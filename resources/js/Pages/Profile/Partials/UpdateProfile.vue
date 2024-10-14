@@ -16,12 +16,16 @@ let isNameChangeable =
   nameUpdatedAt.getTime() + 30 * 24 * 60 * 60 * 1000 < Date.now() ||
   !user.name_updated_at
 
-const form = useForm("post", route("profile.update.profile.informations"), {
-  name: user.name,
-  biography: user.biography ?? "",
-  avatar: user.avatar ?? "",
-  _method: "patch",
-})
+const form = useForm(
+  "post",
+  route("profile.update.profile.informations", { user: user.name }),
+  {
+    name: user.name,
+    biography: user.biography ?? "",
+    avatar: user.avatar ?? "",
+    _method: "patch",
+  }
+)
 
 form.setValidationTimeout(1000)
 form.validateFiles()
