@@ -8,15 +8,16 @@ use App\Models\Discussion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's favorite deals and discussions
      *
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         $user = auth()->user();
 
@@ -73,7 +74,13 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function deals(Request $request)
+    /**
+     * Display the user's deals
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function deals(Request $request): Response
     {
         $user = auth()->user();
         $deals = Deal::query();
@@ -129,7 +136,13 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function discussions(Request $request)
+    /**
+     * Display the user's discussions
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function discussions(Request $request): Response
     {
         $user = auth()->user();
         $discussions = Discussion::query();
@@ -174,7 +187,67 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function settings(): \Inertia\Response
+    /**
+     * Display the user's statistics
+     *
+     * @return Response
+     */
+    public function statistics(): Response
+    {
+        $user = auth()->user();
+        $deals = Deal::where('user_id', $user->id)
+            ->withCount('comments')
+            ->get();
+        // Get the total number of comments on all the user's deals
+        $commentsDealsCount = $deals->sum('comments_count');
+        // Get the total number of deals
+        $dealCount = $deals->count();
+        // Calculate the average votes per deal
+        $averageVotesPerDeal = $dealCount > 0
+            ? number_format($deals->avg('votes'), 2)
+            : 0;
+        // Get the most voted deal
+        $mostUpvotedDeal = Deal::where('user_id', $user->id)
+            ->orderBy('votes', 'desc')
+            ->first();
+
+
+        $discussions = Discussion::where('user_id', $user->id)->withCount('comments')->get();
+        // Get the total number of comments on all the user's discussions
+        $commentsDiscussionsCount = $discussions->sum('comments_count') > 0
+            ? $discussions->sum('comments_count')
+            : 0;
+        // Get the total number of discussions
+        $discussionCount = $discussions->count() > 0
+            ? $discussions->count()
+            : 0;
+        // Calculate the average comments per discussion
+        $averageCommentsPerDiscussion = $discussionCount > 0
+            ? number_format($discussions->avg('comments_count'), 2)
+            : 0;
+
+        return Inertia::render('Profile/Statistics', [
+            'user' => [
+                'name' => auth()->user()->name,
+                'avatar' => auth()->user()->avatar ?? null,
+            ],
+            'mostUpvotedDealCount' => $mostUpvotedDeal ? $mostUpvotedDeal->votes : 0,
+            'averageVotesPerDeal' => $averageVotesPerDeal,
+            'commentsDealsCount' => $commentsDealsCount,
+            'dealsCount' => $dealCount,
+            'averageCommentsPerDiscussion' => $averageCommentsPerDiscussion,
+            'commentsDiscussionsCount' => $commentsDiscussionsCount,
+            'discussionsCount' => $discussionCount,
+            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+        ]);
+    }
+
+    /**
+     * Display the user's settings
+     *
+     * @return Response
+     */
+    public function settings(): Response
     {
         return Inertia::render('Profile/Settings', [
             'user' => [
@@ -189,6 +262,7 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
+     * @param ProfileUpdateRequest $request
      */
     public function updateProfileInformations(ProfileUpdateRequest $request): \Illuminate\Http\RedirectResponse
     {

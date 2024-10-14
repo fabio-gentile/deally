@@ -97,7 +97,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.discussions')"
+            :href="route('profile.newsletter')"
             :class="[
               page.url.includes('newsletter')
                 ? 'font-semibold text-primary'
@@ -109,7 +109,7 @@ const props = defineProps<{
         </li>
         <li>
           <Link
-            :href="route('profile.discussions')"
+            :href="route('profile.statistics')"
             :class="[
               page.url.includes('statistiques')
                 ? 'font-semibold text-primary'

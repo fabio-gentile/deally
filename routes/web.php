@@ -40,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil/favoris', [ProfileController::class, 'index'])->name('profile.favorite');
     Route::get('/profil/deals', [ProfileController::class, 'deals'])->name('profile.deals');
     Route::get('/profil/discussions', [ProfileController::class, 'discussions'])->name('profile.discussions');
+    Route::get('/profil/newsletter', [ProfileController::class, 'newsletter'])->name('profile.newsletter');
+    Route::get('/profil/statistiques', [ProfileController::class, 'statistics'])->name('profile.statistics');
     Route::get('/profil/parametres', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::patch('/profil/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');

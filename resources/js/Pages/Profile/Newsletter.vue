@@ -23,5 +23,5 @@ const props = defineProps<{
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"
   />
-  <Wrapper class="!max-w-[calc(800px+64px)]"> </Wrapper>
+  <Wrapper class="!max-w-[calc(800px+64px)] py-8"> </Wrapper>
 </template>
