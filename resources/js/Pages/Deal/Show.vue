@@ -188,14 +188,9 @@ const { copy, copied } = useClipboard({ source })
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink>
-              <!-- TODO: Add redirection to category-->
-              <Link :href="route('home.index')"> Catégorie </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> {{ category }} </Link>
+              <Link :href="route('search.deals') + '?category=' + category">
+                {{ category }}
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -420,9 +415,16 @@ const { copy, copied } = useClipboard({ source })
                 class="flex flex-row items-center gap-2 text-sm text-muted-foreground"
               >
                 <img
-                  src="/images/avatar.jpg"
+                  v-if="deal.user.avatar"
+                  :src="'/storage/uploads/avatar/' + deal.user.avatar"
+                  :alt="'Avatar de ' + deal.user.avatar"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
+                />
+                <img
+                  v-else
+                  :src="`https://ui-avatars.com/api/?size=64&name=${deal.user.name}`"
                   :alt="'Avatar de ' + deal.user.name"
-                  class="avatar h-[52px] rounded-full object-contain"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
                 />
                 <div class="grid gap-2">
                   <div>

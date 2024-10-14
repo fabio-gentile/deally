@@ -65,7 +65,7 @@ class ProfileController extends Controller
             'latestFavorites' => $latestFavorites,
             'user' => [
                 'name' => $user->name,
-//                'avatar' => $user->avatar,
+                'avatar' => $user->avatar ?? null,
             ],
             'dealsCount' => Deal::where('user_id', $user->id)->count(),
             'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
@@ -78,7 +78,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Settings', [
             'user' => [
                 'name' => auth()->user()->name,
-                'email' => auth()->user()->email,
+                'avatar' => auth()->user()->avatar ?? null,
             ],
             'dealsCount' => Deal::where('user_id', auth()->id())->count(),
             'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),

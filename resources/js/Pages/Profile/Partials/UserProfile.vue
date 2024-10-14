@@ -18,9 +18,16 @@ const props = defineProps<{
   <div class="grid w-full gap-6 bg-white px-8 py-9 sm:place-items-center">
     <div class="grid place-items-center gap-4">
       <img
-        src="/images/avatar.jpg"
-        :alt="'Avatar de Marc'"
-        class="avatar h-24 rounded-full object-contain"
+        v-if="user.avatar"
+        :src="'/storage/uploads/avatar/' + user.avatar"
+        :alt="'Avatar de ' + user.name"
+        class="h-24 w-24 rounded-full object-cover"
+      />
+      <img
+        v-else
+        :src="`https://ui-avatars.com/api/?size=64&name=${user.name}`"
+        :alt="'Avatar de ' + user.name"
+        class="h-24 w-24 rounded-full object-cover"
       />
       <h2 class="text-2xl font-semibold text-foreground">{{ user.name }}</h2>
     </div>

@@ -52,9 +52,22 @@ const submitForm = () => {
 <template>
   <form @submit.prevent="submitForm" class="flex gap-4">
     <img
-      src="/images/avatar.jpg"
-      :alt="`Avatar de ${deal?.user.name || discussion?.user.name || blog?.user.name}`"
-      class="avatar h-[52px] rounded-full object-contain"
+      v-if="$page.props.auth?.user?.avatar"
+      :src="'/storage/uploads/avatar/' + $page.props.auth.user.avatar"
+      :alt="'Avatar de ' + $page.props.auth.user.avatar"
+      class="h-[52px] w-[52px] rounded-full object-cover"
+    />
+    <img
+      v-else-if="$page.props.auth?.user"
+      :src="`https://ui-avatars.com/api/?size=64&name=${$page.props.auth.user.name}`"
+      :alt="'Avatar de ' + $page.props.auth.user.name"
+      class="h-[52px] w-[52px] rounded-full object-cover"
+    />
+    <img
+      v-else
+      src="https://ui-avatars.com/api/?size=64&name=deally"
+      alt="'Avatar de Deally'"
+      class="h-[52px] w-[52px] rounded-full object-cover"
     />
     <div class="relative grow">
       <Label for="content" value="Contenu" />
