@@ -162,29 +162,30 @@ class ProfileController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function discussions(Request $request): Response
+    public function discussions(Request $request, User $user): Response
     {
-        $user = auth()->user();
-        $discussions = Discussion::query();
+        $currentUser = auth()->user();
 
-        $discussions->where('user_id', $user->id);
-        $discussions->orderBy('created_at', 'desc');
+        // Créer la requête de base pour les discussions de l'utilisateur dont on visite le profil
+        $discussions = Discussion::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->with([
+                'favorites' => function ($query) use ($currentUser) {
+                    // Charger les favoris seulement si un utilisateur est connecté
+                    if ($currentUser) {
+                        $query->where('user_id', $currentUser->id);
+                    }
+                }
+            ])
+            ->withCount('comments')
+            ->paginate(10);
 
-        $discussions->with(['favorites' => function ($query) use ($user) {
-            if ($user) {
-                $query->where('user_id', $user->id);
-            }}
-        ]);
-
-        $discussions->withCount('comments');
-
-        $discussions = $discussions->paginate(10);
-
-        if ($user) {
-            $discussions->each(function ($discussion) use ($user) {
+        // Associer le statut de favori pour l'utilisateur connecté, si applicable
+        $discussions->each(function ($discussion) use ($currentUser) {
+            if ($currentUser) {
                 $discussion->user_favorite = $discussion->favorites->isNotEmpty();
-            });
-        }
+            }
+        });
 
         $pagination = [
             'current_page' => $discussions->currentPage(),
@@ -194,16 +195,14 @@ class ProfileController extends Controller
         ];
 
         return Inertia::render('Profile/Discussions', [
-            'user' => [
-                'name' => auth()->user()->name,
-                'avatar' => auth()->user()->avatar ?? null,
-            ],
+            'user' => $user,
             'filters' => $request->all(),
             'pagination' => $pagination,
             'discussions' => $discussions->items(),
-            'dealsCount' => Deal::where('user_id', auth()->id())->count(),
-            'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
-            'commentsCount' => auth()->user()->dealComments()->count() + auth()->user()->discussionComments()->count(),
+            'dealsCount' => Deal::where('user_id', $user->id)->count(),
+            'discussionsCount' => Discussion::where('user_id', $user->id)->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
+            'isCurrentUser' => $currentUser && $currentUser->id === $user->id,
         ]);
     }
 

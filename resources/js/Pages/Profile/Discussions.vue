@@ -18,13 +18,11 @@ import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
+import { User } from "@/types/model/user"
 
 defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
-  user: {
-    name: string
-    avatar: string
-  }
+  user: User
   filters: {
     page: number
   }
@@ -33,19 +31,23 @@ const props = defineProps<{
   dealsCount: number
   discussionsCount: number
   commentsCount: number
+  isCurrentUser: boolean
 }>()
-
 const discussions = ref(props.discussions)
 const filters = ref({ ...props.filters })
 
 const search = useDebounceFn(() => {
-  router.get(route("profile.discussions"), filters.value, {
-    preserveState: true,
-    replace: true,
-    onSuccess: (page) => {
-      discussions.value = props.discussions
-    },
-  })
+  router.get(
+    route("profile.discussions", { user: props.user }),
+    filters.value,
+    {
+      preserveState: true,
+      replace: true,
+      onSuccess: (page) => {
+        discussions.value = props.discussions
+      },
+    }
+  )
 }, 300)
 
 watch(
@@ -65,6 +67,7 @@ const changePage = (page: number) => {
   <Head :title="'Discussions de ' + user.name" />
   <UserProfile
     :user="user"
+    :is-current-user="isCurrentUser"
     :deals-count="dealsCount"
     :discussions-count="discussionsCount"
     :comments-count="commentsCount"

@@ -38,7 +38,7 @@ const deals = ref(props.deals)
 const filters = ref({ ...props.filters })
 
 const search = useDebounceFn(() => {
-  router.get(route("profile.deals"), filters.value, {
+  router.get(route("profile.deals", { user: props.user }), filters.value, {
     preserveState: true,
     replace: true,
     onSuccess: (page) => {
