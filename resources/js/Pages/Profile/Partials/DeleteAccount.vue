@@ -13,6 +13,8 @@ import {
 import Label from "@/Components/ui/label/Label.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import Input from "@/Components/ui/input/Input.vue"
+
+// TODO: DELETE ACCOUNT
 </script>
 <template>
   <div>
