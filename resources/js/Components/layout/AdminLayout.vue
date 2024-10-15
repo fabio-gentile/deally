@@ -76,10 +76,8 @@ const isOpen = ref(false)
 <template>
   <div>
     <Toaster />
-    <div
-      class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
-    >
-      <div class="hidden border-r bg-white md:block">
+    <div class="min-h-screen w-full flex-row md:flex">
+      <div class="hidden border-r bg-white md:block md:w-[220px] lg:w-[280px]">
         <div class="flex h-full max-h-screen flex-col gap-2">
           <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <a href="/" class="flex items-center gap-2 font-semibold">
@@ -198,7 +196,7 @@ const isOpen = ref(false)
           </div>
         </div>
       </div>
-      <div class="flex flex-col">
+      <div class="flex grow flex-col">
         <header
           class="flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6"
         >
@@ -288,11 +286,13 @@ const isOpen = ref(false)
             </DropdownMenu>
           </div>
         </header>
-        <main class="flex flex-1 flex-col gap-4 bg-page p-4 lg:gap-6 lg:p-6">
+        <main
+          class="flex flex-1 flex-col gap-4 overflow-hidden bg-page p-4 lg:gap-6 lg:p-6"
+        >
           <slot />
           <!--          <div class="flex items-center">-->
           <!--            <h1 class="text-lg font-semibold md:text-2xl">Inventory</h1>-->
-          <!--          </div>-->
+          <!--                    </div>-->
           <!--          <div-->
           <!--            class="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"-->
           <!--          >-->

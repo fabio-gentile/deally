@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -31,17 +32,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'email_verified_at',
-        'email',
-    ];
+//    /**
+//     * The attributes that should be hidden for serialization.
+//     *
+//     * @var array<int, string>
+//     */
+//    protected $hidden = [
+//        'password',
+//        'remember_token',
+//        'email_verified_at',
+//        'email',
+//    ];
 
     /**
      * Get the attributes that should be cast.
@@ -56,6 +57,35 @@ class User extends Authenticatable implements MustVerifyEmail
             'name_updated_at' => 'datetime',
             'preferences' => 'array',
         ];
+    }
+
+    /**
+     * The default attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected array $defaultHidden = [
+        'password',
+        'remember_token',
+        'email_verified_at',
+        'email',
+    ];
+
+    /**
+     * Get the hidden attributes based on user role.
+     *
+     * @return array<int, string>
+     */
+    public function getHidden(): array
+    {
+        // Check if the current user is an admin
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            // If the user is an admin, only hide sensitive data like password and remember token
+            return ['password', 'remember_token'];
+        }
+
+        // Default hidden attributes for non-admin users
+        return $this->defaultHidden;
     }
 
     /**

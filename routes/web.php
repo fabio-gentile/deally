@@ -106,6 +106,9 @@ Route::middleware(['guest'])->prefix('admin')->group(function () {
 
 Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashbordController::class, 'index'])->name('admin.dashboard');
+
+    // Users
+    Route::get('/utilisateurs', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.list');
 });
 
 
