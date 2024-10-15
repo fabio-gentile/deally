@@ -1,7 +1,35 @@
 <script setup lang="ts">
 import NavigationBar from "@/Components/layout/NavigationBar.vue"
-import { Toaster } from "@/Components/ui/sonner"
+import { Toaster } from "@/Components/ui/toast"
+import { useToast } from "@/Components/ui/toast/use-toast"
 import Footer from "@/Components/layout/Footer.vue"
+import { usePage } from "@inertiajs/vue3"
+import { watch } from "vue"
+const page = usePage()
+
+const { toast } = useToast()
+
+watch(
+  () => usePage().props.flash,
+  (flash: { success: string | null; error: string | null }) => {
+    // console.log(flash)
+    if (flash.success) {
+      toast({
+        description: flash.success,
+        duration: 3000,
+      })
+    }
+
+    if (flash.error) {
+      toast({
+        description: flash.error,
+        variant: "destructive",
+        duration: 3000,
+      })
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
