@@ -71,7 +71,11 @@ class SocialController extends Controller
 
         // login user
         Auth::login($user, true);
-        return redirect('/dashboard')->with('success', 'Connexion avec ' . $provider . ' réussie');
+        if (url()->previous() === route('admin.login.create')) {
+            return redirect()->route('admin.dashboard')->with('success', 'Connexion avec ' . $provider . ' réussie');
+        } else {
+            return redirect()->intended(route('profile.settings', $user->name))->with('success', 'Connexion avec ' . $provider . ' réussie');
+        }
     }
 
 

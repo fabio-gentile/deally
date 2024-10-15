@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AuthenticatedSessionController extends Controller
+class AdminAuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
@@ -23,10 +23,7 @@ class AuthenticatedSessionController extends Controller
             Redirect::setIntendedUrl(url()->previous());
         }
 
-        return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Auth/Login');
     }
 
     /**
@@ -38,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('profile.settings', \auth()->user()->name, absolute: false))->with('success', 'Vous êtes connecté avec succès');
+        return redirect()->intended(route('admin.dashboard', absolute: false))->with('success', 'Vous êtes connecté à l\'administration avec succès');
     }
 
     /**
@@ -52,6 +49,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(\route('admin.login.create'))->with('success', 'Vous vous êtes déconnecté avec succès');
     }
 }

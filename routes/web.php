@@ -96,5 +96,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('favorite', [\App\Http\Controllers\FavoriteController::class, 'destroy'])->name('favorite.destroy');
 });
 
+// Admin
+Route::middleware(['guest'])->prefix('admin')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'create'])->name('admin.login.create');
+    Route::post('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'login'])->name('admin.login.store');
+    Route::post('/logout', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'destroy'])
+        ->name('admin.login.logout');
+});
+
+Route::middleware(['admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashbordController::class, 'index'])->name('admin.dashboard');
+});
+
+
 
 require __DIR__.'/auth.php';
