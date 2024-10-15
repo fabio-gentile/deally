@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Head } from "@inertiajs/vue3"
+import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 </script>
 
 <template>
-  <Head title="Dashboard" />
+  <AdminTitle title="Tableau de bord">Tableau de bord</AdminTitle>
 </template>
