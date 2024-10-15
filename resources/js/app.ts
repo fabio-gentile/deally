@@ -6,6 +6,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers"
 import { createApp, DefineComponent, h } from "vue"
 import { ZiggyVue } from "../../vendor/tightenco/ziggy"
 import MainLayout from "@/Components/layout/MainLayout.vue"
+import AdminLayout from "@/Components/layout/AdminLayout.vue"
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel"
 
@@ -21,7 +22,10 @@ createInertiaApp({
       `./Pages/${name}.vue`,
       import.meta.glob<DefineComponent>("./Pages/**/*.vue")
     )
-    page.default.layout = page.default.layout || MainLayout
+    const isAdminRoute = window.location.pathname.startsWith("/admin")
+    page.default.layout =
+      page.default.layout || (isAdminRoute ? AdminLayout : MainLayout)
+
     return page
   },
 

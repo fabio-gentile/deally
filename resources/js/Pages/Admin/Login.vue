@@ -38,7 +38,7 @@ const submit = () => {
             <div class="grid gap-2">
               <h1 class="text-3xl font-bold">Se connecter</h1>
               <p class="text-balance text-muted-foreground">
-                Pour accéder à votre compte Deally.
+                Pour accéder à votre compte à l'administration Deally.
               </p>
             </div>
             <div class="grid gap-4">
@@ -87,7 +87,6 @@ const submit = () => {
               >
                 Se connecter
               </Button>
-              <Separator label="OU" class="!dark:bg-primary-foreground" />
             </div>
             <div class="text-center text-sm">
               <Link :href="route('home.index')" class="underline">

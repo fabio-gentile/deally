@@ -23,7 +23,7 @@ class AdminAuthenticatedSessionController extends Controller
             Redirect::setIntendedUrl(url()->previous());
         }
 
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Admin/Login');
     }
 
     /**
