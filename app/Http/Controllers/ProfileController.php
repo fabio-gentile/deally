@@ -292,7 +292,7 @@ class ProfileController extends Controller
         if (auth()->id() !== $user->id) {
             return redirect()->route('home.index')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
-        
+
         $request->validated();
 
         // Check if the user can change their name (once every 30 days)
@@ -329,6 +329,11 @@ class ProfileController extends Controller
             'avatar' => $avatarName ?? $currentAvatar,
             'name_updated_at' => $request->name !== $user->name ? now() : $user->name_updated_at,
         ]);
+        $user->save();
+
+        if ($user->wasChanged('name')) {
+            return redirect()->route('profile.settings', $user->name)->with('success', 'Le profil a été mis à jour avec succès. Vous ne pourrez pas modifier votre nom avant 30 jours.');
+        }
 
         return back()->with('success', 'Le profil a été mis à jour avec succès.');
     }

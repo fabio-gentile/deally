@@ -131,11 +131,7 @@ function useToast() {
 
 type Toast = Omit<ToasterToast, "id">
 
-function toast(props: {
-  duration: number
-  variant: string
-  description: string
-}) {
+function toast(props: { duration: number; description: string }) {
   const id = genId()
 
   const update = (props: ToasterToast) =>

@@ -8,7 +8,6 @@ import { watch } from "vue"
 const page = usePage()
 
 const { toast } = useToast()
-
 watch(
   () => usePage().props.flash,
   (flash: { success: string | null; error: string | null }) => {
@@ -28,19 +27,21 @@ watch(
       })
     }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 </script>
 
 <template>
-  <Toaster />
-  <div
-    class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
-  >
-    <NavigationBar :user="$page.props.auth.user?.name" />
-    <div class="flex grow flex-col items-center justify-center bg-page">
-      <slot />
+  <div>
+    <Toaster />
+    <div
+      class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
+    >
+      <NavigationBar :user="$page.props.auth.user?.name" />
+      <div class="flex grow flex-col items-center justify-center bg-page">
+        <slot />
+      </div>
+      <Footer />
     </div>
-    <Footer />
   </div>
 </template>
