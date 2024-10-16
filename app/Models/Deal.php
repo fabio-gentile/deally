@@ -89,6 +89,16 @@ class Deal extends Model
     }
 
     /**
+     * Get the username that owns the discussion.
+     *
+     * @return BelongsTo
+     */
+    public function userName(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->select('id', 'name');
+    }
+
+    /**
      * Get the category that owns the deal.
      *
      * @return BelongsTo

@@ -6,7 +6,7 @@ use App\Models\CategoryDiscussion;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AdminCategoryDiscussionController {
+class AdminCategoryDiscussionController extends \App\Http\Controllers\Controller{
 
     /**
      * Display a listing of discussions.
