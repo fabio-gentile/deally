@@ -191,12 +191,6 @@ class DealController extends Controller
         $deal = Deal::where('id', $id)->firstOrFail();
         Gate::authorize('delete', $deal);
 
-        $images = ImageDeal::where('deal_id', $deal->id)->get();
-        foreach ($images as $image) {
-            Storage::delete($image->path . $image->filename);
-            $image->delete();
-        }
-
         $deal->delete();
 
         $request->session()->flash('success', 'Deal supprimé avec succès.');

@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Deal extends Model
@@ -68,6 +69,23 @@ class Deal extends Model
     public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ImageDeal::class);
+    }
+
+    // Delete the associated images when the deal is deleted
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function ($deal) {
+            foreach ($deal->images as $image) {
+                $filePath = $image->path . $image->filename;
+
+                // Delete the image file from the storage
+                if (Storage::exists($filePath)) {
+                    Storage::delete($filePath);
+                }
+            }
+        });
     }
 
     /**
