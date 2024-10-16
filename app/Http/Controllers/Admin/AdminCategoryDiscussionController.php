@@ -41,6 +41,9 @@ class AdminCategoryDiscussionController {
         return Inertia::render('Admin/Discussion/Category/Create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
@@ -50,5 +53,31 @@ class AdminCategoryDiscussionController {
         CategoryDiscussion::create($request->all());
 
         return redirect()->route('admin.categories-discussions.list')->with('success', $request->name . ' a été créée avec succès');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id): \Inertia\Response
+    {
+        $category = CategoryDiscussion::findOrFail($id);
+        return Inertia::render('Admin/Discussion/Category/Edit', [
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category = CategoryDiscussion::findOrFail($id);
+        $category->update($request->all());
+
+        return redirect()->route('admin.categories-discussions.list')->with('success', $request->name . ' a été modifiée avec succès');
     }
 }
