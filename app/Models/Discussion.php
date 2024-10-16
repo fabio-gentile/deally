@@ -84,8 +84,8 @@ class Discussion extends Model
     public static function boot(): void
     {
         parent::boot();
-        static::deleting(function ($image) {
-            $filePath = $image->path . $image->thumbnail;
+        static::deleting(function ($discussion) {
+            $filePath = 'uploads/discussions/' . $discussion->thumbnail;
             // Delete the image file from the storage
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);

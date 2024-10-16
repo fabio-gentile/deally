@@ -80,4 +80,20 @@ class AdminCategoryDiscussionController {
 
         return redirect()->route('admin.categories-discussions.list')->with('success', $request->name . ' a été modifiée avec succès');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $category = CategoryDiscussion::findOrFail($id);
+        $discussions = $category->discussions;
+        foreach ($discussions as $discussion) {
+            $discussion->delete();
+        }
+
+        $category->delete();
+
+        return redirect()->route('admin.categories-discussions.list')->with('success', 'La catégorie a été supprimée avec succès');
+    }
 }

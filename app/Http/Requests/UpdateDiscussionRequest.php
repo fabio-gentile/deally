@@ -16,7 +16,7 @@ class UpdateDiscussionRequest extends FormRequest
         return [
             'title' => ['required',  'min:3', 'string', 'max:255'],
             'content' => ['required', 'min:5', 'string'],
-            'category' => ['required', 'exists:category_deals,name'],
+            'category' => ['required', 'exists:category_discussions,name'],
             'thumbnail' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }

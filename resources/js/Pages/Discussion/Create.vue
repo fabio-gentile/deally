@@ -35,6 +35,7 @@ const form = useForm({
 })
 
 const submit = () => {
+  // console.log(form.data())
   form.post(route("discussions.create"), {
     preserveScroll: true,
   })
@@ -185,7 +186,7 @@ const removeImage = (index: number): void => {
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </FormControl>
-                <FormError :message="form.errors.content" />
+                <FormError :message="form.errors.category" />
               </FormItem>
             </FormField>
           </div>
