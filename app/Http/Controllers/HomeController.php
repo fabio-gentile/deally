@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $user = auth()->user();
-
+//        $user->assignRole('admin');
         $deals = Deal::with(['voteDetails' => function ($query) use ($user) {
             // filter the vote of the user
             if ($user) {

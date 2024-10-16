@@ -22,7 +22,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Breadcrumb class="mb-6">
+  <Breadcrumb>
     <BreadcrumbList>
       <BreadcrumbItem v-for="(crumb, index) in breadcrumbs" :key="index">
         <BreadcrumbLink>

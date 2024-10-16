@@ -14,6 +14,7 @@ use Inertia\Inertia;
 
 class DiscussionController extends Controller
 {
+    use \App\Traits\UpdateDiscussion;
     /**
      * Display a listing of the resource.
      */
@@ -140,37 +141,7 @@ class DiscussionController extends Controller
         $discussion = Discussion::where('id', $id)->firstOrFail();
         Gate::authorize('update', $discussion);
 
-        if ($request->get('isThumbnailRemoved')) {
-            try {
-                Storage::delete($discussion->path . $discussion->thumbnail);
-                $discussion->update([
-                    'thumbnail' => null,
-                    'original_filename' => null,
-                    'path' => null,
-                ]);
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
-            }
-        }
-
-        if ($request->hasFile('thumbnail')) {
-            $thumbnail = $request->file('thumbnail');
-            $extension = $thumbnail->extension();
-            $originalName = $thumbnail->getClientOriginalName();
-            $filename = uniqid('discussion-', true) . '.' . $extension;
-            $path = 'uploads/discussions/';
-
-            $thumbnail->storeAs($path, $filename, 'public');
-        }
-
-        $discussion->update([
-            'title' => $request->get('title'),
-            'content' => $request->get('content'),
-            'category_discussion_id' => CategoryDiscussion::where('name', $request->get('category'))->first()->id,
-            'thumbnail' => $filename ?? $discussion->thumbnail,
-            'original_filename' => $originalName ?? $discussion->original_filename,
-            'path' => $path ?? $discussion->path,
-        ]);
+        $this->handleUpdateDiscussion($request, $discussion);
 
         return redirect()->route('home.index')->with('success', 'Discussions modifiée avec succès');
     }

@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UpdateDiscussionRequest;
+use App\Models\CategoryDiscussion;
 use App\Models\Discussion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class AdminDiscussionController
 {
+    use \App\Traits\UpdateDiscussion;
+    /**
+     * Display a listing of discussions.
+     */
     public function index(Request $request): \Inertia\Response
     {
         $discussions = Discussion::query()->withCount('comments')->with('userName');;
@@ -54,13 +61,38 @@ class AdminDiscussionController
         ]);
     }
 
-    public function edit()
+
+    /**
+     * Show the form for editing the user
+     */
+    public function edit(string $discussion): \Inertia\Response
     {
-        return view('admin.discussions.edit');
+        $discussion = Discussion::where('id', $discussion)->firstOrFail();
+
+        if ($discussion->thumbnail) {
+            $currentThumbnail = [
+                'path' => $discussion->path,
+                'filename' => $discussion->thumbnail,
+                'originalName' => $discussion->original_filename,
+            ];
+        } else {
+            $currentThumbnail = null;
+        }
+
+        return Inertia::render('Admin/Discussions/Edit', [
+            'discussion' => $discussion,
+            'currentCategory' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
+            'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
+            'currentThumbnail' => $currentThumbnail,
+        ]);
     }
 
-    public function update()
+    public function update(UpdateDiscussionRequest $request, string $id)
     {
-        return redirect()->route('admin.discussions.list');
+        $discussion = Discussion::where('id', $id)->firstOrFail();
+
+        $this->handleUpdateDiscussion($request, $discussion);
+
+        return redirect()->route('admin.discussions.list')->with('success', 'La discussion a été modifiéé avec succès');
     }
 }
