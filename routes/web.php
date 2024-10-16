@@ -109,6 +109,8 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     // Users
     Route::get('/utilisateurs', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.list');
+    Route::get('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::patch('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update')->middleware([HandlePrecognitiveRequests::class]);
 });
 
 

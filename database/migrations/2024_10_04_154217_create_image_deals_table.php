@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('image_deals', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignIdFor(\App\Models\Deal::class)->constrained();
+            $table->foreignIdFor(\App\Models\Deal::class)->constrained()->cascadeOnDelete();
             $table->string('filename');
             $table->string('original_filename');
             $table->string('path');

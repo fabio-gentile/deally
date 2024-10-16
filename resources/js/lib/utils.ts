@@ -22,3 +22,11 @@ export function calculatePercentage(
 
   return percentage % 1 === 0 ? percentage + "%" : percentage.toFixed(2) + "%"
 }
+
+/**
+ * Capitalize the first letter of a string
+ * @param string
+ */
+export function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}

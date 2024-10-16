@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
+use App\Services\ImageService;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class AdminUserController extends Controller
 {
+    public function __construct(private ImageService $imageService) {}
+
+    /**
+     * Display a listing of users.
+     */
     public function index(Request $request): \Inertia\Response
     {
         $users = User::query();
@@ -37,5 +46,49 @@ class AdminUserController extends Controller
             ],
             'filters' => $request->all(),
         ]);
+    }
+
+    /**
+     * Show the form for editing the user
+     */
+    public function edit(Request $request, string $user): \Inertia\Response
+    {
+        $user = User::where('id', $user)->firstOrFail();
+        return Inertia::render('Admin/User/Edit', [
+            'user' => $user,
+            'roles' => (Role::all()),
+            'userRoles' => $user->getRoleNames(),
+        ]);
+    }
+
+    /**
+     * Update the user
+     * @throws Exception
+     */
+    public function update(UpdateUserRequest $request, string $user): \Illuminate\Http\RedirectResponse
+    {
+        $user = User::where('id', $user)->firstOrFail();
+        $roles = Role::whereIn('name', $request->roles)->get()->pluck('name')->toArray();
+
+        if ($roles) {
+            $user->syncRoles($roles);
+        }
+
+        // Delete avatar
+        if ($request->isAvatarRemoved === true) {
+            try {
+                $this->imageService->deleteImage($user->avatar, 'uploads/avatar/');
+                $user->update(['avatar' => null]);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
+            }
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'biography' => $request->biography,
+        ]);
+
+        return redirect()->route('admin.users.list')->with('success', $user->name . ' a été mis à jour avec succès');
     }
 }

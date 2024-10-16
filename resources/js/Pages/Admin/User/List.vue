@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
+import { Link } from "@inertiajs/vue3"
 import { ChevronsUpDown, Pencil, Eye, Trash, X, Check } from "lucide-vue-next"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
@@ -15,26 +16,10 @@ import {
   TableRow,
   TableEmpty,
 } from "@/Components/ui/table"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select"
-import SelectLabel from "@/Components/ui/select/SelectLabel.vue"
-import {
-  Pagination,
-  PaginationList,
-  PaginationNext,
-  PaginationPrev,
-  PaginationFirst,
-  PaginationLast,
-} from "@/Components/ui/pagination"
 import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import { router } from "@inertiajs/vue3"
+import TablePagination from "@/Components/Admin/TablePagination.vue"
 
 interface Filters {
   filter_by?: string
@@ -58,12 +43,13 @@ const search = useDebounceFn(() => {
   router.get(route("admin.users.list"), filters.value, {
     preserveState: true,
     replace: true,
-    onSuccess: (page) => {
+    onSuccess: () => {
       users.value = props.users
     },
   })
 }, 100)
 
+// Watch for changes in filters
 watch(
   filters,
   () => {
@@ -72,7 +58,6 @@ watch(
   { deep: true }
 )
 
-// Function to handle page change
 const changePage = (page: number) => {
   filters.value.page = page
   search()
@@ -142,60 +127,18 @@ const resetFilters = () => {
         </TableCell>
         <TableCell class="flex justify-end gap-4">
           <Eye class="w-4 cursor-pointer" />
-          <Pencil class="w-4 cursor-pointer" />
+          <Link :href="route('admin.users.edit', user.id)">
+            <Pencil class="w-4 cursor-pointer" />
+          </Link>
           <Trash class="w-4 cursor-pointer" />
         </TableCell>
       </TableRow>
     </TableBody>
   </Table>
-  <!--    pagination-->
-  <div
-    class="flex w-full flex-wrap items-baseline justify-between gap-4 text-sm"
-  >
-    <p>
-      {{ pagination.current_page * pagination.per_page }} utilisateurs sur
-      {{ pagination.total }}
-    </p>
-    <div class="flex flex-wrap items-baseline gap-4">
-      <div class="flex items-baseline gap-4">
-        <div class="shrink-0">Par ligne</div>
-        <Select v-model="filters.per_page">
-          <SelectTrigger @change="search">
-            <SelectValue placeholder="10" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel class="sr-only">Nombre par ligne</SelectLabel>
-              <SelectItem value="10"> 10 </SelectItem>
-              <SelectItem value="20"> 20 </SelectItem>
-              <SelectItem value="30"> 30 </SelectItem>
-              <SelectItem value="50"> 50 </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        Page {{ pagination.current_page }} sur {{ pagination.last_page }}
-      </div>
-      <Pagination
-        class="mt-4"
-        v-slot="{ page }"
-        :total="pagination.total"
-        :sibling-count="1"
-        :default-page="1"
-        show-edges
-      >
-        <PaginationList
-          v-if="pagination.total > 0"
-          v-slot="{ items }"
-          class="flex items-center justify-center gap-1"
-        >
-          <PaginationFirst @click="changePage(1)" />
-          <PaginationPrev @click="changePage(pagination.current_page - 1)" />
-          <PaginationNext @click="changePage(pagination.current_page + 1)" />
-          <PaginationLast @click="changePage(pagination.last_page)" />
-        </PaginationList>
-      </Pagination>
-    </div>
-  </div>
+  <TablePagination
+    :pagination="pagination"
+    v-model="filters.per_page"
+    :onSearch="search"
+    :onPageChange="changePage"
+  />
 </template>
