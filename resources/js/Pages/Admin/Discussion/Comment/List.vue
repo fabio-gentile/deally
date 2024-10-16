@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 import { Link, router } from "@inertiajs/vue3"
-import { Pencil, Trash } from "lucide-vue-next"
+import { Eye, Trash } from "lucide-vue-next"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { Input } from "@/Components/ui/input"
@@ -100,7 +100,7 @@ const destroyCategory = (id: number) => {
 </script>
 
 <template>
-  <AdminTitle :title="'Commentaires de la discussions ' + discussion.title"
+  <AdminTitle :title="'Commentaires de la discussion ' + discussion.title"
     >Commentaires de la discussion {{ discussion.title }}</AdminTitle
   >
   <Breadcrumb
@@ -148,8 +148,8 @@ const destroyCategory = (id: number) => {
           {{ comment.content }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
-          <Link :href="route('admin.discussions.comments.edit', comment.id)">
-            <Pencil class="w-4 cursor-pointer" />
+          <Link :href="route('admin.discussions.comments.show', comment.id)">
+            <Eye class="w-4 cursor-pointer" />
           </Link>
           <AlertDialog>
             <AlertDialogTrigger as-child>

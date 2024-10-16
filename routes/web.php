@@ -119,9 +119,9 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::delete('/discussions/{id}', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'destroy'])->name('admin.discussions.destroy');
 
     // Discussion Comments
-    Route::get('/discussions/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDiscussionController::class, 'index'])->name('admin.discussions.comments.list');
+    Route::get('/discussions/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentDiscussionController::class, 'index'])->name('admin.discussions.comments.list');
     Route::delete('/discussions/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDiscussionController::class, 'destroy'])->name('admin.discussions.comments.destroy');
-    Route::get('/discussions/comments/{id}/edit', [\App\Http\Controllers\Admin\AdminCommentDiscussionController::class, 'edit'])->name('admin.discussions.comments.edit');
+    Route::get('/discussions/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDiscussionController::class, 'show'])->name('admin.discussions.comments.show');
 
     // Category Discussion
     Route::get('/categories-discussions', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'index'])->name('admin.categories-discussions.list');

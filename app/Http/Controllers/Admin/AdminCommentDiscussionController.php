@@ -49,4 +49,31 @@ class AdminCommentDiscussionController extends Controller
             'filters' => $request->all(),
         ]);
     }
+
+    public function show(string $id): \Inertia\Response
+    {
+        $comment = CommentDiscussion::where('id', $id)->with('user')->firstOrFail();
+
+        return Inertia::render('Admin/Discussion/Comment/Show', [
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user' => [
+                    'name' => $comment->user->name,
+                    'id' => $comment->user->id,
+                ],
+            ],
+            'discussion' => Discussion::where('id', $comment->discussion_id)->first(),
+        ]);
+    }
+
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
+    {
+        $comment = CommentDiscussion::where('id', $id)->firstOrFail();
+        $discussion = Discussion::where('id', $comment->discussion_id)->firstOrFail();
+        $comment->delete();
+
+        return redirect()->route('admin.discussions.comments.list', ['id' => $discussion->id])->with('success', 'Commentaire supprimé avec succès');
+    }
 }
