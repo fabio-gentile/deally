@@ -37,7 +37,7 @@ class AdminDiscussionController
 
         $discussions = $discussions->paginate($request->per_page ?? 10);
 //        dd($discussions->items());
-        return Inertia::render('Admin/Discussions/List', [
+        return Inertia::render('Admin/Discussion/List', [
             'discussions' => $discussions->getCollection()->map(function ($discussion) {
                 return [
                     'id' => $discussion->id,
@@ -48,7 +48,7 @@ class AdminDiscussionController
                         'id' => $discussion->userName->id,
                     ],
                     'created_at' => $discussion->created_at,
-                    // Add other fields as needed
+                    'slug' => $discussion->slug,
                 ];
             }),
             'pagination' => [
@@ -79,7 +79,7 @@ class AdminDiscussionController
             $currentThumbnail = null;
         }
 
-        return Inertia::render('Admin/Discussions/Edit', [
+        return Inertia::render('Admin/Discussion/Edit', [
             'discussion' => $discussion,
             'currentCategory' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
             'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
@@ -87,12 +87,28 @@ class AdminDiscussionController
         ]);
     }
 
-    public function update(UpdateDiscussionRequest $request, string $id)
+    /**
+     * Update the discussion
+     * @throws Exception
+     */
+    public function update(UpdateDiscussionRequest $request, string $id): \Illuminate\Http\RedirectResponse
     {
         $discussion = Discussion::where('id', $id)->firstOrFail();
 
         $this->handleUpdateDiscussion($request, $discussion);
 
         return redirect()->route('admin.discussions.list')->with('success', 'La discussion a été modifiéé avec succès');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Discussion $discussion, int $id, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $discussion = Discussion::where('id', $id)->firstOrFail();
+
+        $discussion->delete();
+
+        return redirect()->route('admin.discussions.list')->with('success', 'La discussion a été supprimée avec succès');
     }
 }

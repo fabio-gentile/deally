@@ -208,7 +208,7 @@ class SearchController extends Controller
             'total' => $discussions->total(),
         ];
 
-        return Inertia::render('Search/Discussions', [
+        return Inertia::render('Search/Discussion', [
             'categories' => CategoryDiscussion::all(),
             'discussions' => $discussions->items(),
             'filters' => $request->all(),

@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
-import { Link } from "@inertiajs/vue3"
+import { Link, router } from "@inertiajs/vue3"
 import { ChevronsUpDown, Pencil, Eye, Trash, X, Check } from "lucide-vue-next"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
-// import { Discussion } from "@/types/model/discussion"
 import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
 import {
   Table,
   TableBody,
@@ -18,7 +28,6 @@ import {
 } from "@/Components/ui/table"
 import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
-import { router } from "@inertiajs/vue3"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
 import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
 import { useDateFormat } from "@vueuse/core"
@@ -39,6 +48,7 @@ interface Discussion {
   comments_count: number
   user: { id: number; name: string }
   created_at: string
+  slug: string
 }
 
 const props = defineProps<{
@@ -77,6 +87,16 @@ const changePage = (page: number) => {
 const resetFilters = () => {
   filters.value = {}
 }
+
+const destroyDiscussion = (id: number) => {
+  router.delete(route("admin.discussions.destroy", id), {
+    preserveState: true,
+    replace: true,
+    onSuccess: () => {
+      discussions.value = props.discussions
+    },
+  })
+}
 </script>
 
 <template>
@@ -84,7 +104,7 @@ const resetFilters = () => {
   <Breadcrumb
     :breadcrumbs="[
       { label: 'Tableau de board', route: 'admin.dashboard', active: false },
-      { label: 'Discussions', route: 'admin.discussions.list', active: true },
+      { label: 'Discussion', route: 'admin.discussions.list', active: true },
     ]"
   />
   <div>
@@ -185,11 +205,36 @@ const resetFilters = () => {
           }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
-          <Eye class="w-4 cursor-pointer" />
+          <a target="_blank" :href="route('discussions.show', discussion.slug)">
+            <Eye class="w-4 cursor-pointer" />
+          </a>
+
           <Link :href="route('admin.discussions.edit', discussion.id)">
             <Pencil class="w-4 cursor-pointer" />
           </Link>
-          <Trash class="w-4 cursor-pointer" />
+          <AlertDialog>
+            <AlertDialogTrigger as-child>
+              <Trash class="w-4 cursor-pointer" />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Êtes-vous vraiment sûr ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action ne peut pas être annulée. Cela supprimera
+                  définitivement votre discussion et les commentaires associés.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  @click="destroyDiscussion(discussion.id)"
+                  class="!bg-destructive"
+                >
+                  Supprimer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </TableCell>
       </TableRow>
     </TableBody>

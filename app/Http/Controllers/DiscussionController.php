@@ -28,7 +28,7 @@ class DiscussionController extends Controller
      */
     public function create(): \Inertia\Response
     {
-        return Inertia::render('Discussions/Create', [
+        return Inertia::render('Discussion/Create', [
             'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
         ]);
     }
@@ -58,7 +58,7 @@ class DiscussionController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('home.index')->with('success', 'Discussions créée avec succès');
+        return redirect()->route('home.index')->with('success', 'Discussion créée avec succès');
     }
 
     /**
@@ -98,7 +98,7 @@ class DiscussionController extends Controller
             $this->loadAllReplies($comment); // Recursively load replies
         }
 
-        return Inertia::render('Discussions/Show', [
+        return Inertia::render('Discussion/Show', [
             'discussion' => $discussion,
             'category' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
             'similarDiscussions' => $similarDiscussions ?? [],
@@ -125,7 +125,7 @@ class DiscussionController extends Controller
             $currentThumbnail = null;
         }
 
-        return Inertia::render('Discussions/Edit', [
+        return Inertia::render('Discussion/Edit', [
             'discussion' => $discussion,
             'currentCategory' => CategoryDiscussion::where('id', $discussion->category_discussion_id)->first()->name,
             'categories' => CategoryDiscussion::orderBy('name', 'asc')->get(),
@@ -143,7 +143,7 @@ class DiscussionController extends Controller
 
         $this->handleUpdateDiscussion($request, $discussion);
 
-        return redirect()->route('home.index')->with('success', 'Discussions modifiée avec succès');
+        return redirect()->route('home.index')->with('success', 'Discussion modifiée avec succès');
     }
 
     /**
@@ -164,7 +164,7 @@ class DiscussionController extends Controller
 
         $discussion->delete();
 
-        $request->session()->flash('success', 'Discussions supprimée avec succès.');
+        $request->session()->flash('success', 'Discussion supprimée avec succès.');
         return redirect()->route('home.index');
     }
 

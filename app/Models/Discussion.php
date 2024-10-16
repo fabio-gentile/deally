@@ -6,6 +6,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Discussion extends Model
@@ -79,6 +80,24 @@ class Discussion extends Model
         ];
     }
 
+    // Delete the associated thumbnail when the discussion is deleted
+    public static function boot(): void
+    {
+        parent::boot();
+        static::deleting(function ($image) {
+            $filePath = $image->path . $image->thumbnail;
+            // Delete the image file from the storage
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+        });
+    }
+
+    /**
+     * Get the user name that owns the discussion.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function userName(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')->select('id', 'name');

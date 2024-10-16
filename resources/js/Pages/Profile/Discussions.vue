@@ -64,7 +64,7 @@ const changePage = (page: number) => {
 }
 </script>
 <template>
-  <Head :title="'Discussions de ' + user.name" />
+  <Head :title="'Discussion de ' + user.name" />
   <UserProfile
     :user="user"
     :is-current-user="isCurrentUser"
