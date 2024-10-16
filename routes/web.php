@@ -118,6 +118,12 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'edit'])->name('admin.discussions.edit');
     Route::patch('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'update'])->name('admin.discussions.update')->middleware([HandlePrecognitiveRequests::class]);
     Route::delete('/discussions/{id}', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'destroy'])->name('admin.discussions.destroy');
+
+    // Category Discussion
+    Route::get('/categories-discussions', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'index'])->name('admin.categories-discussions.list');
+    Route::get('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'edit'])->name('admin.categories-discussions.edit');
+    Route::patch('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'update'])->name('admin.categories-discussions.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::delete('/categories-discussions/{id}', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'destroy'])->name('admin.categories-discussions.destroy');
 });
 
 
