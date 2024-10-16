@@ -39,7 +39,7 @@ class FavoriteController extends Controller
 
         $user = Auth::user();
 
-        // Find the favoritable model instance (Deal or Discussion)
+        // Find the favoritable model instance (Deal or Discussions)
         if ($request->input('type') === 'deal') {
             $favoritable = Deal::findOrFail($request->input('id'));
         } else if ($request->input('type') === 'discussion') {

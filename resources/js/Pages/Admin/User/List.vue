@@ -20,6 +20,7 @@ import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import { router } from "@inertiajs/vue3"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
+import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
 
 interface Filters {
   filter_by?: string
@@ -70,6 +71,12 @@ const resetFilters = () => {
 
 <template>
   <AdminTitle title="Utilisateurs">Utilisateurs</AdminTitle>
+  <Breadcrumb
+    :breadcrumbs="[
+      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Utilisateurs', route: 'admin.users.list', active: true },
+    ]"
+  />
   <div>
     <div class="flex flex-wrap gap-4">
       <Label for="search" class="sr-only">Rechercher</Label>
@@ -126,7 +133,14 @@ const resetFilters = () => {
           <X v-else />
         </TableCell>
         <TableCell class="flex justify-end gap-4">
-          <Eye class="w-4 cursor-pointer" />
+          <a
+            target="_blank"
+            class="hover:underline"
+            :href="route('profile.index', user.name)"
+          >
+            <Eye class="w-4 cursor-pointer" />
+          </a>
+
           <Link :href="route('admin.users.edit', user.id)">
             <Pencil class="w-4 cursor-pointer" />
           </Link>
@@ -140,5 +154,6 @@ const resetFilters = () => {
     v-model="filters.per_page"
     :onSearch="search"
     :onPageChange="changePage"
+    :label="'utilisateurs'"
   />
 </template>

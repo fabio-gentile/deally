@@ -67,7 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/deals/{slug}', [DealController::class, 'show'])->name('deals.show');
 
-//Discussion
+//Discussions
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/discussions/create', [DiscussionController::class, 'create'])->name('discussions.create');
     Route::post('/discussions/create', [DiscussionController::class, 'store'])->name('discussions.store');
@@ -111,6 +111,12 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/utilisateurs', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.list');
     Route::get('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('admin.users.edit');
     Route::patch('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update')->middleware([HandlePrecognitiveRequests::class]);
+
+    // Discussions
+    Route::get('/discussions', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'index'])->name('admin.discussions.list');
+    Route::get('/discussions/comments/{id}', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'indexComments'])->name('admin.discussions.comments.list');
+    Route::get('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'edit'])->name('admin.discussions.edit');
+    Route::patch('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'update'])->name('admin.discussions.update')->middleware([HandlePrecognitiveRequests::class]);
 });
 
 

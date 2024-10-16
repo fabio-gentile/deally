@@ -79,6 +79,11 @@ class Discussion extends Model
         ];
     }
 
+    public function userName(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->select('id', 'name');
+    }
+
     /**
      * Get the category that owns the discussion.
      *

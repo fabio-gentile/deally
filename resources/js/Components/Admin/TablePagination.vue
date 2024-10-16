@@ -24,6 +24,7 @@ const props = defineProps<{
   modelValue?: string
   onSearch: () => void
   onPageChange: (page: number) => void
+  label: string
 }>()
 
 const emit = defineEmits(["update:modelValue"])
@@ -48,7 +49,7 @@ const changePage = (page: number) => {
     class="flex w-full flex-wrap items-baseline justify-between gap-4 text-sm"
   >
     <p>
-      {{ pagination.current_page * pagination.per_page }} utilisateurs sur
+      {{ pagination.current_page * pagination.per_page }} {{ label }} sur
       {{ pagination.total }}
     </p>
     <div class="flex flex-wrap items-baseline gap-4">
@@ -56,7 +57,7 @@ const changePage = (page: number) => {
         <div class="shrink-0">Par ligne</div>
         <Select v-model="localPerPage">
           <SelectTrigger @change="onChangePerPage">
-            <SelectValue :placeholder="localPerPage?.toString() ?? 10" />
+            <SelectValue :placeholder="localPerPage?.toString() ?? '10'" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
