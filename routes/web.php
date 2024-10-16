@@ -126,6 +126,21 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'edit'])->name('admin.categories-discussions.edit');
     Route::patch('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'update'])->name('admin.categories-discussions.update')->middleware([HandlePrecognitiveRequests::class]);
     Route::delete('/categories-discussions/{id}', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'destroy'])->name('admin.categories-discussions.destroy');
+
+    // Deals
+    Route::get('/deals', [\App\Http\Controllers\Admin\AdminDealController::class, 'index'])->name('admin.deals.list');
+    Route::get('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminDealController::class, 'indexComments'])->name('admin.deals.comments.list');
+    Route::get('/deals/{id}/edit', [\App\Http\Controllers\Admin\AdminDealController::class, 'edit'])->name('admin.deals.edit');
+    Route::patch('/deals/{id}/edit', [\App\Http\Controllers\Admin\AdminDealController::class, 'update'])->name('admin.deals.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::delete('/deals/{id}', [\App\Http\Controllers\Admin\AdminDealController::class, 'destroy'])->name('admin.deals.destroy');
+
+    // Category Deal
+    Route::get('/categories-deals', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'index'])->name('admin.categories-deals.list');
+    Route::get('/categories-deals/create', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'create'])->name('admin.categories-deals.create');
+    Route::post('/categories-deals/create', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'store'])->name('admin.categories-deals.store');
+    Route::get('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'edit'])->name('admin.categories-deals.edit');
+    Route::patch('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'update'])->name('admin.categories-deals.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::delete('/categories-deals/{id}', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'destroy'])->name('admin.categories-deals.destroy');
 });
 
 
