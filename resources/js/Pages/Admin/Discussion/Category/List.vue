@@ -98,7 +98,7 @@ const destroyCategory = (id: number) => {
       },
     ]"
   />
-  <div>
+  <div class="flex flex-wrap justify-between gap-4">
     <div class="flex flex-wrap gap-4">
       <Label for="search" class="sr-only">Rechercher</Label>
       <Input
@@ -112,6 +112,9 @@ const destroyCategory = (id: number) => {
         >Réinitialiser les filtres</Button
       >
     </div>
+    <Link :href="route('admin.categories-discussions.create')">
+      <Button>Créer une catégorie</Button>
+    </Link>
   </div>
   <Table class="rounded-lg bg-white">
     <TableHeader>

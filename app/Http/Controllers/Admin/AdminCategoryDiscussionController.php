@@ -8,6 +8,9 @@ use Inertia\Inertia;
 
 class AdminCategoryDiscussionController {
 
+    /**
+     * Display a listing of discussions.
+     */
     public function index(Request $request): \Inertia\Response
     {
         $categories = CategoryDiscussion::query();
@@ -28,5 +31,24 @@ class AdminCategoryDiscussionController {
             ],
             'filters' => $request->all(),
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function create(): \Inertia\Response
+    {
+        return Inertia::render('Admin/Discussion/Category/Create');
+    }
+
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        CategoryDiscussion::create($request->all());
+
+        return redirect()->route('admin.categories-discussions.list')->with('success', $request->name . ' a été créée avec succès');
     }
 }

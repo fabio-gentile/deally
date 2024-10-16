@@ -121,6 +121,8 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     // Category Discussion
     Route::get('/categories-discussions', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'index'])->name('admin.categories-discussions.list');
+    Route::get('/categories-discussions/create', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'create'])->name('admin.categories-discussions.create');
+    Route::post('/categories-discussions/create', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'store'])->name('admin.categories-discussions.store');
     Route::get('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'edit'])->name('admin.categories-discussions.edit');
     Route::patch('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'update'])->name('admin.categories-discussions.update')->middleware([HandlePrecognitiveRequests::class]);
     Route::delete('/categories-discussions/{id}', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'destroy'])->name('admin.categories-discussions.destroy');
