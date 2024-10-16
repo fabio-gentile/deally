@@ -15,6 +15,10 @@ class AdminCommentDiscussionController extends Controller
         $comments = CommentDiscussion::query();
         $comments->where('discussion_id', $id);
 
+        if (!$request->has('created_at')) {
+            $comments->orderBy('created_at', 'desc');
+        }
+
         if ($request->has('search') && $request->search !== null) {
             $comments->where('content', 'like', '%' . $request->search . '%')->orWhereHas('user', function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');

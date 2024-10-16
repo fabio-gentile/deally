@@ -19,6 +19,10 @@ class AdminDiscussionController
     {
         $discussions = Discussion::query()->withCount('comments')->with('userName');;
 
+        if (!$request->has('created_at')) {
+            $discussions->orderBy('created_at', 'desc');
+        }
+
         if ($request->has('search') && $request->search !== null) {
             $discussions->where('title', 'like', '%' . $request->search . '%');
         }

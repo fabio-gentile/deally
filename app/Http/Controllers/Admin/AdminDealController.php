@@ -22,6 +22,10 @@ class AdminDealController extends Controller
     {
         $deals = Deal::query()->with(['userName', 'categoryDeal']);
 
+        if (!$request->has('created_at')) {
+            $deals->orderBy('created_at', 'desc');
+        }
+
         if ($request->has('search') && $request->search !== null) {
             $deals->where('title', 'like', '%' . $request->search . '%');
         }

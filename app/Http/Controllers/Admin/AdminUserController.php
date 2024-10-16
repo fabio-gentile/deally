@@ -22,6 +22,10 @@ class AdminUserController extends Controller
     {
         $users = User::query();
 
+        if (!$request->has('created_at')) {
+            $users->orderBy('created_at', 'desc');
+        }
+
         if ($request->has('search') && $request->search !== null) {
             $users->where('name', 'like', '%' . $request->search . '%')->orWhere('email', 'like', '%' . $request->search . '%');
         }
