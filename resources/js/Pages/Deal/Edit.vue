@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from "@inertiajs/vue3"
+import { Head, Link, router, useForm } from "@inertiajs/vue3"
 import { ref } from "vue"
-import { X } from "lucide-vue-next"
 import {
   Form,
   FormControl,
@@ -23,8 +22,6 @@ import Wrapper from "@/Components/layout/Wrapper.vue"
 import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
 import { Deal } from "@/types/model/deal"
-import { ImageDeal } from "@/types/model/deal"
-import axios from "axios"
 import TipTap from "@/Components/TipTap.vue"
 import {
   Breadcrumb,
@@ -111,12 +108,12 @@ const removeImage = (index: number): void => {
 
 // Function to delete an uploaded image
 const deleteImage = async (filename: string, index: number): Promise<void> => {
-  try {
-    await axios.delete(route("deals.delete-image", filename))
-    uploaded_images.value.splice(index, 1)
-  } catch (error) {
-    throw new Error("Une erreur est survenue lors de la suppression de l'image")
-  }
+  router.delete(route("deals.delete-image", filename), {
+    preserveScroll: true,
+    onSuccess: () => {
+      uploaded_images.value.splice(index, 1)
+    },
+  })
 }
 </script>
 <template>

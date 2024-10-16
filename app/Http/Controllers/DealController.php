@@ -15,6 +15,7 @@ use Inertia\Inertia;
 
 class DealController extends Controller
 {
+    use \App\Traits\UpdateDeal;
     /**
      *  Load all replies for a comment.
      */
@@ -146,23 +147,8 @@ class DealController extends Controller
     {
         $deal = Deal::where('id', $id)->firstOrFail();
         Gate::authorize('update', $deal);
-        $validated = $updateDealRequest->validated();
 
-        $deal->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'original_price' => $validated['original_price'],
-            'price' => $validated['price'],
-            'expiration_date' => $validated['expiration_date'],
-            'start_date' => $validated['start_date'],
-            'promo_code' => $validated['promo_code'],
-            'deal_url' => $validated['deal_url'],
-            'category_deal_id' => CategoryDeal::where('name', $validated['category'])->first()->id,
-        ]);
-
-        if ($validated['images']) {
-            $this->storeImage($validated['images'], $deal);
-        }
+        $this->updateDeal($updateDealRequest, $deal);
 
         //        TODO: Add redirect with success message
         return redirect()->route('home.index');
