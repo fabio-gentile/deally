@@ -151,6 +151,11 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'edit'])->name('admin.categories-deals.edit');
     Route::patch('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'update'])->name('admin.categories-deals.update')->middleware([HandlePrecognitiveRequests::class]);
     Route::delete('/categories-deals/{id}', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'destroy'])->name('admin.categories-deals.destroy');
+
+    // Reports
+        Route::get('/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.list');
+    Route::get('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('admin.reports.show');
+    Route::delete('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'destroy'])->name('admin.reports.destroy');
 });
 
 

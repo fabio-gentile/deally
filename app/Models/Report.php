@@ -18,6 +18,24 @@ class Report extends Model
     ];
 
     /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
+
+    /**
+     * Get the user that owns the report.
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Get all the owning reportable models.
      */
     public function reportable(): \Illuminate\Database\Eloquent\Relations\MorphTo
