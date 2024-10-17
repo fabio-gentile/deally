@@ -32,6 +32,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
     ];
 
+    protected $attributes = [
+        'preferences' => '{"newsletter": false, "blog_notification": false}',
+    ];
+
+
 //    /**
 //     * The attributes that should be hidden for serialization.
 //     *

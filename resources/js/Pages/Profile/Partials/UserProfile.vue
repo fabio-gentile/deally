@@ -94,14 +94,14 @@ const props = defineProps<{
         </li>
         <li v-if="isCurrentUser">
           <Link
-            :href="route('profile.newsletter', { user: user.name })"
+            :href="route('profile.notifications', { user: user.name })"
             :class="[
-              page.url.includes('newsletter')
+              page.url.includes('notifications')
                 ? 'font-semibold text-primary'
                 : 'font-medium text-muted-foreground',
             ]"
           >
-            Newsletter
+            Notifications
           </Link>
         </li>
         <li>

@@ -44,7 +44,7 @@ Route::get('/profil/{user}/discussions', [ProfileController::class, 'discussions
 Route::get('/profil/{user}/statistiques', [ProfileController::class, 'statistics'])->name('profile.statistics');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/profil/{user}/newsletter', [ProfileController::class, 'newsletter'])->name('profile.newsletter');
+    Route::get('/profil/{user}/notifications', [ProfileController::class, 'notifications'])->name('profile.notifications');
     Route::get('/profil/{user}/parametres', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::patch('/profil/{user}/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');
@@ -99,6 +99,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Report
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('report', [\App\Http\Controllers\ReportController::class, 'store'])->name('report.store');
+});
+
+// Newsletter
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::patch('report', [\App\Http\Controllers\SubscribeNewsletterController::class, 'update'])->name('newsletter.update');
 });
 
 // Admin

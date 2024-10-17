@@ -286,6 +286,8 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      * @param ProfileUpdateRequest $request
+     * @param User $user
+     * @return RedirectResponse
      */
     public function updateProfileInformations(ProfileUpdateRequest $request, User $user): \Illuminate\Http\RedirectResponse
     {
@@ -336,5 +338,27 @@ class ProfileController extends Controller
         }
 
         return back()->with('success', 'Le profil a été mis à jour avec succès.');
+    }
+
+    /**
+     * Update the user's notification preferences
+     *
+     * @param User $user
+     * @return Response|RedirectResponse
+     */
+    public function notifications(User $user): Response|RedirectResponse
+    {
+        if (auth()->id() !== $user->id) {
+            return redirect()->route('home.index')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
+        }
+
+        return Inertia::render('Profile/Newsletter', [
+            'user' => $user,
+            'isCurrentUser' => auth()->id() === $user->id,
+            'dealsCount' => Deal::where('user_id', auth()->id())->count(),
+            'discussionsCount' => Discussion::where('user_id', auth()->id())->count(),
+            'commentsCount' => $user->dealComments()->count() + $user->discussionComments()->count(),
+            'newsletter' => $user->preferences,
+        ]);
     }
 }
