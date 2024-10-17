@@ -352,7 +352,7 @@ class ProfileController extends Controller
             return redirect()->route('home.index')->with('error', 'Vous n\'êtes pas autorisé à accéder à cette page.');
         }
 
-        return Inertia::render('Profile/Newsletter', [
+        return Inertia::render('Profile/Notifications', [
             'user' => $user,
             'isCurrentUser' => auth()->id() === $user->id,
             'dealsCount' => Deal::where('user_id', auth()->id())->count(),
