@@ -89,6 +89,19 @@ class Deal extends Model
     }
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function ($deal) {
+            // Delete all reports associated with this deal
+            $deal->reports()->delete();
+        });
+    }
+
+    /**
      * Get the username that owns the discussion.
      *
      * @return BelongsTo

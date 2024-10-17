@@ -23,6 +23,19 @@ class CommentDiscussion extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function ($comment) {
+            // Delete all reports associated with this deal
+            $comment->reports()->delete();
+        });
+    }
+
+    /**
      * Get the reports for the comment.
      */
     public function reports(): \Illuminate\Database\Eloquent\Relations\MorphMany

@@ -94,6 +94,19 @@ class Discussion extends Model
     }
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function ($discussion) {
+            // Delete all reports associated with this deal
+            $discussion->reports()->delete();
+        });
+    }
+
+    /**
      * Get the user name that owns the discussion.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
