@@ -69,9 +69,12 @@ class AdminReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Report $report)
+    public function show(string $id)
     {
-        //
+        $report = Report::where('id', $id)->first();
+        return Inertia::render('Admin/Report/Show', [
+            'report' => $report->load('user')->load('reportable'),
+        ]);
     }
 
     /**

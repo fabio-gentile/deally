@@ -144,6 +144,11 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::delete('/deals/{id}', [\App\Http\Controllers\Admin\AdminDealController::class, 'destroy'])->name('admin.deals.destroy');
     Route::delete('/deals/image/{filename}', [\App\Http\Controllers\Admin\AdminDealController::class, 'deleteImage'])->name('admin.deals.delete-image');
 
+    // Deal Comments
+    Route::get('/deals/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'index'])->name('admin.deals.comments.list');
+    Route::delete('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'destroy'])->name('admin.deals.comments.destroy');
+    Route::get('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'show'])->name('admin.deals.comments.show');
+
     // Category Deal
     Route::get('/categories-deals', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'index'])->name('admin.categories-deals.list');
     Route::get('/categories-deals/create', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'create'])->name('admin.categories-deals.create');
@@ -153,7 +158,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::delete('/categories-deals/{id}', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'destroy'])->name('admin.categories-deals.destroy');
 
     // Reports
-        Route::get('/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.list');
+    Route::get('/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.list');
     Route::get('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('admin.reports.show');
     Route::delete('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'destroy'])->name('admin.reports.destroy');
 });
