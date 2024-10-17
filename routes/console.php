@@ -11,3 +11,5 @@ Artisan::command('inspire', function () {
 // Clear expired password reset tokens every 15 minutes
 Schedule::command('auth:clear-resets')->everyFifteenMinutes();
 
+// Send newsletter every day at 16:00
+Schedule::command('app:send-daily-newsletter')->dailyAt('16:00');
