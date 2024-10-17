@@ -79,26 +79,14 @@ class AdminCommentDealController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
-        //
+        $comment = CommentDeal::where('id', $id)->firstOrFail();
+        $deal = Deal::where('id', $comment->deal_id)->firstOrFail();
+        $comment->delete();
+
+        return redirect()->route('admin.deal.comments.list', ['id' => $deal->id])->with('success', 'Commentaire supprimé avec succès');
     }
 }

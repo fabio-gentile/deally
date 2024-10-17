@@ -85,7 +85,7 @@ const resetFilters = () => {
 }
 
 const destroyComment = (id: number) => {
-  router.delete(route("admin.deals.comments.destroy", id), {
+  router.delete(route("admin.deal.comments.destroy", id), {
     preserveState: true,
     replace: true,
     onSuccess: () => {

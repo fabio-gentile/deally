@@ -29,7 +29,7 @@ const props = defineProps<{
 }>()
 
 const submit = () => {
-  router.delete(route("admin.deals.comments.destroy", props.comment.id))
+  router.delete(route("admin.deal.comments.destroy", props.comment.id))
 }
 </script>
 
