@@ -78,9 +78,11 @@ const [isOpen, closeDialog] = dialogState()
 </script>
 <template>
   <Dialog v-if="!$page.props.auth.user?.id">
-    <DialogTrigger as-child class="flex w-fit items-center gap-1 text-sm">
-      <Flag class="h-5 w-5 cursor-pointer object-contain" />
-      <slot />
+    <DialogTrigger as-child>
+      <div class="flex w-fit items-center gap-1 text-sm">
+        <Flag class="h-5 w-5 cursor-pointer object-contain" />
+        <slot />
+      </div>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
@@ -97,9 +99,11 @@ const [isOpen, closeDialog] = dialogState()
     </DialogContent>
   </Dialog>
   <Dialog v-else v-model:open="isOpen">
-    <DialogTrigger class="flex w-fit items-center gap-1 text-sm">
-      <Flag class="h-5 w-5 cursor-pointer object-contain" />
-      <slot />
+    <DialogTrigger as-child>
+      <div class="flex w-fit items-center gap-1 text-sm">
+        <Flag class="h-5 w-5 cursor-pointer object-contain" />
+        <slot />
+      </div>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
