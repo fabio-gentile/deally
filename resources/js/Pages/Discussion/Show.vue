@@ -240,7 +240,9 @@ const discussionDestroy = (id: number) => {
               >Partager</ShareSocial
             >
             <MessageSquare url="#comments">Commentaires </MessageSquare>
-            <Report type="deal" url="#"> Signaler la discussion</Report>
+            <Report :id="discussion.id" type="discussion">
+              Signaler la discussion</Report
+            >
             <SaveBookmark
               :is-bookmarked="discussion.user_favorite"
               type="discussion"

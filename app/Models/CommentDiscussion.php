@@ -23,6 +23,14 @@ class CommentDiscussion extends Model
     ];
 
     /**
+     * Get the reports for the comment.
+     */
+    public function reports(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    /**
      * Get the replies.
      */
     public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany

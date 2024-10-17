@@ -104,6 +104,14 @@ class Discussion extends Model
     }
 
     /**
+     * Get the reports for the discussion.
+     */
+    public function reports(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    /**
      * Get the category that owns the discussion.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

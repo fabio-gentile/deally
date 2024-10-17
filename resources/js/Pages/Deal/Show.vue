@@ -377,7 +377,7 @@ const { copy, copied } = useClipboard({ source })
                   title="Jordan 1 Mid"
                   >Partager</ShareSocial
                 >
-                <Report type="deal" url="#"> Signaler l'annonce</Report>
+                <Report :id="deal.id" type="deal"> Signaler l'annonce</Report>
               </div>
               <div class="flex flex-col gap-4">
                 <MessageSquare url="#comments">Commentaires </MessageSquare>

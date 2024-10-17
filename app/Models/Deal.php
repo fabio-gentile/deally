@@ -99,6 +99,14 @@ class Deal extends Model
     }
 
     /**
+     * Get the reports for the deal.
+     */
+    public function reports(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    /**
      * Get the category that owns the deal.
      *
      * @return BelongsTo

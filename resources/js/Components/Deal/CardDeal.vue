@@ -138,7 +138,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
               :count="deal?.comments_count"
               :url="route('deals.show', deal.slug)"
             />
-            <Report type="deal" url="#" />
+            <Report :id="deal.id" type="deal" />
             <SaveBookmark
               type="deal"
               :is-bookmarked="deal.user_favorite"

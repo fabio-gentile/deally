@@ -96,6 +96,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('favorite', [\App\Http\Controllers\FavoriteController::class, 'destroy'])->name('favorite.destroy');
 });
 
+// Report
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('report', [\App\Http\Controllers\ReportController::class, 'store'])->name('report.store');
+});
+
 // Admin
 Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'create'])->name('admin.login.create');

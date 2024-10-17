@@ -77,7 +77,7 @@ const since = timeAgo(new Date(discussion.created_at)) // string
               :count="discussion?.comments_count"
               :url="route('discussions.show', discussion.slug)"
             />
-            <Report type="discussion" url="#" />
+            <Report :id="discussion.id" type="discussion" />
             <SaveBookmark
               type="discussion"
               :is-bookmarked="discussion.user_favorite"
