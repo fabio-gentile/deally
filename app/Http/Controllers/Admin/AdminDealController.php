@@ -20,7 +20,7 @@ class AdminDealController extends Controller
      */
     public function index(Request $request): \Inertia\Response
     {
-        $deals = Deal::query()->with(['userName', 'categoryDeal']);
+        $deals = Deal::query()->with(['userName', 'categoryDeal'])->withCount('comments');
 
         if (!$request->has('created_at')) {
             $deals->orderBy('created_at', 'desc');
@@ -59,6 +59,7 @@ class AdminDealController extends Controller
                     'slug' => $deal->slug,
                     'category' => $deal->categoryDeal->name,
                     'votes' => $deal->votes,
+                    'comments_count' => $deal->comments_count,
                 ];
             }),
             'pagination' => [

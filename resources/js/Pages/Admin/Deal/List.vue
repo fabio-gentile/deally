@@ -197,6 +197,7 @@ const destroyDeal = (id: number) => {
             >Date de fin<ChevronsUpDown class="ml-2 w-4"
           /></Button>
         </TableHead>
+        <TableHead> Commentaires </TableHead>
         <TableHead class="text-right"> Action </TableHead>
       </TableRow>
     </TableHeader>
@@ -212,7 +213,7 @@ const destroyDeal = (id: number) => {
         <TableCell class="text-center"
           ><Link
             class="hover:underline"
-            :href="route('admin.deals.comments.list', deal.id)"
+            :href="route('admin.deal.comments.list', deal.id)"
           >
             {{ deal.votes }}
           </Link></TableCell
@@ -231,6 +232,14 @@ const destroyDeal = (id: number) => {
             })
           }}
         </TableCell>
+        <TableCell class="text-center"
+          ><Link
+            class="hover:underline"
+            :href="route('admin.deal.comments.list', deal.id)"
+          >
+            {{ deal.comments_count }}
+          </Link></TableCell
+        >
         <TableCell class="flex justify-end gap-4">
           <a target="_blank" :href="route('deals.show', deal.slug)">
             <Eye class="w-4 cursor-pointer" />

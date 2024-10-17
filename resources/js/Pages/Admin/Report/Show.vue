@@ -22,7 +22,7 @@ const modifyLink = computed(() => {
 
 const showLink = computed(() => {
   if (props.report.reportable_type === "App\\Models\\CommentDeal") {
-    return route("admin.deals.comments.show", props.report.reportable.id)
+    return route("admin.deal.comments.show", props.report.reportable.id)
   }
 
   if (props.report.reportable_type === "App\\Models\\CommentDiscussion") {

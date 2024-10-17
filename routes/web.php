@@ -138,16 +138,15 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     // Deals
     Route::get('/deals', [\App\Http\Controllers\Admin\AdminDealController::class, 'index'])->name('admin.deals.list');
-    Route::get('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminDealController::class, 'indexComments'])->name('admin.deals.comments.list');
     Route::get('/deals/{id}/edit', [\App\Http\Controllers\Admin\AdminDealController::class, 'edit'])->name('admin.deals.edit');
     Route::patch('/deals/{id}/edit', [\App\Http\Controllers\Admin\AdminDealController::class, 'update'])->name('admin.deals.update');
     Route::delete('/deals/{id}', [\App\Http\Controllers\Admin\AdminDealController::class, 'destroy'])->name('admin.deals.destroy');
     Route::delete('/deals/image/{filename}', [\App\Http\Controllers\Admin\AdminDealController::class, 'deleteImage'])->name('admin.deals.delete-image');
 
     // Deal Comments
-    Route::get('/deals/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'index'])->name('admin.deals.comments.list');
-    Route::delete('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'destroy'])->name('admin.deals.comments.destroy');
-    Route::get('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'show'])->name('admin.deals.comments.show');
+    Route::get('/deals/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'index'])->name('admin.deal.comments.list');
+    Route::delete('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'destroy'])->name('admin.deal.comments.destroy');
+    Route::get('/deals/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentDealController::class, 'show'])->name('admin.deal.comments.show');
 
     // Category Deal
     Route::get('/categories-deals', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'index'])->name('admin.categories-deals.list');
