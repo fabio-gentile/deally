@@ -46,4 +46,34 @@ class AdminPageController extends Controller
 
         return redirect()->route('admin.pages.list')->with('success', 'La page ' . request('title') . ' a bien été créée.');
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function edit(string $id): Response
+    {
+        $page = Page::findOrFail($id);
+        return Inertia::render('Admin/Page/Edit', [
+            'page' => $page
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param string $id
+     * @return RedirectResponse
+     */
+    public function update(string $id): RedirectResponse
+    {
+        $page = Page::findOrFail($id);
+        $page->update(request()->validate([
+            'content' => 'required',
+        ]));
+
+        return redirect()->route('admin.pages.list')->with('success', 'La page ' . $page->title . ' a bien été modifiée.');
+    }
 }

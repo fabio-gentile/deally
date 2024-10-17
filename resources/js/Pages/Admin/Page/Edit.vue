@@ -7,14 +7,19 @@ import FormError from "@/Components/FormError.vue"
 import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
 import { useForm } from "@inertiajs/vue3"
 import TipTap from "@/Components/TipTap.vue"
+import { Page } from "@/types/model/page"
+
+const props = defineProps<{
+  page: Page
+}>()
 
 const form = useForm({
-  title: "",
-  content: "",
+  content: props.page.content,
+  _method: "patch",
 })
 
 const submit = () => {
-  form.post(route("admin.pages.store"), {
+  form.post(route("admin.pages.update", props.page.id), {
     preserveState: true,
     onSuccess: () => {
       form.reset()
@@ -34,8 +39,9 @@ const submit = () => {
         active: false,
       },
       {
-        label: 'Créer une page',
-        route: 'admin.pages.create',
+        label: 'Modifier la page ' + props.page.title,
+        route: 'admin.pages.edit',
+        params: { id: props.page.id },
         active: true,
       },
     ]"
@@ -43,8 +49,13 @@ const submit = () => {
   <div class="grid gap-4">
     <div class="grid gap-2">
       <Label for="title">Titre</Label>
-      <Input v-model="form.title" id="title" type="text" required />
-      <FormError :message="form.errors.title" />
+      <Input
+        disabled
+        v-model="props.page.title"
+        id="title"
+        type="text"
+        required
+      />
     </div>
     <div class="grid gap-2">
       <Label for="content">Contenu</Label>
@@ -52,6 +63,6 @@ const submit = () => {
       <FormError :message="form.errors.content" />
     </div>
 
-    <Button @click="submit" type="submit" class="mt-4 w-fit">Créer</Button>
+    <Button @click="submit" type="submit" class="mt-4 w-fit">Modifier</Button>
   </div>
 </template>
