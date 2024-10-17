@@ -15,6 +15,7 @@ import {
 import { ref, watch } from "vue"
 import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
 import { Page } from "@/types/model/page"
+import striptags from "striptags"
 
 const props = defineProps<{
   pages: Page[]
@@ -54,8 +55,8 @@ const pages = ref(props.pages)
         <TableCell class="truncate">
           {{ page.title }}
         </TableCell>
-        <TableCell class="truncate">
-          {{ page.content }}
+        <TableCell class="max-w-[250px] truncate">
+          {{ striptags(page.content) }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
           <Link :href="route('admin.pages.edit', page.id)">

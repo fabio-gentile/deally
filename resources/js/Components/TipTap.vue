@@ -15,6 +15,7 @@ import {
   Underline as UnderlineIcon,
   Heading1,
   Heading2,
+  Heading3,
   ListIcon,
   ListOrderedIcon,
   TextQuote,
@@ -133,6 +134,16 @@ const setLink = () => {
         class="p-1"
       >
         <Heading2 title="Titre 2" />
+      </button>
+      <button
+        type="button"
+        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+        :class="{
+          'rounded bg-secondary': editor.isActive('heading', { level: 3 }),
+        }"
+        class="p-1"
+      >
+        <Heading3 title="Titre 3" />
       </button>
       <Popover>
         <PopoverTrigger>

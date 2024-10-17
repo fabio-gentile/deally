@@ -170,6 +170,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/pages', [\App\Http\Controllers\Admin\AdminPageController::class, 'index'])->name('admin.pages.list');
     Route::get('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'create'])->name('admin.pages.create');
     Route::get('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'edit'])->name('admin.pages.edit');
+    Route::post('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'store'])->name('admin.pages.store');
     Route::patch('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'update'])->name('admin.pages.update')->middleware([HandlePrecognitiveRequests::class]);
 });
 

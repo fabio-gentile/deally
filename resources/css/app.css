@@ -101,6 +101,10 @@
     @apply text-2xl font-bold;
 }
 
+.tip-tap h3 {
+    @apply text-xl font-bold;
+}
+
 .tip-tap ol {
     @apply list-decimal pl-4;
 }
