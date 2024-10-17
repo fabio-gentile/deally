@@ -12,7 +12,7 @@ class AdminReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         $reports = Report::query()->with('user');
 
@@ -69,7 +69,7 @@ class AdminReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): \Inertia\Response
     {
         $report = Report::where('id', $id)->first();
         return Inertia::render('Admin/Report/Show', [
@@ -78,26 +78,12 @@ class AdminReportController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Report $report)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Report $report)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Report $report)
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
-        //
+        $report = Report::where('id', $id)->first();
+        $report->delete();
+        return redirect()->route('admin.reports.list')->with('success', 'Le signalement a bien été supprimé.');
     }
 }
