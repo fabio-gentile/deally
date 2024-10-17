@@ -461,7 +461,7 @@ const { copy, copied } = useClipboard({ source })
         >
           <h2 class="text-xl font-semibold">Description</h2>
           <div
-            class="text-sm text-muted-foreground lg:text-base"
+            class="break-all text-sm text-muted-foreground lg:text-base"
             v-html="deal.description"
           ></div>
           <Separator class="my-1" />
@@ -586,20 +586,23 @@ const { copy, copied } = useClipboard({ source })
                 </div>
               </div>
 
-              <DropdownMenu
-                v-if="comment.user.id === $page?.props?.auth?.user?.id"
+              <div
+                class="flex items-center gap-2 text-sm text-muted-foreground"
               >
-                <DropdownMenuTrigger>
-                  <Ellipsis />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <!-- TODO: Ajouter action -->
-                  <DropdownMenuItem>Signaler</DropdownMenuItem>
-                  <DropdownMenuItem @click="handleRemoveComment(comment.id)"
-                    >Supprimer</DropdownMenuItem
-                  >
-                </DropdownMenuContent>
-              </DropdownMenu>
+                <Report
+                  v-if="comment.user_id !== $page?.props?.auth?.user?.id"
+                  :id="comment.id"
+                  type="comment_deal"
+                />
+                <div
+                  class="flex w-fit cursor-pointer items-center gap-1 text-sm"
+                >
+                  <Trash2
+                    v-if="comment.user_id === $page?.props?.auth?.user?.id"
+                    @click="handleRemoveComment(comment.id)"
+                  />
+                </div>
+              </div>
             </div>
             <p>
               {{ comment.content }}
@@ -647,20 +650,23 @@ const { copy, copied } = useClipboard({ source })
                     </div>
                   </div>
 
-                  <DropdownMenu
-                    v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                  <div
+                    class="flex items-center gap-2 text-sm text-muted-foreground"
                   >
-                    <DropdownMenuTrigger>
-                      <Ellipsis />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <!-- TODO: Ajouter action -->
-                      <DropdownMenuItem>Signaler</DropdownMenuItem>
-                      <DropdownMenuItem @click="handleRemoveComment(reply.id)"
-                        >Supprimer</DropdownMenuItem
-                      >
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <Report
+                      v-if="reply.user_id !== $page?.props?.auth?.user?.id"
+                      :id="reply.id"
+                      type="comment_deal"
+                    />
+                    <div
+                      class="flex w-fit cursor-pointer items-center gap-1 text-sm"
+                    >
+                      <Trash2
+                        v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                        @click="handleRemoveComment(reply.id)"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div v-if="reply.answer_to_user" class="text-muted-foreground">
                   <!--  TODO: redirection                  -->

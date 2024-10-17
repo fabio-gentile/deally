@@ -84,8 +84,7 @@ function getAllSubReplies(reply, replies) {
   }
 }
 
-const handleRemoveComment = (id) => {
-  console.log("Remove comment with id:", id)
+const handleRemoveComment = (id: number) => {
   router.delete(
     route(
       "discussions.comments.destroy",
@@ -96,6 +95,7 @@ const handleRemoveComment = (id) => {
           console.log("Remove comment with id:", id)
           console.log("Comment removed")
         },
+        preserveState: true,
       }
     )
   )
@@ -205,7 +205,7 @@ const discussionDestroy = (id: number) => {
             />
           </div>
           <div
-            class="tip-tap text-sm text-muted-foreground lg:text-base"
+            class="tip-tap break-all text-sm text-muted-foreground lg:text-base"
             v-html="discussion.content"
           ></div>
           <Separator class="!-mt-4" />
@@ -342,20 +342,23 @@ const discussionDestroy = (id: number) => {
                 </div>
               </div>
 
-              <DropdownMenu
-                v-if="comment.user.id === $page?.props?.auth?.user?.id"
+              <div
+                class="flex items-center gap-2 text-sm text-muted-foreground"
               >
-                <DropdownMenuTrigger>
-                  <Ellipsis />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <!-- TODO: Ajouter action -->
-                  <DropdownMenuItem>Signaler</DropdownMenuItem>
-                  <DropdownMenuItem @click="handleRemoveComment(comment.id)"
-                    >Supprimer</DropdownMenuItem
-                  >
-                </DropdownMenuContent>
-              </DropdownMenu>
+                <Report
+                  v-if="comment.user_id !== $page?.props?.auth?.user?.id"
+                  :id="comment.id"
+                  type="comment_discussion"
+                />
+                <div
+                  class="flex w-fit cursor-pointer items-center gap-1 text-sm"
+                >
+                  <Trash2
+                    v-if="comment.user_id === $page?.props?.auth?.user?.id"
+                    @click="handleRemoveComment(comment.id)"
+                  />
+                </div>
+              </div>
             </div>
             <p>
               {{ comment.content }}
@@ -402,21 +405,23 @@ const discussionDestroy = (id: number) => {
                       >
                     </div>
                   </div>
-
-                  <DropdownMenu
-                    v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                  <div
+                    class="flex items-center gap-2 text-sm text-muted-foreground"
                   >
-                    <DropdownMenuTrigger>
-                      <Ellipsis />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <!-- TODO: Ajouter action -->
-                      <DropdownMenuItem>Signaler</DropdownMenuItem>
-                      <DropdownMenuItem @click="handleRemoveComment(reply.id)"
-                        >Supprimer</DropdownMenuItem
-                      >
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <Report
+                      v-if="reply.user_id !== $page?.props?.auth?.user?.id"
+                      :id="reply.id"
+                      type="comment_discussion"
+                    />
+                    <div
+                      class="flex w-fit cursor-pointer items-center gap-1 text-sm"
+                    >
+                      <Trash2
+                        v-if="reply.user_id === $page?.props?.auth?.user?.id"
+                        @click="handleRemoveComment(reply.id)"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div v-if="reply.answer_to_user" class="text-muted-foreground">
                   <!--  TODO: redirection                  -->
