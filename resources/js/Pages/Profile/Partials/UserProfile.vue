@@ -31,7 +31,7 @@ const props = defineProps<{
       <h2 class="text-2xl font-semibold text-foreground">{{ user.name }}</h2>
     </div>
     <div
-      class="flex flex-col flex-wrap gap-8 font-medium text-muted-foreground sm:flex-row"
+      class="flex flex-col flex-wrap gap-2 font-medium text-muted-foreground sm:flex-row md:gap-4 lg:gap-8"
     >
       <div class="flex flex-wrap items-center gap-2">
         <Handshake />
