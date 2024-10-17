@@ -58,27 +58,24 @@ class AdminCommentDealController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): \Inertia\Response
     {
-        //
+        $comment = CommentDeal::where('id', $id)->with('user')->firstOrFail();
+
+        return Inertia::render('Admin/Deal/Comment/Show', [
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user' => [
+                    'name' => $comment->user->name,
+                    'id' => $comment->user->id,
+                ],
+            ],
+            'deal' => Deal::where('id', $comment->deal_id)->first(),
+        ]);
     }
 
     /**
