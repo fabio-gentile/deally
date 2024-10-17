@@ -19,7 +19,7 @@ class ReportController extends Controller
         switch ($request->input('type')) {
             case 'deal':
                 $request->validate([
-                    'reason' => ['required', 'in:spam,inappropriate,other,missing_information,wrong_category'],
+                    'reason' => ['required', 'in:Spam,Inapproprié,Autre,Informations manquantes,Mauvaise catégorie'],
                     'description' => ['nullable', 'string', 'max:1024'],
                     'id' => ['required', 'integer', 'exists:deals,id'],
                 ]);
@@ -27,7 +27,7 @@ class ReportController extends Controller
                 break;
             case 'discussion':
                 $request->validate([
-                    'reason' => ['required', 'in:spam,inappropriate,other,wrong_category'],
+                    'reason' => ['required', 'in:Spam,Inapproprié,Autre,Mauvaise catégorie'],
                     'description' => ['nullable', 'string', 'max:1024'],
                     'id' => ['required', 'integer', 'exists:discussions,id'],
                 ]);
@@ -35,7 +35,7 @@ class ReportController extends Controller
                 break;
             case 'comment_deal':
                 $request->validate([
-                    'reason' => ['required', 'in:spam,inappropriate,other'],
+                    'reason' => ['required', 'in:Spam,Inapproprié,Autre'],
                     'description' => ['nullable', 'string', 'max:1024'],
                     'id' => ['required', 'integer', 'exists:comment_deals,id'],
                 ]);
@@ -43,7 +43,7 @@ class ReportController extends Controller
                 break;
             case 'comment_discussion':
                 $request->validate([
-                    'reason' => ['required', 'in:spam,inappropriate,other'],
+                    'reason' => ['required', 'in:Spam,Inapproprié,Autre'],
                     'description' => ['nullable', 'string', 'max:1024'],
                     'id' => ['required', 'integer', 'exists:comment_discussions,id'],
                 ]);

@@ -28,22 +28,22 @@ interface Reason {
 }
 
 const dealReasons: Reason[] = [
-  { value: "spam", label: "Spam" },
-  { value: "inappropriate", label: "Inapproprié / Injurieux / Vulgaire" },
-  { value: "missing_information", label: "Informations manquantes" },
-  { value: "wrong_category", label: "Mauvaise catégorie" },
-  { value: "other", label: "Autre" },
+  { value: "Spam", label: "Spam" },
+  { value: "Inapproprié", label: "Inapproprié / Injurieux / Vulgaire" },
+  { value: "Informations manquantes", label: "Informations manquantes" },
+  { value: "Mauvaise catégorie", label: "Mauvaise catégorie" },
+  { value: "Autre", label: "Autre" },
 ]
 const commentReasons: Reason[] = [
-  { value: "spam", label: "Spam" },
-  { value: "inappropriate", label: "Inapproprié / Injurieux / Vulgaire" },
-  { value: "other", label: "Autre" },
+  { value: "Spam", label: "Spam" },
+  { value: "Inapproprié", label: "Inapproprié / Injurieux / Vulgaire" },
+  { value: "Autre", label: "Autre" },
 ]
 const discussionReasons: Reason[] = [
-  { value: "spam", label: "Spam" },
-  { value: "inappropriate", label: "Inapproprié / Injurieux / Vulgaire" },
-  { value: "wrong_category", label: "Mauvaise catégorie" },
-  { value: "other", label: "Autre" },
+  { value: "Spam", label: "Spam" },
+  { value: "Inapproprié", label: "Inapproprié / Injurieux / Vulgaire" },
+  { value: "Mauvaise catégorie", label: "Mauvaise catégorie" },
+  { value: "Autre", label: "Autre" },
 ]
 
 const form = useForm({
@@ -79,8 +79,8 @@ const [isOpen, closeDialog] = dialogState()
 <template>
   <Dialog v-if="!$page.props.auth.user?.id">
     <DialogTrigger as-child>
-      <div class="flex w-fit items-center gap-1 text-sm">
-        <Flag class="h-5 w-5 cursor-pointer object-contain" />
+      <div class="flex w-fit cursor-pointer items-center gap-1 text-sm">
+        <Flag class="h-5 w-5 object-contain" />
         <slot />
       </div>
     </DialogTrigger>
@@ -100,8 +100,8 @@ const [isOpen, closeDialog] = dialogState()
   </Dialog>
   <Dialog v-else v-model:open="isOpen">
     <DialogTrigger as-child>
-      <div class="flex w-fit items-center gap-1 text-sm">
-        <Flag class="h-5 w-5 cursor-pointer object-contain" />
+      <div class="flex w-fit cursor-pointer items-center gap-1 text-sm">
+        <Flag class="h-5 w-5 object-contain" />
         <slot />
       </div>
     </DialogTrigger>
