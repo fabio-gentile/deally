@@ -165,6 +165,12 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.list');
     Route::get('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('admin.reports.show');
     Route::delete('/reports/{id}', [\App\Http\Controllers\Admin\AdminReportController::class, 'destroy'])->name('admin.reports.destroy');
+
+    // Pages
+    Route::get('/pages', [\App\Http\Controllers\Admin\AdminPageController::class, 'index'])->name('admin.pages.list');
+    Route::get('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'create'])->name('admin.pages.create');
+    Route::get('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'edit'])->name('admin.pages.edit');
+    Route::patch('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'update'])->name('admin.pages.update')->middleware([HandlePrecognitiveRequests::class]);
 });
 
 
