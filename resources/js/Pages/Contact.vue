@@ -15,6 +15,11 @@ import {
 } from "@/Components/ui/select"
 import { Textarea } from "@/Components/ui/textarea"
 import { Button } from "@/Components/ui/button"
+import GoogleReCaptchaV3 from "@/Components/googlerecaptchav3/GoogleReCaptchaV3.vue"
+
+const props = defineProps<{
+  recaptchaKey: string
+}>()
 
 const subjects = [
   "Proposer une amélioration",
@@ -30,6 +35,7 @@ const form = useForm({
   name: "",
   email: "",
   message: "",
+  recaptcha: "",
 })
 
 const submit = () => {
@@ -55,10 +61,11 @@ const submit = () => {
         entre quelques heures et 2 jours, en fonction de la nature de votre
         demande.
       </p>
-      <div class="flex flex-col gap-4">
+      <form @submit.prevent="submit" class="flex flex-col gap-4">
         <div class="flex flex-col gap-3">
           <Label for="name">Nom</Label>
           <Input
+            required
             v-model="form.name"
             type="text"
             id="name"
@@ -71,6 +78,7 @@ const submit = () => {
         <div class="flex flex-col gap-3">
           <Label for="name">Email</Label>
           <Input
+            required
             v-model="form.email"
             type="email"
             id="email"
@@ -82,8 +90,8 @@ const submit = () => {
         </div>
         <div class="flex flex-col gap-3">
           <Label for="name">Sujet</Label>
-          <Select v-model="form.subject">
-            <SelectTrigger v-model="form.subject">
+          <Select required v-model="form.subject">
+            <SelectTrigger>
               <SelectValue placeholder="Sélectionner un sujet" />
             </SelectTrigger>
             <SelectContent>
@@ -105,6 +113,7 @@ const submit = () => {
         <div class="flex flex-col gap-3">
           <Label for="name">Message</Label>
           <Textarea
+            required
             class="min-h-[150px]"
             v-model="form.message"
             id="message"
@@ -114,8 +123,35 @@ const submit = () => {
           />
           <FormError :message="form.errors.message" />
         </div>
-        <Button class="w-fit" @click="submit">Envoyer</Button>
-      </div>
+        <!-- Google Recaptcha Widget-->
+        <google-re-captcha-v3
+          class="hidden"
+          v-model="form.recaptcha"
+          ref="captcha"
+          :site-key="recaptchaKey"
+          id="contact_us_id"
+          inline
+          action="contact_us"
+        ></google-re-captcha-v3>
+        <div class="text-sm text-muted-foreground">
+          Ce site est protégé par reCAPTCHA et la
+          <a
+            class="text-primary underline"
+            target="_blank"
+            href="https://policies.google.com/privacy"
+            >politique de confidentialité</a
+          >
+          et les
+          <a
+            class="text-primary underline"
+            target="_blank"
+            href="https://policies.google.com/terms"
+            >conditions d'utilisation</a
+          >
+          de Google s'appliquent.
+        </div>
+        <Button class="w-fit" type="submit">Envoyer</Button>
+      </form>
     </Wrapper>
   </div>
 </template>

@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.10",
         "spatie/laravel-permission": "^6.9",
         "stevebauman/purify": "^6.2",
-        "tightenco/ziggy": "^2.0"
+        "tightenco/ziggy": "^2.0",
+        "timehunter/laravel-google-recaptcha-v3": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
