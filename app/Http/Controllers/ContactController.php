@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use TimeHunter\LaravelGoogleReCaptchaV3\GoogleReCaptchaV3;
 
 class ContactController extends Controller
 {
@@ -28,9 +30,11 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request): \Illuminate\Http\RedirectResponse
     {
-        //
+        \App\Models\Contact::create($request->validated());
+
+        return back()->with('success', 'Votre message a bien été envoyé !');
     }
 
     /**
