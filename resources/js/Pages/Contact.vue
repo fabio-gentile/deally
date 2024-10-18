@@ -16,6 +16,7 @@ import {
 import { Textarea } from "@/Components/ui/textarea"
 import { Button } from "@/Components/ui/button"
 import GoogleReCaptchaV3 from "@/Components/googlerecaptchav3/GoogleReCaptchaV3.vue"
+import { ref } from "vue"
 
 const props = defineProps<{
   recaptchaKey: string
@@ -38,12 +39,16 @@ const form = useForm({
   recaptcha: "",
 })
 
-const submit = () => {
-  console.log(form.data())
-  // form.post(route("contact.store"), {
-  //   preserveScroll: true,
-  //   onSuccess: () => form.reset(),
-  // })
+const captcha = ref(null)
+const submit = async () => {
+  form.post(route("contact.store"), {
+    preserveScroll: true,
+    onSuccess: () => form.reset(),
+  })
+
+  if (captcha.value) {
+    await captcha.value.execute()
+  }
 }
 </script>
 <template>
