@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
 use TimeHunter\LaravelGoogleReCaptchaV3\GoogleReCaptchaV3;
 
@@ -36,6 +37,16 @@ class ContactController extends Controller
         if (!empty($request->input('website'))) {
             return back()->with('error', 'Erreur !');
         }
+
+        // Limit the number of requests to 1 every 15 minutes per IP
+        if (RateLimiter::tooManyAttempts('contact-form:'.$request->ip(), 1)) {
+            $seconds = RateLimiter::availableIn('contact-form:'.$request->ip());
+            $minutes = floor($seconds / 60);
+            $string = $minutes > 0 ? $minutes.' minute'.($minutes > 1 ? 's' : '') : '';
+            return back()->with('error', 'Vous avez déjà envoyé un message. Veuillez réessayer dans '.$string);
+        }
+
+        RateLimiter::increment('contact-form:'.$request->ip(), 15 * 60);
 
         \App\Models\Contact::create($request->validated());
 
