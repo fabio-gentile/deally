@@ -37,6 +37,7 @@ const form = useForm({
   email: "",
   message: "",
   recaptcha: "",
+  website: "",
 })
 
 const captcha = ref(null)
@@ -128,6 +129,15 @@ const submit = async () => {
           />
           <FormError :message="form.errors.message" />
         </div>
+
+        <!-- Honeypot -->
+        <input
+          type="text"
+          v-model="form.website"
+          name="website"
+          style="display: none"
+        />
+
         <!-- Google Recaptcha Widget-->
         <google-re-captcha-v3
           class="hidden"

@@ -32,6 +32,11 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request): \Illuminate\Http\RedirectResponse
     {
+        // Honeypot to prevent spam
+        if (!empty($request->input('website'))) {
+            return back()->with('error', 'Erreur !');
+        }
+
         \App\Models\Contact::create($request->validated());
 
         return back()->with('success', 'Votre message a bien été envoyé !');
