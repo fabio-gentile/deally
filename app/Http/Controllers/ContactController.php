@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
-use TimeHunter\LaravelGoogleReCaptchaV3\GoogleReCaptchaV3;
 
 class ContactController extends Controller
 {
@@ -49,6 +49,16 @@ class ContactController extends Controller
         RateLimiter::increment('contact-form:'.$request->ip(), 15 * 60);
 
         \App\Models\Contact::create($request->validated());
+
+        $emailData = [
+            'subject' => $request->input('subject'),
+            'message' => $request->input('message'),
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+        ];
+
+        // Send email
+        Mail::to(env('CONTACT_FORM_EMAIL'))->send(new \App\Mail\ContactMail($emailData));
 
         return back()->with('success', 'Votre message a bien été envoyé !');
     }

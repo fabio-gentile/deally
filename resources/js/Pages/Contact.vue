@@ -17,6 +17,7 @@ import { Textarea } from "@/Components/ui/textarea"
 import { Button } from "@/Components/ui/button"
 import GoogleReCaptchaV3 from "@/Components/googlerecaptchav3/GoogleReCaptchaV3.vue"
 import { ref } from "vue"
+import { Loader2 } from "lucide-vue-next"
 
 const props = defineProps<{
   recaptchaKey: string
@@ -165,7 +166,10 @@ const submit = async () => {
           >
           de Google s'appliquent.
         </div>
-        <Button class="w-fit" type="submit">Envoyer</Button>
+        <Button :disabled="form.processing" class="w-fit" type="submit">
+          <Loader2 v-if="form.processing" class="mr-2 h-5 w-5 animate-spin" />
+          Envoyer
+        </Button>
       </form>
     </Wrapper>
   </div>
