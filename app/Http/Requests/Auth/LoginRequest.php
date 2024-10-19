@@ -34,6 +34,22 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'L\'adresse email est requise.',
+            'email.string' => 'L\'adresse email doit être une chaîne de caractères.',
+            'email.email' => 'L\'adresse email doit être valide.',
+            'password.required' => 'Le mot de passe est requis.',
+            'password.string' => 'Le mot de passe doit être une chaîne de caractères.',
+        ];
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws \Illuminate\Validation\ValidationException

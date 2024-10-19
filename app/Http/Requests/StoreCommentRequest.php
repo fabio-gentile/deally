@@ -29,4 +29,23 @@ class StoreCommentRequest extends FormRequest
             'answer_to' => ['nullable', 'integer'],
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'content.required' => 'Le contenu est requis.',
+            'content.string' => 'Le contenu doit être une chaîne de caractères.',
+            'content.max' => 'Le contenu ne doit pas dépasser 512 caractères.',
+            'content.min' => 'Le contenu doit contenir au moins 1 caractère.',
+            'parent_id.integer' => 'L\'identifiant du parent doit être un entier.',
+            'content_id.required' => 'L\'identifiant du contenu est requis.',
+            'content_id.integer' => 'L\'identifiant du contenu doit être un entier.',
+            'answer_to.integer' => 'L\'identifiant de la réponse doit être un entier.',
+        ];
+    }
 }
