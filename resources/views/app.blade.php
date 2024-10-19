@@ -14,8 +14,12 @@
         @routes
         @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
+
+        <!-- Cookie consent -->
+        @cookieconsentscripts
     </head>
     <body>
+        @cookieconsentview
         <div>
             @inertia
         </div>

@@ -129,3 +129,6 @@
     @apply text-primary underline;
 }
 
+#cookies-policy .cookies__category input:checked+.cookies__box:after {
+    @apply !bg-primary;
+}
