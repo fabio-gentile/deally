@@ -10,6 +10,12 @@ use Inertia\Inertia;
 
 class AdminCommentBlogController extends Controller
 {
+    /*
+     * List all comments
+     * @param string $id
+     * @param Request $request
+     * @return \Inertia\Response
+     */
     public function index(string $id, Request $request): \Inertia\Response
     {
         $comments = CommentBlog::query();
@@ -54,6 +60,11 @@ class AdminCommentBlogController extends Controller
         ]);
     }
 
+    /*
+     * Show a comment
+     * @param string $id
+     * @return \Inertia\Response
+     */
     public function show(string $id): \Inertia\Response
     {
         $comment = CommentBlog::where('id', $id)->with('user')->firstOrFail();
@@ -70,5 +81,19 @@ class AdminCommentBlogController extends Controller
             ],
             'blog' => Blog::where('id', $comment->blog_id)->first(),
         ]);
+    }
+
+    /*
+     * Delete a comment
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
+    {
+        $comment = CommentBlog::where('id', $id)->firstOrFail();
+        $blog = Blog::where('id', $comment->blog_id)->firstOrFail();
+        $comment->delete();
+
+        return redirect()->route('admin.blog.comments.list', ['id' => $blog->id])->with('success', 'Commentaire supprimé avec succès');
     }
 }
