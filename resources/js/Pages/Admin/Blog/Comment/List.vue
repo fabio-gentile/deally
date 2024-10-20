@@ -30,7 +30,7 @@ import { ref, watch } from "vue"
 import { useDateFormat, useDebounceFn } from "@vueuse/core"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
 import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
-import { Discussion } from "@/types/model/discussion"
+import { Blog } from "@/types/model/blog"
 
 interface Filters {
   page?: number
@@ -47,7 +47,7 @@ interface Comment {
 }
 
 const props = defineProps<{
-  discussion: Discussion
+  blog: Blog
   comments: Comment[]
   filters: Filters
   pagination: IPagination
@@ -57,17 +57,13 @@ const filters = ref({ ...props.filters })
 const comments = ref(props.comments)
 
 const search = useDebounceFn(() => {
-  router.get(
-    route("admin.discussions.comments.list", props.discussion.id),
-    filters.value,
-    {
-      preserveState: true,
-      replace: true,
-      onSuccess: () => {
-        comments.value = props.comments
-      },
-    }
-  )
+  router.get(route("admin.blog.comments.list", props.blog.id), filters.value, {
+    preserveState: true,
+    replace: true,
+    onSuccess: () => {
+      comments.value = props.comments
+    },
+  })
 }, 100)
 
 // Watch for changes in filters
@@ -89,7 +85,7 @@ const resetFilters = () => {
 }
 
 const destroyComment = (id: number) => {
-  router.delete(route("admin.discussions.comments.destroy", id), {
+  router.delete(route("admin.blog.comments.destroy", id), {
     preserveState: true,
     replace: true,
     onSuccess: () => {
@@ -100,17 +96,17 @@ const destroyComment = (id: number) => {
 </script>
 
 <template>
-  <AdminTitle :title="'Commentaires de la discussion ' + discussion.title"
-    >Commentaires de la discussion {{ discussion.title }}</AdminTitle
+  <AdminTitle :title="'Commentaires de l\'article ' + blog.title"
+    >Commentaires de l'article' {{ blog.title }}</AdminTitle
   >
   <Breadcrumb
     :breadcrumbs="[
       { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
-      { label: 'Discussion', route: 'admin.discussions.list', active: false },
+      { label: 'Blog', route: 'admin.blog.list', active: false },
       {
-        label: 'Commentaires de la discussions ' + discussion.title,
-        route: 'admin.discussions.comments.list',
-        params: { id: discussion.id },
+        label: 'Commentaires de l\'article ' + blog.title,
+        route: 'admin.blog.comments.list',
+        params: { id: blog.id },
         active: true,
       },
     ]"
@@ -166,7 +162,7 @@ const destroyComment = (id: number) => {
           }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
-          <Link :href="route('admin.discussions.comments.show', comment.id)">
+          <Link :href="route('admin.blog.comments.show', comment.id)">
             <Eye class="w-4 cursor-pointer" />
           </Link>
           <AlertDialog>

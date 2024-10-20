@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 import { Link, router } from "@inertiajs/vue3"
-import { Eye, Trash } from "lucide-vue-next"
+import { ChevronsUpDown, Eye, Trash } from "lucide-vue-next"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { Input } from "@/Components/ui/input"
@@ -27,7 +27,7 @@ import {
   TableEmpty,
 } from "@/Components/ui/table"
 import { ref, watch } from "vue"
-import { useDebounceFn } from "@vueuse/core"
+import { useDateFormat, useDebounceFn } from "@vueuse/core"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
 import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
 import { Deal } from "@/types/model/deal"
@@ -131,6 +131,17 @@ const destroyComment = (id: number) => {
       <TableRow>
         <TableHead> Nom </TableHead>
         <TableHead> Commentaire </TableHead>
+        <TableHead>
+          <Button
+            @click="
+              filters.created_at === 'asc'
+                ? (filters.created_at = 'desc')
+                : (filters.created_at = 'asc')
+            "
+            variant="ghost"
+            >Créé<ChevronsUpDown class="ml-2 w-4"
+          /></Button>
+        </TableHead>
         <TableHead class="text-right"> Action </TableHead>
       </TableRow>
     </TableHeader>
@@ -142,6 +153,13 @@ const destroyComment = (id: number) => {
         </TableCell>
         <TableCell class="max-w-[200px] truncate">
           {{ comment.content }}
+        </TableCell>
+        <TableCell>
+          {{
+            useDateFormat(comment.created_at, "DD-MM-YY", {
+              locales: "fr-FR",
+            })
+          }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
           <Link :href="route('admin.deal.comments.show', comment.id)">
