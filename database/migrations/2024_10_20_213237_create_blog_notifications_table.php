@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Blog::class)->constrained()->cascadeOnDelete();
             $table->dateTime('last_notified_at')->nullable();
         });
     }

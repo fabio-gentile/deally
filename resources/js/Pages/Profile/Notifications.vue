@@ -22,8 +22,8 @@ const props = defineProps<{
 }>()
 
 const form = useForm({
-  newsletter: props.newsletter.newsletter ?? false,
-  blog_notification: props.newsletter.blog_notification ?? false,
+  newsletter: props.newsletter?.newsletter ?? false,
+  blog_notification: props.newsletter?.blog_notification ?? false,
   _method: "patch",
 })
 

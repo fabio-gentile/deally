@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\SendBlogNotification;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,6 +63,21 @@ class Blog extends Model
             // Delete the image file from the storage
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
+            }
+        });
+    }
+
+    //
+    /**
+     * Dispatch the notification job when a blog is updated
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::updated(function ($blog) {
+            if ($blog->is_published && $blog->getOriginal('is_published') === false) {
+                SendBlogNotification::dispatch($blog)->delay(now()->addHours(1));
             }
         });
     }

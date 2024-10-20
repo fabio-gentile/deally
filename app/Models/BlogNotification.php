@@ -9,5 +9,12 @@ class BlogNotification extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['last_notified_at', 'user_id', 'blog_id'];
+    protected $fillable = ['last_notified_at', 'user_id'];
+
+    public function casts(): array
+    {
+        return [
+            'last_notified_at' => 'datetime',
+        ];
+    }
 }
