@@ -13,11 +13,46 @@ class AdminBlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): \Inertia\Response
     {
-        //
-    }
+        $blogs = Blog::query()->withCount('comments');
 
+        if ($request->has('created_at')) {
+            $blogs->orderBy('created_at', $request->created_at === 'desc' ? 'desc' : 'asc');
+        } else {
+            $blogs->orderBy('created_at', 'desc');
+        }
+
+        if ($request->has('comments') && $request->comments !== null) {
+            $blogs->orderBy('comments_count', $request->comments === 'desc' ? 'desc' : 'asc');
+        }
+
+        if ($request->has('search') && $request->search !== null) {
+            $blogs->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $blogs = $blogs->paginate($request->per_page ?? 10);
+
+        return Inertia::render('Admin/Blog/List', [
+            'blogs' => $blogs->getCollection()->map(function ($blog) {
+                return [
+                    'id' => $blog->id,
+                    'title' => $blog->title,
+                    'comments_count' => $blog->comments_count,
+                    'created_at' => $blog->created_at,
+                    'is_published' => $blog->is_published,
+                    'published_at' => $blog->published_at,
+                ];
+            }),
+            'pagination' => [
+                'current_page' => $blogs->currentPage(),
+                'last_page' => $blogs->lastPage(),
+                'per_page' => $blogs->perPage(),
+                'total' => $blogs->total(),
+            ],
+            'filters' => $request->all(),
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */

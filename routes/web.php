@@ -190,6 +190,11 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'edit'])->name('admin.blog.edit');
     Route::patch('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'update'])->name('admin.blog.update')->middleware([HandlePrecognitiveRequests::class]);
     Route::delete('/blog/{id}', [\App\Http\Controllers\Admin\AdminBlogController::class, 'destroy'])->name('admin.blog.destroy');
+
+    // Blog Comments
+    Route::get('/blog/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'index'])->name('admin.blog.comments.list');
+    Route::delete('/blog/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'destroy'])->name('admin.blog.comments.destroy');
+    Route::get('/blog/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'show'])->name('admin.blog.comments.show');
 });
 
 
