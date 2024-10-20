@@ -110,6 +110,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('report', [\App\Http\Controllers\SubscribeNewsletterController::class, 'update'])->name('newsletter.update');
 });
 
+// Comment Blog
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/blog/{slug}/comments', [\App\Http\Controllers\CommentBlogController::class, 'store'])->name('blog.comments.store');
+    Route::delete('/blog/comments/{id}', [\App\Http\Controllers\CommentBlogController::class, 'destroy'])->name('blog.comments.destroy');
+});
+
 // Admin
 Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'create'])->name('admin.login.create');
