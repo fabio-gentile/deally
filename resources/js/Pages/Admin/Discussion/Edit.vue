@@ -79,6 +79,7 @@ const handleImageUpload = (event: Event): void => {
 // Fonction pour supprimer une image de la liste
 const removeImage = (index: number): void => {
   images.value.splice(index, 1)
+  form.thumbnail = ""
 }
 
 const handleRemoveThumbnail = () => {

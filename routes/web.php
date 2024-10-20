@@ -130,12 +130,12 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     // Users
     Route::get('/utilisateurs', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.list');
     Route::get('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('admin.users.edit');
-    Route::patch('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update');
 
     // Discussion
     Route::get('/discussions', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'index'])->name('admin.discussions.list');
     Route::get('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'edit'])->name('admin.discussions.edit');
-    Route::patch('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'update'])->name('admin.discussions.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'update'])->name('admin.discussions.update');
     Route::delete('/discussions/{id}', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'destroy'])->name('admin.discussions.destroy');
 
     // Discussion Comments
@@ -148,7 +148,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/categories-discussions/create', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'create'])->name('admin.categories-discussions.create');
     Route::post('/categories-discussions/create', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'store'])->name('admin.categories-discussions.store');
     Route::get('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'edit'])->name('admin.categories-discussions.edit');
-    Route::patch('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'update'])->name('admin.categories-discussions.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/categories-discussions/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'update'])->name('admin.categories-discussions.update');
     Route::delete('/categories-discussions/{id}', [\App\Http\Controllers\Admin\AdminCategoryDiscussionController::class, 'destroy'])->name('admin.categories-discussions.destroy');
 
     // Deals
@@ -168,7 +168,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/categories-deals/create', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'create'])->name('admin.categories-deals.create');
     Route::post('/categories-deals/create', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'store'])->name('admin.categories-deals.store');
     Route::get('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'edit'])->name('admin.categories-deals.edit');
-    Route::patch('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'update'])->name('admin.categories-deals.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/categories-deals/{id}/edit', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'update'])->name('admin.categories-deals.update');
     Route::delete('/categories-deals/{id}', [\App\Http\Controllers\Admin\AdminCategoryDealController::class, 'destroy'])->name('admin.categories-deals.destroy');
 
     // Reports
@@ -181,14 +181,14 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'create'])->name('admin.pages.create');
     Route::get('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'edit'])->name('admin.pages.edit');
     Route::post('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'store'])->name('admin.pages.store');
-    Route::patch('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'update'])->name('admin.pages.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'update'])->name('admin.pages.update');
 
     // Blog
     Route::get('/blog', [\App\Http\Controllers\Admin\AdminBlogController::class, 'index'])->name('admin.blog.list');
     Route::get('/blog/create', [\App\Http\Controllers\Admin\AdminBlogController::class, 'create'])->name('admin.blog.create');
     Route::post('/blog/create', [\App\Http\Controllers\Admin\AdminBlogController::class, 'store'])->name('admin.blog.store');
     Route::get('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'edit'])->name('admin.blog.edit');
-    Route::patch('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'update'])->name('admin.blog.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::patch('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'update'])->name('admin.blog.update');
     Route::delete('/blog/{id}', [\App\Http\Controllers\Admin\AdminBlogController::class, 'destroy'])->name('admin.blog.destroy');
 
     // Blog Comments

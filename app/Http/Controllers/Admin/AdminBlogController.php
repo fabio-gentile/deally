@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBlogRequest;
 use App\Models\Blog;
+use App\Models\CategoryDiscussion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AdminBlogController extends Controller
@@ -90,27 +92,66 @@ class AdminBlogController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Blog $blog)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Blog $blog)
+    public function edit(string $id): \Inertia\Response
     {
-        //
+        $blog = Blog::where('id', $id)->firstOrFail();
+
+        if ($blog->image) {
+            $currentThumbnail = [
+                'path' => 'uploads/blog/',
+                'filename' => $blog->image,
+            ];
+        } else {
+            $currentThumbnail = null;
+        }
+
+        return Inertia::render('Admin/Blog/Edit', [
+            'blog' => $blog,
+            'currentThumbnail' => $currentThumbnail,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Blog $blog)
+    public function update(StoreBlogRequest $request, string $id): \Illuminate\Http\RedirectResponse
     {
-        //
+        $blog = Blog::where('id', $id)->firstOrFail();
+//        dd($request->all());
+        if ($request->get('isThumbnailRemoved')) {
+            try {
+                Storage::delete('uploads/blog/' . $blog->image);
+                $blog->update([
+                    'image' => null,
+                ]);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
+            }
+        }
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $extension = $image->extension();
+            $filename = uniqid('blog-', true) . '.' . $extension;
+            $path = 'uploads/blog/';
+
+            $image->storeAs($path, $filename, 'public');
+        }
+
+        $blog->update([
+            'title' => $request->title,
+            'content' => $request->description,
+            'image' => $filename ?? $blog->image,
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
+            'meta_keywords' => $request->meta_keywords,
+            'is_published' => $request->is_published,
+            'published_at' => $request->is_published === true ? now() : null,
+        ]);
+
+        return redirect()->route('admin.blog.list')->with('success', 'Article modifié avec succès.');
     }
 
     /**
