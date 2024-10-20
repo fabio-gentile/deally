@@ -106,7 +106,7 @@ const destroyBlog = (id: number) => {
       { label: 'Blog', route: 'admin.blog.list', active: true },
     ]"
   />
-  <div>
+  <div class="flex flex-wrap justify-between gap-4">
     <div class="flex flex-wrap gap-4">
       <Label for="search" class="sr-only">Rechercher</Label>
       <Input
@@ -120,6 +120,9 @@ const destroyBlog = (id: number) => {
         >Réinitialiser les filtres</Button
       >
     </div>
+    <Link :href="route('admin.blog.create')">
+      <Button>Créer un article</Button>
+    </Link>
   </div>
   <Table class="rounded-lg bg-white">
     <TableHeader>
