@@ -176,6 +176,14 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'edit'])->name('admin.pages.edit');
     Route::post('/pages/create', [\App\Http\Controllers\Admin\AdminPageController::class, 'store'])->name('admin.pages.store');
     Route::patch('/pages/{id}/edit', [\App\Http\Controllers\Admin\AdminPageController::class, 'update'])->name('admin.pages.update')->middleware([HandlePrecognitiveRequests::class]);
+
+    // Blog
+    Route::get('/blog', [\App\Http\Controllers\Admin\AdminBlogController::class, 'index'])->name('admin.blog.list');
+    Route::get('/blog/create', [\App\Http\Controllers\Admin\AdminBlogController::class, 'create'])->name('admin.blog.create');
+    Route::post('/blog/create', [\App\Http\Controllers\Admin\AdminBlogController::class, 'store'])->name('admin.blog.store');
+    Route::get('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'edit'])->name('admin.blog.edit');
+    Route::patch('/blog/{id}/edit', [\App\Http\Controllers\Admin\AdminBlogController::class, 'update'])->name('admin.blog.update')->middleware([HandlePrecognitiveRequests::class]);
+    Route::delete('/blog/{id}', [\App\Http\Controllers\Admin\AdminBlogController::class, 'destroy'])->name('admin.blog.destroy');
 });
 
 
