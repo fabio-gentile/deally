@@ -28,7 +28,7 @@ const pages = ref(props.pages)
   <AdminTitle title="Pages">Pages</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       {
         label: 'Pages',
         route: 'admin.pages.list',

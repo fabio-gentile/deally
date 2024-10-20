@@ -106,7 +106,7 @@ const destroyReport = (id: number) => {
   <AdminTitle title="Signalements">Signalements</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       {
         label: 'Signalements',
         route: 'admin.reports.list',

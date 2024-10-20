@@ -101,7 +101,7 @@ const destroyComment = (id: number) => {
   >
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       { label: 'Deal', route: 'admin.deals.list', active: false },
       {
         label: 'Commentaires du deal ' + deal.title,

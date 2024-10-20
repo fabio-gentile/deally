@@ -91,7 +91,7 @@ const handleRemoveThumbnail = () => {
   <AdminTitle :title="'Modification ' + discussion.title" />
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       { label: 'Discussion', route: 'admin.discussions.list', active: false },
       {
         label: discussion.title,

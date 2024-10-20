@@ -90,7 +90,7 @@ const destroyCategory = (id: number) => {
   <AdminTitle title="Catégories discussion">Catégories discussions</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       {
         label: 'Catégories discussion',
         route: 'admin.categories-discussions.list',

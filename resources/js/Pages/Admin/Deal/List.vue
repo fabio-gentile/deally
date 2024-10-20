@@ -106,7 +106,7 @@ const destroyDeal = (id: number) => {
   <AdminTitle title="Deals">Deals</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       { label: 'Deals', route: 'admin.deals.list', active: true },
     ]"
   />

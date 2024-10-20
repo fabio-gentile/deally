@@ -73,7 +73,7 @@ const resetFilters = () => {
   <AdminTitle title="Utilisateurs">Utilisateurs</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       { label: 'Utilisateurs', route: 'admin.users.list', active: true },
     ]"
   />

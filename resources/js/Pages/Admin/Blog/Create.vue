@@ -62,7 +62,7 @@ const removeImage = (index: number): void => {
   <AdminTitle :title="'Créer un article'" />
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       {
         label: 'Blog',
         route: 'admin.blog.list',

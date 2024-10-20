@@ -37,7 +37,7 @@ const submit = () => {
   <AdminTitle :title="'Commentaires de la deal ' + deal.title" />
   <Breadcrumb
     :breadcrumbs="[
-      { label: 'Tableau de board', route: 'admin.dashboard', active: false },
+      { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
       { label: 'Deals', route: 'admin.deals.list', active: false },
       {
         label: 'Commentaires du deal ' + deal.title,
