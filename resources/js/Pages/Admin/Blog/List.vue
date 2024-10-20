@@ -99,7 +99,7 @@ const destroyBlog = (id: number) => {
 </script>
 
 <template>
-  <AdminTitle title="Discussions">Discussions</AdminTitle>
+  <AdminTitle title="Articles">Articles</AdminTitle>
   <Breadcrumb
     :breadcrumbs="[
       { label: 'Tableau de bord', route: 'admin.dashboard', active: false },

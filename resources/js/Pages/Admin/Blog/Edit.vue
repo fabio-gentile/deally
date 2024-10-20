@@ -76,7 +76,7 @@ const handleRemoveThumbnail = () => {
 </script>
 
 <template>
-  <AdminTitle :title="'Créer un article'" />
+  <AdminTitle :title="'Modification de l\'article ' + props.blog.title" />
   <Breadcrumb
     :breadcrumbs="[
       { label: 'Tableau de bord', route: 'admin.dashboard', active: false },
