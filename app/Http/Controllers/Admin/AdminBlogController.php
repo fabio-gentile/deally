@@ -157,8 +157,11 @@ class AdminBlogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Blog $blog)
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
-        //
+        $blog = Blog::where('id', $id)->firstOrFail();
+        $blog->delete();
+
+        return redirect()->route('admin.blog.list')->with('success', 'Article supprimé avec succès.');
     }
 }
