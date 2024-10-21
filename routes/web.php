@@ -122,6 +122,10 @@ Route::get('/politique-de-confidentialite', [\App\Http\Controllers\PageControlle
 Route::get('/politique-cookie', [\App\Http\Controllers\PageController::class, 'cookiePolicy'])->name('pages.cookie-policy');
 Route::get('/a-propos', [\App\Http\Controllers\PageController::class, 'about'])->name('pages.about');
 
+// Blog
+Route::get('/blog', [\App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
 // Admin
 Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'create'])->name('admin.login.create');

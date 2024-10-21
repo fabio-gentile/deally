@@ -38,7 +38,7 @@ watch(
       class="mx-auto flex min-h-[100dvh] flex-col justify-center font-sans antialiased"
     >
       <NavigationBar :user="$page.props.auth.user?.name" />
-      <div class="flex grow flex-col items-center justify-center bg-page">
+      <div class="flex grow flex-col items-center bg-page">
         <slot />
       </div>
       <Footer />
