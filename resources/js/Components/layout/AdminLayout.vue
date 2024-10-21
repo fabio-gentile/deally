@@ -287,7 +287,7 @@ const isOpen = ref(false)
           </div>
         </header>
         <main
-          class="flex flex-1 flex-col gap-4 overflow-hidden bg-page p-4 lg:gap-6 lg:p-6"
+          class="flex flex-1 flex-col gap-4 overflow-hidden bg-page p-4 md:max-w-[calc(100dvw-220px)] lg:max-w-[calc(100dvw-280px)] lg:gap-6 lg:p-6"
         >
           <slot />
           <!--          <div class="flex items-center">-->

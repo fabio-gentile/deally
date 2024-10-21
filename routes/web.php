@@ -195,6 +195,11 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/blog/{id}/comments', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'index'])->name('admin.blog.comments.list');
     Route::delete('/blog/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'destroy'])->name('admin.blog.comments.destroy');
     Route::get('/blog/comments/{id}', [\App\Http\Controllers\Admin\AdminCommentBlogController::class, 'show'])->name('admin.blog.comments.show');
+
+    // Contact
+    Route::get('/contacts', [\App\Http\Controllers\Admin\AdminContactController::class, 'index'])->name('admin.contacts.list');
+    Route::get('/contacts/{id}', [\App\Http\Controllers\Admin\AdminContactController::class, 'show'])->name('admin.contacts.show');
+    Route::delete('/contacts/{id}', [\App\Http\Controllers\Admin\AdminContactController::class, 'destroy'])->name('admin.contacts.destroy');
 });
 
 
