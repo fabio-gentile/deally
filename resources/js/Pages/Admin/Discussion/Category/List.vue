@@ -29,7 +29,7 @@ import {
 import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 import { CategoryDiscussion } from "@/types/model/discussion"
 
 interface Filters {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 import { Button } from "@/Components/ui/button"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 import { router } from "@inertiajs/vue3"
 import {
   AlertDialog,

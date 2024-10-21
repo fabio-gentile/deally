@@ -13,7 +13,7 @@ import {
   TableEmpty,
 } from "@/Components/ui/table"
 import { ref, watch } from "vue"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 import { Page } from "@/types/model/page"
 import striptags from "striptags"
 

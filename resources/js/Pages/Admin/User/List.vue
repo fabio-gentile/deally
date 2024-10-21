@@ -20,7 +20,7 @@ import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import { router } from "@inertiajs/vue3"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 interface Filters {
   filter_by?: string

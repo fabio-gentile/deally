@@ -2,7 +2,7 @@
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 import { Button } from "@/Components/ui/button"
 import { Label } from "@/Components/ui/label"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 import { router } from "@inertiajs/vue3"
 import { Deal } from "@/types/model/deal"
 import { Textarea } from "@/Components/ui/textarea"

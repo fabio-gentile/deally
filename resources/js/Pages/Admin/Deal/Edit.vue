@@ -26,7 +26,7 @@ import { ImageDeal } from "@/types/model/deal"
 import axios from "axios"
 import TipTap from "@/Components/TipTap.vue"
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 interface Image {
   file: File

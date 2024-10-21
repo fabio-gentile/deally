@@ -15,7 +15,7 @@ import FormError from "@/Components/FormError.vue"
 import TipTap from "@/Components/TipTap.vue"
 import { CategoryDiscussion, Discussion } from "@/types/model/discussion"
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const props = defineProps<{
   categories: CategoryDiscussion[]

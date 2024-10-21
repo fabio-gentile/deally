@@ -10,7 +10,7 @@ import { useForm } from "laravel-precognition-vue-inertia"
 import { capitalizeFirstLetter } from "@/lib/utils"
 import { Role } from "@/types/model/role"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
-import Breadcrumb from "@/Components/Admin/Breadcrumb.vue"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const props = defineProps<{
   user: IUser
