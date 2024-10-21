@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\CategoryDeal;
 use App\Models\Deal;
+use App\Models\Discussion;
 use App\Models\VoteDeals;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -13,22 +15,6 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the form for creating the resource.
-     */
-    public function create(): never
-    {
-        abort(404);
-    }
-
-    /**
-     * Store the newly created resource in storage.
-     */
-    public function store(Request $request): never
-    {
-        abort(404);
-    }
-
     /**
      * Display the resource.
      */
@@ -62,30 +48,8 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'categories' => CategoryDeal::all(),
             'deals' => $deals,
+            'discussions' => Discussion::orderBy('created_at', 'desc')->with('user')->withCount('comments')->limit(5)->get(),
+            'blogs' => Blog::orderBy('published_at', 'desc')->where('is_published', true)->limit(5)->get(),
         ]);
-    }
-
-    /**
-     * Show the form for editing the resource.
-     */
-    public function edit()
-    {
-        //
-    }
-
-    /**
-     * Update the resource in storage.
-     */
-    public function update(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Remove the resource from storage.
-     */
-    public function destroy(): never
-    {
-        abort(404);
     }
 }

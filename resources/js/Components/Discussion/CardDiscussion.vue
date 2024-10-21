@@ -25,7 +25,7 @@ const since = timeAgo(new Date(discussion.created_at)) // string
 
 <template>
   <article
-    class="w-full gap-4 overflow-hidden rounded-lg border bg-background p-4 text-muted-foreground"
+    class="w-full gap-4 overflow-hidden rounded-lg border bg-white p-4 text-muted-foreground"
   >
     <div class="flex flex-col gap-4 md:flex-row">
       <div class="flex shrink-0 gap-2">

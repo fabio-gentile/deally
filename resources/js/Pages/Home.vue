@@ -12,10 +12,15 @@ import {
 } from "@/Components/ui/carousel"
 import CardDeal from "@/Components/Deal/CardDeal.vue"
 import { Deal } from "@/types/model/deal"
+import HomeDiscussion from "@/Components/Discussion/HomeDiscussion.vue"
+import { Discussion } from "@/types/model/discussion"
+import { Blog } from "@/types/model/blog"
 
 defineProps<{
   categories: CategoryDeal[]
   deals: Deal[]
+  discussions: Discussion[]
+  blogs: Blog[]
 }>()
 </script>
 
@@ -79,8 +84,20 @@ defineProps<{
 
     <main class="bg-page">
       <Wrapper class="pt-8">
-        <div class="flex flex-col gap-3">
-          <CardDeal v-for="(deal, index) in deals" :key="index" :deal="deal" />
+        <div class="flex flex-col gap-3 lg:flex-row lg:gap-6">
+          <div class="flex grow flex-col gap-3">
+            <CardDeal
+              v-for="(deal, index) in deals"
+              :key="index"
+              :deal="deal"
+            />
+          </div>
+          <div class="flex shrink-0 flex-row gap-6 lg:flex-col">
+            <HomeDiscussion
+              class="w-1/2 lg:w-full"
+              :discussions="discussions"
+            />
+          </div>
         </div>
       </Wrapper>
     </main>
