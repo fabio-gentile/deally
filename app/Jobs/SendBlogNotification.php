@@ -35,13 +35,13 @@ class SendBlogNotification implements ShouldQueue
                     'last_notified_at' => now(),
                 ]);
             }
-            if ($subscriber->blogLastNotifiedAt->last_notified_at && $subscriber->blogLastNotifiedAt->last_notified_at->diffInHours(now()) <= 24) {
-                return;
+
+            if ($subscriber->blogLastNotifiedAt && $subscriber->blogLastNotifiedAt->last_notified_at && $subscriber->blogLastNotifiedAt->last_notified_at->diffInHours(now()) <= 24) {
+                continue;
             }
 
-            Mail::to($subscriber->email)->send(new BlogPublishedNotification($this->blog));
-
             $subscriber->blogLastNotifiedAt->update(['last_notified_at' => now()]);
+            Mail::to($subscriber->email)->send(new BlogPublishedNotification($this->blog));
         }
     }
 }
