@@ -9,6 +9,11 @@ use Inertia\Inertia;
 
 class AdminContactController extends Controller
 {
+    /*
+     * List all contacts
+     * @param \Illuminate\Http\Request $request
+     * @return \Inertia\Response
+     */
     public function index(Request $request): \Inertia\Response
     {
         $contacts = Contact::query();
@@ -40,6 +45,20 @@ class AdminContactController extends Controller
                 'total' => $contacts->total(),
             ],
             'filters' => $request->all(),
+        ]);
+    }
+
+    /*
+     * Show a contact
+     * @param string $id
+     * @return \Inertia\Response
+     */
+    public function show(string $id): \Inertia\Response
+    {
+        $contact = Contact::where('id', $id)->firstOrFail();
+
+        return Inertia::render('Admin/Contact/Show', [
+            'contact' => $contact,
         ]);
     }
 }
