@@ -192,6 +192,9 @@ const destroyReport = (id: number) => {
           {{ report.reason }}
         </TableCell>
         <TableCell class="truncate">
+          <span v-if="report.reportable.type === 'App\\Models\\CommentBlog'"
+            >Commentaire blog</span
+          >
           <span v-if="report.reportable.type === 'App\\Models\\CommentDeal'"
             >Commentaire deal</span
           >

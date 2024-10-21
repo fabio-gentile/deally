@@ -19,16 +19,18 @@ class AdminBlogController extends Controller
     {
         $blogs = Blog::query()->withCount('comments');
 
-        if ($request->has('created_at')) {
-            $blogs->orderBy('created_at', $request->created_at === 'desc' ? 'desc' : 'asc');
-        } else {
+        if (!$request->has('created_at')) {
             $blogs->orderBy('created_at', 'desc');
+        }
+
+        if ($request->has('created_at') && $request->created_at !== null) {
+            $blogs->orderBy('created_at', $request->created_at === 'desc' ? 'desc' : 'asc');
         }
 
         if ($request->has('comments') && $request->comments !== null) {
             $blogs->orderBy('comments_count', $request->comments === 'desc' ? 'desc' : 'asc');
         }
-
+//dd($blogs->get());
         if ($request->has('search') && $request->search !== null) {
             $blogs->where('title', 'like', '%' . $request->search . '%');
         }
@@ -44,6 +46,7 @@ class AdminBlogController extends Controller
                     'created_at' => $blog->created_at,
                     'is_published' => $blog->is_published,
                     'published_at' => $blog->published_at,
+                    'slug' => $blog->slug,
                 ];
             }),
             'pagination' => [

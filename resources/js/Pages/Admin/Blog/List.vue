@@ -41,15 +41,6 @@ interface Filters {
   created_at: "asc" | "desc" | null
 }
 
-interface Discussion {
-  id: number
-  title: string
-  comments_count: number
-  user: { id: number; name: string }
-  created_at: string
-  slug: string
-}
-
 const props = defineProps<{
   blogs: Blog[]
   filters: Filters
@@ -180,8 +171,7 @@ const destroyBlog = (id: number) => {
           }}
         </TableCell>
         <TableCell class="flex justify-end gap-4">
-          <!--            TODO: add redirection-->
-          <a target="_blank" href="#">
+          <a target="_blank" :href="route('blog.show', blog.slug)">
             <Eye class="w-4 cursor-pointer" />
           </a>
 
@@ -220,6 +210,6 @@ const destroyBlog = (id: number) => {
     v-model="filters.per_page"
     :onSearch="search"
     :onPageChange="changePage"
-    :label="'blogs'"
+    :label="'articles'"
   />
 </template>
