@@ -86,8 +86,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 
-
-
 //Vote
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/vote/{id}', [VoteController::class, 'store'])->name('deals.vote.store');
@@ -115,6 +113,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/blog/{slug}/comments', [\App\Http\Controllers\CommentBlogController::class, 'store'])->name('blog.comments.store');
     Route::delete('/blog/comments/{id}', [\App\Http\Controllers\CommentBlogController::class, 'destroy'])->name('blog.comments.destroy');
 });
+
+// Pages
+Route::get('/faq', [\App\Http\Controllers\PageController::class, 'faq'])->name('pages.faq');
+Route::get('/conditions-generales', [\App\Http\Controllers\PageController::class, 'cgu'])->name('pages.cgu');
+Route::get('/mentions-legales', [\App\Http\Controllers\PageController::class, 'legalMentions'])->name('pages.legal-mentions');
+Route::get('/politique-de-confidentialite', [\App\Http\Controllers\PageController::class, 'privacyPolicy'])->name('pages.privacy-policy');
+Route::get('/politique-cookie', [\App\Http\Controllers\PageController::class, 'cookiePolicy'])->name('pages.cookie-policy');
+Route::get('/a-propos', [\App\Http\Controllers\PageController::class, 'about'])->name('pages.about');
 
 // Admin
 Route::middleware(['guest'])->prefix('admin')->group(function () {
