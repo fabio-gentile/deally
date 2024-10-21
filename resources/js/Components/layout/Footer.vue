@@ -24,14 +24,20 @@ import Separator from "@/Components/ui/separator/Separator.vue"
         <div class="flex flex-col gap-4">
           <h3 class="font-semibold">Entreprise</h3>
           <ul class="flex flex-col gap-2 text-sm">
-            <li><Link class="hover:underline" href="/">À propos</Link></li>
             <li>
-              <Link class="hover:underline" href="/about"
+              <Link class="hover:underline" :href="route('pages.about')"
+                >À propos</Link
+              >
+            </li>
+            <li>
+              <Link class="hover:underline" :href="route('pages.faq')"
                 >Foire aux questions</Link
               >
             </li>
             <li>
-              <Link class="hover:underline" href="/contact">Contact</Link>
+              <Link class="hover:underline" :href="route('contact.create')"
+                >Contact</Link
+              >
             </li>
           </ul>
         </div>
@@ -39,20 +45,26 @@ import Separator from "@/Components/ui/separator/Separator.vue"
           <h3 class="font-semibold">Légal</h3>
           <ul class="flex flex-col gap-2 text-sm">
             <li>
-              <Link class="hover:underline" href="/">Conditions générales</Link>
+              <Link class="hover:underline" :href="route('pages.cgu')"
+                >Conditions générales</Link
+              >
             </li>
             <li>
-              <Link class="hover:underline" href="/about"
+              <Link class="hover:underline" :href="route('pages.cookie-policy')"
                 >Politique d'utilisation des cookies</Link
               >
             </li>
             <li>
-              <Link class="hover:underline" href="/contact"
+              <Link
+                class="hover:underline"
+                :href="route('pages.privacy-policy')"
                 >Politique de confidentialité</Link
               >
             </li>
             <li>
-              <Link class="hover:underline" href="/contact"
+              <Link
+                class="hover:underline"
+                :href="route('pages.legal-mentions')"
                 >Mention légales</Link
               >
             </li>
