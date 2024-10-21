@@ -61,4 +61,17 @@ class AdminContactController extends Controller
             'contact' => $contact,
         ]);
     }
+
+    /*
+     * Delete a contact
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(string $id): \Illuminate\Http\RedirectResponse
+    {
+        $contact = Contact::where('id', $id)->firstOrFail();
+        $contact->delete();
+
+        return redirect()->route('admin.contacts.list')->with('success', 'Contact supprimé avec succès');
+    }
 }
