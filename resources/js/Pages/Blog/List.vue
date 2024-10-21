@@ -139,7 +139,7 @@ const changePage = (page: number) => {
                   <img
                     class="h-full w-full rounded-md bg-page object-cover transition-all group-hover:scale-110"
                     :src="'/storage/uploads/blog/' + post.image"
-                    :alt="'Image article ' + firstPost.title"
+                    :alt="'Image article ' + post.title"
                   />
                 </Link>
                 <Link

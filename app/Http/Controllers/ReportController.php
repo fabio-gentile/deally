@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommentBlog;
 use App\Models\CommentDeal;
 use App\Models\CommentDiscussion;
 use App\Models\Deal;
@@ -49,6 +50,14 @@ class ReportController extends Controller
                 ]);
                 $reportable = CommentDiscussion::findOrFail($request->input('id'));
                 break;
+            case 'comment_blog':
+                $request->validate([
+                    'reason' => ['required', 'in:Spam,Inapproprié,Autre'],
+                    'description' => ['nullable', 'string', 'max:1024'],
+                    'id' => ['required', 'integer', 'exists:comment_blogs,id'],
+                ]);
+                $reportable = CommentBlog::findOrFail($request->input('id'));
+                break;
             default:
                 return back()->with('error', 'Erreur lors du signalement');
         }
@@ -56,7 +65,7 @@ class ReportController extends Controller
         $user = Auth::user();
         $existingReport = $reportable->reports()->where('user_id', $user->id)->first();
         if ($existingReport) {
-            return back()->with('error', 'Vous avez déjà effectué un signalement pour ce contenu');
+            return back()->with('error', 'Vous avez déjà effectué un signalement.');
         }
 
         $reportable->reports()->create([

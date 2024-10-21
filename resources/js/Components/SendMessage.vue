@@ -6,6 +6,7 @@ import Textarea from "@/Components/ui/textarea/Textarea.vue"
 import { SendHorizonal } from "lucide-vue-next"
 import { Deal } from "@/types/model/deal"
 import { Discussion } from "@/types/model/discussion"
+import { Blog } from "@/types/model/blog"
 
 const emit = defineEmits(["submitted"])
 
@@ -36,7 +37,7 @@ const submitForm = () => {
     routeName = "discussions.comments.store"
     slug = discussion.slug
   } else if (contentType === "blog" && blog) {
-    routeName = "blogs.comments.store"
+    routeName = "blog.comments.store"
     slug = blog.slug
   }
 
@@ -55,19 +56,19 @@ const submitForm = () => {
       v-if="$page.props.auth?.user?.avatar"
       :src="'/storage/uploads/avatar/' + $page.props.auth.user.avatar"
       :alt="'Avatar de ' + $page.props.auth.user.avatar"
-      class="h-[52px] w-[52px] rounded-full object-cover"
+      class="hidden h-[52px] w-[52px] rounded-full object-cover sm:block"
     />
     <img
       v-else-if="$page.props.auth?.user"
       :src="`https://ui-avatars.com/api/?size=64&name=${$page.props.auth.user.name}`"
       :alt="'Avatar de ' + $page.props.auth.user.name"
-      class="h-[52px] w-[52px] rounded-full object-cover"
+      class="hidden h-[52px] w-[52px] rounded-full object-cover sm:block"
     />
     <img
       v-else
       src="https://ui-avatars.com/api/?size=64&name=deally"
       alt="'Avatar de Deally'"
-      class="h-[52px] w-[52px] rounded-full object-cover"
+      class="hidden h-[52px] w-[52px] rounded-full object-cover sm:block"
     />
     <div class="relative grow">
       <Label for="content" value="Contenu" />

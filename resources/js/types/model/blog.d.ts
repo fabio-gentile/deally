@@ -19,6 +19,16 @@ export interface Blog {
 }
 
 export interface CommentBlog {
+  // columns
+  id: number
+  created_at: string | null
+  updated_at: string | null
+  deleted_at: string | null
+  blog_id: number
+  user_id: number
+  parent_id: number | null
+  content: string
+  answer_to: number | null
   // relations
   reports: Report[]
   replies: CommentBlog[]

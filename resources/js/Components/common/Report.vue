@@ -19,7 +19,12 @@ import { dialogState } from "@/lib/dialog"
 
 const props = defineProps<{
   id: number
-  type: "deal" | "discussion" | "comment_deal" | "comment_discussion"
+  type:
+    | "deal"
+    | "discussion"
+    | "comment_deal"
+    | "comment_discussion"
+    | "comment_blog"
 }>()
 
 interface Reason {
@@ -153,7 +158,8 @@ const [isOpen, closeDialog] = dialogState()
             <RadioGroup
               v-if="
                 props.type === 'comment_deal' ||
-                props.type === 'comment_discussion'
+                props.type === 'comment_discussion' ||
+                props.type === 'comment_blog'
               "
               v-model="form.reason"
               id="reason"
@@ -186,7 +192,11 @@ const [isOpen, closeDialog] = dialogState()
       </DialogHeader>
 
       <DialogFooter class="sm:justify-start">
-        <Button @click="submit" :disabled="!form.reason" type="button">
+        <Button
+          @click="submit"
+          :disabled="!form.reason || form.processing"
+          type="button"
+        >
           Signaler
         </Button>
       </DialogFooter>
