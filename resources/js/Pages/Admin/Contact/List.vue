@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminTitle from "@/Components/Admin/AdminTitle.vue"
 import { Link, router } from "@inertiajs/vue3"
-import { ChevronsUpDown, Eye, Trash } from "lucide-vue-next"
+import { ChevronsUpDown, Eye, Trash, MailPlus } from "lucide-vue-next"
 import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { Input } from "@/Components/ui/input"
@@ -170,6 +170,10 @@ const destroyContact = (id: number) => {
           <Link :href="route('admin.contacts.show', contact.id)">
             <Eye class="w-4 cursor-pointer" />
           </Link>
+
+          <a :href="`mailto:${contact.email}?subject=${contact.subject}`"
+            ><MailPlus class="w-4 cursor-pointer"
+          /></a>
           <AlertDialog>
             <AlertDialogTrigger as-child>
               <Trash class="w-4 cursor-pointer" />
