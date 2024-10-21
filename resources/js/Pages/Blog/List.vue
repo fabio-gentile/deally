@@ -85,12 +85,12 @@ const changePage = (page: number) => {
               <Link
                 v-if="firstPost.image"
                 class="group hover:underline"
-                href="#"
+                :href="route('blog.show', firstPost.slug)"
               >
                 <img
                   class="h-full w-full rounded-md bg-page object-cover transition-all group-hover:scale-110"
                   :src="'/storage/uploads/blog/' + firstPost.image"
-                  alt=""
+                  :alt="'Image article ' + firstPost.title"
                 />
               </Link>
               <Link v-else class="group hover:underline" href="#">
@@ -101,7 +101,10 @@ const changePage = (page: number) => {
             </AspectRatio>
           </div>
           <div class="flex grow flex-col justify-center gap-4">
-            <Link class="hover:underline" href="#">
+            <Link
+              class="hover:underline"
+              :href="route('blog.show', firstPost.slug)"
+            >
               <h2 class="font-semibold sm:text-2xl">{{ firstPost.title }}</h2>
             </Link>
             <div class="flex items-center gap-4">
@@ -128,14 +131,22 @@ const changePage = (page: number) => {
           <div class="flex grow flex-col gap-4">
             <div class="flex w-full shrink-0 gap-2 overflow-hidden">
               <AspectRatio :ratio="16 / 9">
-                <Link v-if="post.image" class="group hover:underline" href="#">
+                <Link
+                  v-if="post.image"
+                  class="group hover:underline"
+                  :href="route('blog.show', post.slug)"
+                >
                   <img
                     class="h-full w-full rounded-md bg-page object-cover transition-all group-hover:scale-110"
                     :src="'/storage/uploads/blog/' + post.image"
-                    alt=""
+                    :alt="'Image article ' + firstPost.title"
                   />
                 </Link>
-                <Link v-else class="group hover:underline" href="#">
+                <Link
+                  v-else
+                  class="group hover:underline"
+                  :href="route('blog.show', post.slug)"
+                >
                   <ImageOff
                     class="h-full w-full rounded-md bg-page object-cover transition-all group-hover:scale-110"
                   />
@@ -143,7 +154,10 @@ const changePage = (page: number) => {
               </AspectRatio>
             </div>
             <div class="flex grow flex-col justify-end gap-4">
-              <Link class="hover:underline" href="#">
+              <Link
+                class="hover:underline"
+                :href="route('blog.show', post.slug)"
+              >
                 <h2 class="font-semibold">{{ post.title }}</h2>
               </Link>
               <div class="flex items-center gap-4">
