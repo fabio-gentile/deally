@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, usePage } from "@inertiajs/vue3"
+import { Link } from "@inertiajs/vue3"
 import { computed, onMounted, ref } from "vue"
 import {
   Collapsible,
@@ -25,13 +25,18 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
-import SheetContent from "@/Components/ui/sheet/SheetContent.vue"
-import SheetTrigger from "@/Components/ui/sheet/SheetTrigger.vue"
-import Sheet from "@/Components/ui/sheet/Sheet.vue"
 import { Button } from "@/Components/ui/button"
 import { CircleUser, Package2, Menu, Plus, ChevronDown } from "lucide-vue-next"
 import ThemeSwitcher from "@/Components/ThemeSwitcher.vue"
 import Separator from "@/Components/ui/separator/Separator.vue"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/Components/ui/sheet"
 
 type MenuType = {
   title: string
@@ -264,6 +269,12 @@ const closeSheet = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left">
+        <SheetHeader class="sr-only">
+          <SheetTitle>Menu mobile</SheetTitle>
+          <SheetDescription>
+            Naviguez à travers les différentes sections de la plateforme.
+          </SheetDescription>
+        </SheetHeader>
         <nav class="mb-4 grid gap-8 text-lg font-medium">
           <Link href="#" class="flex items-center gap-2 text-lg font-semibold">
             <!--              TODO: Add logo here-->
@@ -407,7 +418,7 @@ const closeSheet = () => {
       <SearchBar />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="link">
+          <Button variant="ghost">
             <CircleUser />
             <span class="sr-only">Ouvrir menu compte</span>
           </Button>

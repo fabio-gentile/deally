@@ -14,12 +14,12 @@ const mode = useColorMode()
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child v-if="mode === 'dark'">
-      <Button variant="link">
+      <Button variant="ghost">
         <Moon />
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuTrigger as-child v-else>
-      <Button variant="link">
+      <Button variant="ghost">
         <Sun />
       </Button>
     </DropdownMenuTrigger>
