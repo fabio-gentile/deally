@@ -177,11 +177,7 @@ const changePage = (page: number) => {
                 </p>
               </div>
             </div>
-            <CardDeal
-              v-for="(deal, index) in deals"
-              :key="index"
-              :deal="deal"
-            />
+            <CardDeal v-for="deal in deals" :key="deal.id" :deal="deal" />
             <Pagination
               class="mt-4"
               v-slot="{ page }"

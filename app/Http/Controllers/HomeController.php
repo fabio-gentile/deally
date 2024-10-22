@@ -19,6 +19,8 @@ class HomeController extends Controller
         $user = auth()->user();
         $deals = Deal::query();
 
+        $deals->orderBy('votes', 'desc');
+
         // by default, only show deals created in the last 30 days
         if (!$request->filled('period')) {
             $deals->where('created_at', '>', now()->subDays(30));
