@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { Handshake, MessageSquareText, PencilLine } from "lucide-vue-next"
-import { Link, usePage } from "@inertiajs/vue3"
+import { Link, usePage, router } from "@inertiajs/vue3"
 import { User } from "@/types/model/user"
+import { X } from "lucide-vue-next"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/Components/ui/dialog"
+import { Button } from "@/Components/ui/button"
 
 const page = usePage()
 const props = defineProps<{
@@ -11,23 +23,58 @@ const props = defineProps<{
   commentsCount: number
   isCurrentUser: boolean
 }>()
+
+const deleteAvatar = () => {
+  router.delete(route("profile.avatar.delete"), {
+    preserveScroll: true,
+  })
+}
 </script>
 
 <template>
   <div class="grid w-full gap-6 bg-white px-8 py-9 sm:place-items-center">
     <div class="grid place-items-center gap-4">
-      <img
-        v-if="user.avatar"
-        :src="'/storage/uploads/avatar/' + user.avatar"
-        :alt="'Avatar de ' + user.name"
-        class="h-24 w-24 rounded-full object-cover"
-      />
-      <img
-        v-else
-        :src="`https://ui-avatars.com/api/?size=64&name=${user.name}`"
-        :alt="'Avatar de ' + user.name"
-        class="h-24 w-24 rounded-full object-cover"
-      />
+      <div class="relative">
+        <img
+          v-if="user.avatar"
+          :src="'/storage/uploads/avatar/' + user.avatar"
+          :alt="'Avatar de ' + user.name"
+          class="h-24 w-24 rounded-full object-cover"
+        />
+        <Dialog v-if="user.avatar">
+          <DialogTrigger
+            class="absolute -right-4 top-0 z-10 rounded-full bg-destructive p-1"
+          >
+            <X />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Supprimer votre avatar</DialogTitle>
+              <DialogDescription class="my-2">
+                Êtes-vous sûr de vouloir supprimer votre avatar ?
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <DialogClose as-child>
+                <Button type="button" variant="secondary"> Annuler </Button>
+              </DialogClose>
+              <DialogClose as-child>
+                <Button variant="destructive" @click="deleteAvatar">
+                  Supprimer
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <img
+          v-else
+          :src="`https://ui-avatars.com/api/?size=64&name=${user.name}`"
+          :alt="'Avatar de ' + user.name"
+          class="h-24 w-24 rounded-full object-cover"
+        />
+      </div>
+
       <h2 class="text-2xl font-semibold text-foreground">{{ user.name }}</h2>
     </div>
     <div

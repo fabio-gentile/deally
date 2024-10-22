@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profil/{user}/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profil', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profil/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 });
 
 //Deals

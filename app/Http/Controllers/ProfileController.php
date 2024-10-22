@@ -341,6 +341,31 @@ class ProfileController extends Controller
     }
 
     /**
+     * Delete the user's avatar
+     *
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function deleteAvatar(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+
+        // delete the current avatar
+        try {
+            Storage::delete('uploads/avatar/' . $user->avatar);
+            $user->update([
+                'avatar' => null,
+            ]);
+            $user->save();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression de l\'image');
+        }
+
+        return redirect()->back()->with('success', 'Votre avatar a été supprimé avec succès.');
+    }
+
+    /**
      * Update the user's notification preferences
      *
      * @param User $user
