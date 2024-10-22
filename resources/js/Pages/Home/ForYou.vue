@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, router } from "@inertiajs/vue3"
+import { Head, Link, router, useForm } from "@inertiajs/vue3"
 import Button from "@/Components/ui/button/Button.vue"
 import { CategoryDeal } from "@/types/model/deal"
 import Wrapper from "@/Components/layout/Wrapper.vue"
@@ -35,7 +35,6 @@ import {
   PaginationNext,
   PaginationPrev,
 } from "@/Components/ui/pagination"
-import { Flag, Frown } from "lucide-vue-next"
 import {
   Dialog,
   DialogContent,
@@ -45,6 +44,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/Components/ui/dialog"
+import { Frown } from "lucide-vue-next"
+import FormError from "@/Components/FormError.vue"
+import { capitalizeFirstLetter } from "@/lib/utils"
+import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
+import { Label } from "@/Components/ui/label"
+import { dialogState } from "@/lib/dialog"
 
 interface Filters {
   page: number
@@ -58,25 +63,20 @@ const props = defineProps<{
   blogs: Blog[]
   pagination: IPagination
   filters: Filters
+  preferencesCategories: any
 }>()
 
 const filters = ref({ ...props.filters })
 const deals = ref(props.deals)
 
 const search = () => {
-  router.get(
-    route().current() === "home.index"
-      ? route("home.index")
-      : route("home.new"),
-    filters.value,
-    {
-      preserveState: true,
-      replace: true,
-      onSuccess: () => {
-        deals.value = props.deals
-      },
-    }
-  )
+  router.get(route("home.for-you"), filters.value, {
+    preserveState: true,
+    replace: true,
+    onSuccess: () => {
+      deals.value = props.deals
+    },
+  })
 }
 
 watch(
@@ -92,6 +92,25 @@ const changePage = (page: number) => {
   filters.value.page = page
   search()
 }
+
+const form = useForm({
+  categories: props.preferencesCategories ? props.preferencesCategories : [],
+  _method: "patch",
+})
+
+const updatePreferences = () => {
+  form.post(route("home.update-for-you"), {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: () => {
+      closeDialog()
+      search()
+    },
+  })
+}
+
+// auto close dialog after submit
+const [isOpen, closeDialog] = dialogState()
 </script>
 
 <template>
@@ -157,7 +176,6 @@ const changePage = (page: number) => {
             >Nouveauté</Link
           >
           <Link
-            v-if="$page.props.auth.user?.id"
             :href="route('home.for-you')"
             :class="[
               route().current() === 'home.for-you'
@@ -166,33 +184,6 @@ const changePage = (page: number) => {
             ]"
             >Pour vous</Link
           >
-          <Dialog v-else>
-            <DialogTrigger as-child>
-              <button
-                class="cursor-pointer"
-                :class="[
-                  route().current() === 'home.for-you'
-                    ? 'font-semibold text-primary'
-                    : 'font-medium text-muted-foreground',
-                ]"
-              >
-                Pour vous
-              </button>
-            </DialogTrigger>
-            <DialogContent class="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Se connecter</DialogTitle>
-                <DialogDescription>
-                  Vous devez être connecté pour accéder à cette fonctionnalité.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Link :href="route('login')">
-                  <Button type="submit">Se connecter</Button>
-                </Link>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </div>
       </Wrapper>
     </div>
@@ -210,15 +201,58 @@ const changePage = (page: number) => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel class="sr-only"
-                  >Deals les plus populaires</SelectLabel
-                >
+                <SelectLabel class="sr-only">Deals créés ces</SelectLabel>
                 <SelectItem value="day"> dernières 24 heures </SelectItem>
                 <SelectItem value="week"> 7 derniers jours </SelectItem>
                 <SelectItem value="month"> 30 derniers jours </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
+        </div>
+        <div class="mb-6 flex flex-row flex-wrap items-center gap-4">
+          <p class="text-muted-foreground">
+            Ajustez vos préférences pour voir les deals qui vous intéressent.
+          </p>
+          <Dialog v-model:open="isOpen">
+            <DialogTrigger as-child>
+              <Button>Modifiez votre préférences</Button>
+            </DialogTrigger>
+            <DialogContent
+              class="max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)_auto] p-0 sm:max-w-[425px]"
+            >
+              <DialogHeader class="p-6 pb-0">
+                <DialogTitle>Modifiez votre préférences</DialogTitle>
+                <DialogDescription>
+                  Sélectionnez les catégories qui vous intéressent.
+                </DialogDescription>
+              </DialogHeader>
+              <div class="grid gap-4 overflow-y-auto px-6 py-4">
+                <Label for="categories" class="sr-only">Catégories</Label>
+                <ToggleGroup
+                  id="categories"
+                  type="multiple"
+                  class="flex flex-wrap !justify-normal gap-4"
+                  v-model="form.categories"
+                >
+                  <ToggleGroupItem
+                    aria-label="Toggle bold"
+                    v-for="category in props.categories"
+                    :value="category.id.toString()"
+                    :key="category.id"
+                    class="border data-[state=on]:bg-primary data-[state=on]:text-white"
+                  >
+                    {{ capitalizeFirstLetter(category.name) }}
+                  </ToggleGroupItem>
+                </ToggleGroup>
+                <FormError :message="form.errors.categories" />
+              </div>
+              <DialogFooter class="p-6 pt-0">
+                <Button @click="updatePreferences" type="submit"
+                  >Sauvegarder</Button
+                >
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <div class="flex flex-col gap-3 lg:flex-row lg:gap-6">
           <div class="flex grow flex-col gap-3">
@@ -232,7 +266,7 @@ const changePage = (page: number) => {
                   Aucun bon plan trouvé
                 </p>
                 <p class="text-muted-foreground">
-                  Essayez de changer la période.
+                  Essayez de changer vos préférences ou la période.
                 </p>
               </div>
             </div>

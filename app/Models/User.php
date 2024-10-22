@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $attributes = [
-        'preferences' => '{"newsletter": false, "blog_notification": false}',
+        'preferences' => '{"newsletter": false, "blog_notification": false, "home_foryou": {"category_id": []}}',
     ];
 
 

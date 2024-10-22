@@ -16,6 +16,8 @@ Route::get('/', [HomeController::class, 'index'])
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pour-vous', [HomeController::class, 'forYou'])
         ->name('home.for-you');
+    Route::patch('/pour-vous', [HomeController::class, 'updateForYou'])
+        ->name('home.update-for-you');
 });
 
 Route::get('/nouveaux', [HomeController::class, 'new'])
