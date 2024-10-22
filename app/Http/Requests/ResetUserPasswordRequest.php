@@ -24,7 +24,7 @@ class ResetUserPasswordRequest extends FormRequest
         return [
             'token' => 'required',
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->uncompromised()],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)],
         ];
     }
 
@@ -42,7 +42,6 @@ class ResetUserPasswordRequest extends FormRequest
             'password.required' => 'Le mot de passe est requis.',
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
-            'password.uncompromised' => 'Le mot de passe est compromis. Veuillez en choisir un autre.',
         ];
     }
 }

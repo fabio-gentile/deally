@@ -40,9 +40,7 @@ class StoreUserRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                $this->isPrecognitive()
-                    ? Password::min(8)
-                    : Password::min(8)->uncompromised(),
+                Password::min(8),
             ],
         ];
     }
@@ -70,7 +68,6 @@ class StoreUserRequest extends FormRequest
             'password.required' => 'Le mot de passe est requis.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
-            'password.uncompromised' => 'Le mot de passe a été compromis dans une fuite de données.',
             'regex' => 'Le nom d\'utilisateur ne doit contenir que des lettres et des chiffres.',
         ];
     }
