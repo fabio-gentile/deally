@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -92,6 +93,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Default hidden attributes for non-admin users
         return $this->defaultHidden;
+    }
+
+    // Delete the associated avatar when the user is deleted
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $filePath = 'uploads/avatar/' . $user->avatar;
+
+            // Delete the avatar file from the storage
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+        });
     }
 
     /**
