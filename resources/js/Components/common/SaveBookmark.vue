@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { BookmarkPlus } from "lucide-vue-next"
 import { router } from "@inertiajs/vue3"
+import { ref } from "vue"
 
 const props = defineProps<{
   type: "deal" | "discussion"
   id: number
   isBookmarked: boolean
 }>()
+
+const isBookmarked = ref(props.isBookmarked)
 
 const saveBookmark = () => {
   router.post(
@@ -18,6 +21,9 @@ const saveBookmark = () => {
     {
       preserveState: true,
       preserveScroll: true,
+      onSuccess: () => {
+        isBookmarked.value = !isBookmarked.value
+      },
     }
   )
 }

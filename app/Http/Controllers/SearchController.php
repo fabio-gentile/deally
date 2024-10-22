@@ -90,39 +90,7 @@ class SearchController extends Controller
             $deals->orderBy('created_at', 'desc');
         }
 
-        $deals->with(['voteDetails' => function ($query) use ($user) {
-            if ($user) {
-                $query->where('user_id', $user->id);
-            }
-        }, 'images' => function ($query) {
-            // Limit the number of images to 1
-            $query->limit(1);
-        }, 'favorites' => function ($query) use ($user) {
-                if ($user) {
-                    $query->where('user_id', $user->id);
-                }
-            }
-        ]);
-
-        $deals->withCount('comments');
-
-        $deals = $deals->paginate(10);
-
-        if ($user) {
-            // Associate user_vote and favorite in one pass
-            $deals->each(function ($deal) use ($user) {
-                $deal->user_vote = $deal->voteDetails->first();
-                $deal->is_expired = $deal->isExpired();
-                $deal->user_favorite = $deal->favorites->isNotEmpty();
-            });
-        }
-
-        $pagination = [
-            'current_page' => $deals->currentPage(),
-            'last_page' => $deals->lastPage(),
-            'per_page' => $deals->perPage(),
-            'total' => $deals->total(),
-        ];
+        list($deals, $pagination) = $this->getDealsWithPagination($deals, $user);
 //        dd($deals, $pagination);
 
         return Inertia::render('Search/Deal', [
@@ -245,5 +213,49 @@ class SearchController extends Controller
                 'users' => $users,
                 'discussions' => $discussions
         ]);
+    }
+
+    /**
+     * Get deals with pagination
+     * @param \Illuminate\Database\Eloquent\Builder $deals
+     * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
+     * @return array
+     */
+    private function getDealsWithPagination(\Illuminate\Database\Eloquent\Builder $deals, ?\Illuminate\Contracts\Auth\Authenticatable $user): array
+    {
+        $deals->with(['voteDetails' => function ($query) use ($user) {
+            if ($user) {
+                $query->where('user_id', $user->id);
+            }
+        }, 'images' => function ($query) {
+            // Limit the number of images to 1
+            $query->limit(1);
+        }, 'favorites' => function ($query) use ($user) {
+            if ($user) {
+                $query->where('user_id', $user->id);
+            }
+        }
+        ]);
+
+        $deals->withCount('comments');
+
+        $deals = $deals->paginate(10);
+
+        if ($user) {
+            // Associate user_vote and favorite in one pass
+            $deals->each(function ($deal) use ($user) {
+                $deal->user_vote = $deal->voteDetails->first();
+                $deal->is_expired = $deal->isExpired();
+                $deal->user_favorite = $deal->favorites->isNotEmpty();
+            });
+        }
+
+        $pagination = [
+            'current_page' => $deals->currentPage(),
+            'last_page' => $deals->lastPage(),
+            'per_page' => $deals->perPage(),
+            'total' => $deals->total(),
+        ];
+        return array($deals, $pagination);
     }
 }
