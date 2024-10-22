@@ -42,78 +42,73 @@ type MenuType = {
 const deals: MenuType[] = [
   {
     title: "Populaires",
-    href: "/docs/primitives/alert-dialog",
-    description: "Les bons plans les plus populaires du moment.",
+    href: route("search.deals") + "?filter_by=popular",
+    description: "Les deals les plus populaires du moment.",
   },
   {
     title: "Nouveautés",
-    href: "/docs/primitives/hover-card",
-    description: "Les derniers bons plans ajoutés sur la plateforme.",
+    href: route("search.deals") + "?filter_by=newest",
+    description: "Les derniers deals ajoutés sur la plateforme.",
   },
   {
     title: "Pour vous",
-    href: "/docs/primitives/progress",
-    description: "Les bons plans qui pourraient vous intéresser.",
-  },
-  {
-    title: "Catégorie",
-    href: "/docs/primitives/progress",
-    description: "Voir toutes les catégories de bons plans disponibles.",
+    href: route("home.for-you"),
+    description: "Les deals qui pourraient vous intéresser.",
   },
 ]
 const forums: MenuType[] = [
   {
     title: "Populaires",
-    href: "/docs/primitives/alert-dialog",
+    href: route("search.discussions") + "?filter_by=popular",
     description: "Les discussions les plus populaires du moment.",
   },
   {
     title: "Nouveautés",
-    href: "/docs/primitives/hover-card",
+    href: route("search.discussions") + "?filter_by=newest",
     description: "Les derniers discussions ajoutés sur la plateforme.",
-  },
-  {
-    title: "Catégorie",
-    href: "/docs/primitives/progress",
-    description: "Voir toutes les catégories de discussions disponibles.",
   },
 ]
 const resources: MenuType[] = [
   {
-    title: "FAQ",
-    href: "/docs/primitives/alert-dialog",
-    description: "Les questions les plus fréquentes.",
-  },
-  {
     title: "Blog",
-    href: "/docs/primitives/hover-card",
+    href: route("blog.index"),
     description: "Les derniers articles publiés par l'équipe Deally.",
   },
   {
+    title: "FAQ",
+    href: route("pages.faq"),
+    description: "Les questions les plus fréquentes.",
+  },
+  {
+    title: "À propos",
+    href: route("pages.about"),
+    description: "En savoir plus sur la plateforme Deally.",
+  },
+  {
     title: "Contact",
-    href: "/docs/primitives/progress",
+    href: route("contact.create"),
     description: "Contacter l'équipe Deally pour toute question.",
   },
   {
     title: "Conditions générales",
-    href: "/docs/primitives/progress",
+    href: route("pages.cgu"),
     description:
       "Les conditions générales d'utilisation de la plateforme Deally.",
   },
   {
     title: "Politique de confidentialité",
-    href: "/docs/primitives/progress",
+    href: route("pages.privacy-policy"),
     description: "La politique de confidentialité de la plateforme Deally.",
   },
   {
     title: "Politique d'utilisation des cookies",
-    href: "/docs/primitives/progress",
+    href: route("pages.cookie-policy"),
     description:
       "La politique d'utilisation des cookies de la plateforme Deally.",
   },
   {
     title: "Mentions légales",
-    href: "/docs/primitives/progress",
+    href: route("pages.legal-mentions"),
     description: "Les mentions légales de la plateforme Deally.",
   },
 ]
@@ -145,11 +140,21 @@ const openCollapsibles = ref<{ [key: string]: boolean }>({
 })
 
 const isOpen = ref(false)
+const isSheetOpen = ref(false)
+const closeSheet = () => {
+  isSheetOpen.value = false
+  isOpen.value = false
+  openCollapsibles.value = {
+    bonPlans: false,
+    forum: false,
+    resources: false,
+  }
+}
 </script>
 
 <template>
   <header
-    class="sticky z-50 top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6"
+    class="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6"
   >
     <nav
       class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
@@ -251,7 +256,7 @@ const isOpen = ref(false)
         </NavigationMenuList>
       </NavigationMenu>
     </nav>
-    <Sheet>
+    <Sheet :open="isSheetOpen" @update:open="isSheetOpen = !isSheetOpen">
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" class="shrink-0 lg:hidden">
           <Menu class="h-5 w-5" />
@@ -259,13 +264,13 @@ const isOpen = ref(false)
         </Button>
       </SheetTrigger>
       <SheetContent side="left">
-        <nav class="mb-4 grid gap-10 text-lg font-medium">
+        <nav class="mb-4 grid gap-8 text-lg font-medium">
           <Link href="#" class="flex items-center gap-2 text-lg font-semibold">
             <!--              TODO: Add logo here-->
             <Package2 class="h-6 w-6" />
             <span class="sr-only">Acme Inc</span>
           </Link>
-          <ul class="grid gap-10">
+          <ul class="grid gap-8">
             <li v-for="mobileMenu in mobileMenus" :key="mobileMenu.title">
               <Collapsible v-model:open="openCollapsibles[mobileMenu.title]">
                 <CollapsibleTrigger
@@ -283,6 +288,7 @@ const isOpen = ref(false)
                 >
                 <CollapsibleContent class="mt-2">
                   <Link
+                    @click="closeSheet"
                     v-for="deal in mobileMenu.menu"
                     :href="deal.href"
                     class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -291,7 +297,7 @@ const isOpen = ref(false)
                       {{ deal.title }}
                     </div>
                   </Link>
-                </CollapsibleContent class="mt-2">
+                </CollapsibleContent>
               </Collapsible>
             </li>
           </ul>
@@ -316,13 +322,15 @@ const isOpen = ref(false)
               >
               <CollapsibleContent class="mt-2">
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="route('profile.favorite', $page.props.auth.user.name)"
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">Favoris</div>
                 </Link>
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="route('profile.deals', $page.props.auth.user.name)"
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">
@@ -330,7 +338,10 @@ const isOpen = ref(false)
                   </div>
                 </Link>
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="
+                    route('profile.discussions', $page.props.auth.user.name)
+                  "
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">
@@ -338,13 +349,17 @@ const isOpen = ref(false)
                   </div>
                 </Link>
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="
+                    route('profile.statistics', $page.props.auth.user.name)
+                  "
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">Newsletter</div>
                 </Link>
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="route('profile.favorite', $page.props.auth.user.name)"
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">
@@ -352,15 +367,18 @@ const isOpen = ref(false)
                   </div>
                 </Link>
                 <Link
-                  href="#"
+                  @click="closeSheet"
+                  :href="route('profile.settings', $page.props.auth.user.name)"
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">Paramètres</div>
                 </Link>
                 <Separator />
                 <Link
+                  @click="closeSheet"
                   :href="route('logout')"
                   method="post"
+                  as="button"
                   class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   <div class="text-sm font-medium leading-none">
@@ -371,14 +389,16 @@ const isOpen = ref(false)
             </Collapsible>
           </ul>
         </nav>
-          <ul class="w-full absolute bottom-2 left-1/2 transform -translate-x-1/2">
-
-              <li class="block md:hidden">
-                  <ThemeSwitcher />
-              </li>
-          <li class="mt-4 text-center text-sm">Copyright 2023 - 2024. Deally. Tous droits réservés</li>
-          </ul>
-
+        <ul
+          class="absolute bottom-2 left-1/2 w-full -translate-x-1/2 transform"
+        >
+          <li class="block md:hidden">
+            <ThemeSwitcher />
+          </li>
+          <li class="mt-4 text-center text-sm">
+            Copyright {{ new Date().getFullYear() }}. Tous droits réservés
+          </li>
+        </ul>
       </SheetContent>
     </Sheet>
     <div
@@ -396,36 +416,66 @@ const isOpen = ref(false)
           <DropdownMenuLabel>Compte</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <Link :href="route('login')"> Se connecter </Link>
+            <Link class="w-full" :href="route('login')"> Se connecter </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            ><Link :href="route('register')"
+            ><Link class="w-full" :href="route('register')"
               >Créer un compte</Link
             ></DropdownMenuItem
           >
         </DropdownMenuContent>
         <DropdownMenuContent align="end" v-else>
           <DropdownMenuItem>
-            <Link href="#">Favoris</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.favorite', $page.props.auth.user.name)"
+              >Favoris</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="#">Deals postés</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.deals', $page.props.auth.user.name)"
+              >Deals postés</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="#">Discussions</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.discussions', $page.props.auth.user.name)"
+              >Discussions</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="#">Newsletter</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.notifications', $page.props.auth.user.name)"
+              >Notifications</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="#">Statistiques</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.statistics', $page.props.auth.user.name)"
+              >Statistiques</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="#">Paramètres</Link>
+            <Link
+              class="w-full"
+              :href="route('profile.settings', $page.props.auth.user.name)"
+              >Paramètres</Link
+            >
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <Link :href="route('logout')" method="post">Déconnexion</Link>
+            <Link
+              class="w-full text-left"
+              :href="route('logout')"
+              method="post"
+              as="button"
+              >Déconnexion</Link
+            >
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -438,10 +488,14 @@ const isOpen = ref(false)
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem class="cursor-pointer">
-            <Link href="#">Bon plan</Link></DropdownMenuItem
+            <Link class="w-full" :href="route('deals.create')"
+              >Bon plan</Link
+            ></DropdownMenuItem
           >
           <DropdownMenuItem class="cursor-pointer">
-            <Link href="#">Discussion</Link></DropdownMenuItem
+            <Link class="w-full" :href="route('discussions.create')"
+              >Discussion</Link
+            ></DropdownMenuItem
           >
         </DropdownMenuContent>
       </DropdownMenu>

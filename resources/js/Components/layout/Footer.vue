@@ -13,11 +13,19 @@ import Separator from "@/Components/ui/separator/Separator.vue"
           <h3 class="font-semibold">Découvrir</h3>
           <ul class="flex flex-col gap-2 text-sm">
             <li>
-              <Link class="hover:underline" href="/">Les bons plans</Link>
+              <Link class="hover:underline" :href="route('search.deals')"
+                >Les bons plans</Link
+              >
             </li>
-            <li><Link class="hover:underline" href="/about">Forum</Link></li>
             <li>
-              <Link class="hover:underline" href="/contact">Actualités</Link>
+              <Link class="hover:underline" :href="route('search.discussions')"
+                >Forum</Link
+              >
+            </li>
+            <li>
+              <Link class="hover:underline" :href="route('blog.index')"
+                >Blog</Link
+              >
             </li>
           </ul>
         </div>

@@ -74,7 +74,7 @@ const changePage = (page: number) => {
         Les derniers articles publiés.
       </h1>
       <article
-        v-if="firstPost && filters.page === 1"
+        v-if="firstPost && (+filters.page === 1 || !filters.page)"
         class="mb-4 flex w-full flex-col overflow-hidden rounded-lg border bg-white p-4 md:mb-8"
       >
         <div class="flex grow flex-col flex-wrap gap-4 md:flex-row">
