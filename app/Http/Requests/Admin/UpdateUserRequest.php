@@ -24,7 +24,7 @@ class UpdateUserRequest extends FormRequest
                 'max:16',
                 'regex:/^[a-zA-Z0-9 ]+$/',
                 new NoSpaces(),
-                Rule::unique('users')->ignore($this->user()->id),
+                Rule::unique('users')->ignore($this->route('id')),
             ],
             'biography' => [
                 'nullable',
