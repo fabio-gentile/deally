@@ -138,6 +138,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/utilisateurs', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.list');
     Route::get('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'edit'])->name('admin.users.edit');
     Route::patch('/utilisateurs/{id}/edit', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/utilisateurs/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 
     // Discussion
     Route::get('/discussions', [\App\Http\Controllers\Admin\AdminDiscussionController::class, 'index'])->name('admin.discussions.list');

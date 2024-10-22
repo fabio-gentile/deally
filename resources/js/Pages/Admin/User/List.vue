@@ -21,6 +21,17 @@ import { useDebounceFn } from "@vueuse/core"
 import { router } from "@inertiajs/vue3"
 import TablePagination from "@/Components/Admin/TablePagination.vue"
 import Breadcrumb from "@/Components/Breadcrumb.vue"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
 
 interface Filters {
   filter_by?: string
@@ -66,6 +77,16 @@ const changePage = (page: number) => {
 
 const resetFilters = () => {
   filters.value = {}
+}
+
+const destroyUser = (id: number) => {
+  router.delete(route("admin.users.destroy", id), {
+    preserveState: true,
+    replace: true,
+    onSuccess: () => {
+      users.value = props.users
+    },
+  })
 }
 </script>
 
@@ -144,7 +165,29 @@ const resetFilters = () => {
           <Link :href="route('admin.users.edit', user.id)">
             <Pencil class="w-4 cursor-pointer" />
           </Link>
-          <Trash class="w-4 cursor-pointer" />
+          <AlertDialog>
+            <AlertDialogTrigger as-child>
+              <Trash class="w-4 cursor-pointer" />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Êtes-vous vraiment sûr ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action ne peut pas être annulée. Cela supprimera
+                  définitivement l'utilisateur ainsi que toutes ses données.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  @click="destroyUser(user.id)"
+                  class="!bg-destructive"
+                >
+                  Supprimer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </TableCell>
       </TableRow>
     </TableBody>

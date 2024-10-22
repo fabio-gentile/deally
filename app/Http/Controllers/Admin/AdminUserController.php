@@ -95,4 +95,21 @@ class AdminUserController extends Controller
 
         return redirect()->route('admin.users.list')->with('success', $user->name . ' a été mis à jour avec succès');
     }
+
+    /**
+     * Remove the user
+     * @throws Exception
+     */
+    public function destroy(string $user): \Illuminate\Http\RedirectResponse
+    {
+        $user = User::where('id', $user)->firstOrFail();
+
+        if ($user->hasRole('admin')) {
+            return back()->with('error', 'Vous ne pouvez pas supprimer un compte administrateur.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.list')->with('success', $user->name . ' a été supprimé avec succès');
+    }
 }
