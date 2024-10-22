@@ -31,7 +31,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
     class="w-full gap-4 overflow-hidden rounded-lg border bg-white p-4 text-muted-foreground"
   >
     <div class="flex flex-col gap-4 md:flex-row">
-      <div class="flex shrink-0 gap-2">
+      <div class="flex shrink-0 gap-4">
         <img
           v-if="deal?.images[0]?.filename && deal?.images[0]?.path"
           class="h-32 w-32 shrink-0 overflow-hidden rounded-lg bg-page object-contain md:h-52 md:w-52"

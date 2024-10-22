@@ -49,7 +49,7 @@ class HomeController extends Controller
             'categories' => CategoryDeal::all(),
             'deals' => $deals,
             'discussions' => Discussion::orderBy('created_at', 'desc')->with('user')->withCount('comments')->limit(5)->get(),
-            'blogs' => Blog::orderBy('published_at', 'desc')->where('is_published', true)->limit(5)->get(),
+            'blogs' => Blog::orderBy('published_at', 'desc')->where('is_published', true)->withCount('comments')->limit(5)->get(),
         ]);
     }
 }

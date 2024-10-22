@@ -12,9 +12,10 @@ import {
 } from "@/Components/ui/carousel"
 import CardDeal from "@/Components/Deal/CardDeal.vue"
 import { Deal } from "@/types/model/deal"
-import HomeDiscussion from "@/Components/Discussion/HomeDiscussion.vue"
+import HomeDiscussion from "@/Components/Home/HomeDiscussion.vue"
 import { Discussion } from "@/types/model/discussion"
 import { Blog } from "@/types/model/blog"
+import HomeBlog from "@/Components/Home/HomeBlog.vue"
 
 defineProps<{
   categories: CategoryDeal[]
@@ -38,11 +39,11 @@ defineProps<{
           v-slot="{ canScrollNext, canScrollPrev }"
         >
           <div class="overflow-hidden">
-            <CarouselContent class="mx-auto">
+            <CarouselContent class="mx-auto gap-3">
               <CarouselItem
                 v-for="category in categories"
                 :key="category.slug"
-                class="flex basis-auto"
+                class="flex basis-auto !pl-0"
               >
                 <!--                TODO: add route redirection-->
                 <Link
@@ -92,11 +93,14 @@ defineProps<{
               :deal="deal"
             />
           </div>
-          <div class="flex shrink-0 flex-row gap-6 lg:flex-col">
+          <div
+            class="flex w-full shrink-0 flex-col justify-between gap-4 md:flex-row lg:w-fit lg:flex-col lg:justify-normal"
+          >
             <HomeDiscussion
-              class="w-1/2 lg:w-full"
+              class="md:w-[calc(50%-12px)] lg:w-full"
               :discussions="discussions"
             />
+            <HomeBlog class="md:w-[calc(50%-12px)] lg:w-full" :blogs="blogs" />
           </div>
         </div>
       </Wrapper>

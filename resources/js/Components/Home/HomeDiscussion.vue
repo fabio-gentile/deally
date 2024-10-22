@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Discussion } from "@/types/model/discussion"
 import { MessageSquareText } from "lucide-vue-next"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
 import { Link } from "@inertiajs/vue3"
 
 defineProps<{
