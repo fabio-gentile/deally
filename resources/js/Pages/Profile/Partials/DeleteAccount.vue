@@ -10,11 +10,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
+import { useForm } from "@inertiajs/vue3"
 import Label from "@/Components/ui/label/Label.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import Input from "@/Components/ui/input/Input.vue"
 
-// TODO: DELETE ACCOUNT
+const form = useForm({
+  confirm: "",
+  textConfirmDeleteAccount: "Supprimer mon compte",
+})
+
+const deleteAccount = () => {
+  form.delete(route("profile.destroy"))
+}
 </script>
 <template>
   <div>
@@ -25,7 +33,7 @@ import Input from "@/Components/ui/input/Input.vue"
       l'avenir.
     </p>
   </div>
-  <AlertDialog>
+  <AlertDialog @update:open="form.confirm = ''">
     <AlertDialogTrigger class="mr-auto"
       ><Button variant="destructive" class="w-fit"
         >Supprimer votre compte</Button
@@ -37,18 +45,28 @@ import Input from "@/Components/ui/input/Input.vue"
           >Etes-vous sûr de vouloir supprimer votre compte ?
         </AlertDialogTitle>
         <AlertDialogDescription>
-          Une fois votre compte supprimé, toutes ses données seront
-          définitivement supprimées. Veuillez saisir votre mot de passe pour
-          confirmer que vous souhaitez supprimer définitivement votre compte.
+          <p class="my-2">
+            Une fois votre compte supprimé, toutes ses données seront
+            définitivement supprimées.
+          </p>
+          <p>
+            Pour confirmer, écrivez
+            <span class="font-semibold"
+              >"{{ form.textConfirmDeleteAccount }}"</span
+            >
+            ci-dessous.
+          </p>
         </AlertDialogDescription>
 
         <AlertDialogDescription>
-          <Label for="password" class="sr-only">Mot de passe</Label>
+          <Label for="confirm" class="sr-only"
+            >Confirmer la suppression du compte</Label
+          >
           <Input
-            placeholder="Mot de passe"
+            v-model="form.confirm"
             type="text"
-            id="password"
-            name="password"
+            id="confirm"
+            name="confirm"
             class="mt-3"
           />
         </AlertDialogDescription>
@@ -56,8 +74,16 @@ import Input from "@/Components/ui/input/Input.vue"
       <AlertDialogFooter>
         <AlertDialogCancel>Annuler</AlertDialogCancel>
         <AlertDialogAction
+          as-child
           class="bg-destructive text-inherit hover:bg-destructive/80"
-          >Supprimer votre compte</AlertDialogAction
+          @click="deleteAccount"
+          ><Button
+            :disabled="
+              form.confirm.toLocaleLowerCase() !==
+              form.textConfirmDeleteAccount.toLocaleLowerCase()
+            "
+            >Supprimer votre compte</Button
+          ></AlertDialogAction
         >
       </AlertDialogFooter>
     </AlertDialogContent>

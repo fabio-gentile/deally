@@ -36,12 +36,6 @@ Route::get('/rechercher/deals', [\App\Http\Controllers\SearchController::class, 
 Route::get('/rechercher/discussions', [\App\Http\Controllers\SearchController::class, 'searchDiscussion'])->name('search.discussions');
 Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [BreezeProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [BreezeProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
 //Profile
 Route::get('/profil/{user}', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/profil/{user}/favoris', [ProfileController::class, 'index'])->name('profile.favorite');
@@ -54,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil/{user}/parametres', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::patch('/profil/{user}/parametres', [ProfileController::class, 'updateProfileInformations'])->name('profile.update.profile.informations')->middleware([HandlePrecognitiveRequests::class]);
     Route::patch('/profil', [BreezeProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profil', [BreezeProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profil/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 });
 

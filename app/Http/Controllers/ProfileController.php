@@ -8,6 +8,8 @@ use App\Models\Discussion;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -344,7 +346,6 @@ class ProfileController extends Controller
      * Delete the user's avatar
      *
      * @param Request $request
-     * @param User $user
      * @return RedirectResponse
      */
     public function deleteAvatar(Request $request): RedirectResponse
@@ -363,6 +364,37 @@ class ProfileController extends Controller
         }
 
         return redirect()->back()->with('success', 'Votre avatar a été supprimé avec succès.');
+    }
+
+    /**
+     * Destroy the user's account
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'confirm' => ['required', 'string'],
+            'textConfirmDeleteAccount' => ['required', 'string'],
+        ]);
+
+        if (strtolower($request->confirm) !== strtolower($request->textConfirmDeleteAccount)) {
+            return back()->with('error', 'Erreur de confirmation. Veuillez saisir le texte correct pour supprimer votre compte.');
+        }
+
+        $user = $request->user();
+
+        // if user has the role admin, prevent account deletion
+        if ($user->hasRole('admin')) {
+            return back()->with('error', 'Vous ne pouvez pas supprimer un compte administrateur.');
+        }
+
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/')->with('success', 'Votre compte a été supprimé avec succès. Vous pouvez vous réinscrire à tout moment.');
     }
 
     /**
