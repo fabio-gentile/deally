@@ -86,7 +86,6 @@ Route::get('/discussions/{slug}', [DiscussionController::class, 'show'])->name('
 //Vote
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/vote/{id}', [VoteController::class, 'store'])->name('deals.vote.store');
-//    Route::delete('/deals/{deal}/vote', [DealController::class, 'unvote'])->name('deals.unvote');
 });
 
 // favorite
@@ -126,7 +125,7 @@ Route::get('/blog/{slug}', [\App\Http\Controllers\BlogController::class, 'show']
 // Admin
 Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'create'])->name('admin.login.create');
-    Route::post('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'login'])->name('admin.login.store');
+    Route::post('/login', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'store'])->name('admin.login.store');
     Route::post('/logout', [\App\Http\Controllers\Admin\AdminAuthenticatedSessionController::class, 'destroy'])
         ->name('admin.login.logout');
 });

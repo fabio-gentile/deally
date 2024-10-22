@@ -5,9 +5,9 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Checkbox } from "@/Components/ui/checkbox"
 import FormError from "@/Components/FormError.vue"
-import Separator from "@/Components/ui/separator/Separator.vue"
-import { LockKeyholeOpen } from "lucide-vue-next"
 import Wrapper from "@/Components/layout/Wrapper.vue"
+import MainLayout from "@/Components/layout/MainLayout.vue"
+defineOptions({ layout: MainLayout })
 
 const form = useForm({
   email: "",
@@ -27,7 +27,7 @@ const submit = () => {
   <Head>
     <title>Connexion</title>
   </Head>
-  <div class="grid w-full grid-cols-1 place-items-center">
+  <div class="my-auto grid w-full grid-cols-1 place-items-center">
     <Wrapper>
       <form
         @submit.prevent="submit"
@@ -38,7 +38,7 @@ const submit = () => {
             <div class="grid gap-2">
               <h1 class="text-3xl font-bold">Se connecter</h1>
               <p class="text-balance text-muted-foreground">
-                Pour accéder à votre compte à l'administration Deally.
+                Pour accéder à l'administration Deally.
               </p>
             </div>
             <div class="grid gap-4">
@@ -89,9 +89,9 @@ const submit = () => {
               </Button>
             </div>
             <div class="text-center text-sm">
-              <Link :href="route('home.index')" class="underline">
+              <a :href="route('home.index')" class="underline">
                 Revenir au site web.
-              </Link>
+              </a>
             </div>
           </div>
         </div>

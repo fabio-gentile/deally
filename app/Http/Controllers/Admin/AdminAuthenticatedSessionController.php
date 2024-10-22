@@ -35,7 +35,7 @@ class AdminAuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard', absolute: false))->with('success', 'Vous êtes connecté à l\'administration avec succès');
+        return redirect()->route('admin.dashboard')->with('success', 'Vous êtes connecté à l\'administration avec succès');
     }
 
     /**
