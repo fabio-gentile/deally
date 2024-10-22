@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import { FilterX, Frown, Filter } from "lucide-vue-next"
+import { FilterX, Frown, Filter, Search } from "lucide-vue-next"
 import {
   Pagination,
   PaginationEllipsis,
@@ -34,6 +34,7 @@ import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import { CategoryDiscussion, Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
+import { Input } from "@/Components/ui/input"
 
 const props = defineProps<{
   categories: CategoryDiscussion[]
@@ -43,6 +44,7 @@ const props = defineProps<{
 }>()
 
 interface Filters {
+  search?: string
   filter_by?: string
   category?: string
   comments?: string
@@ -132,6 +134,21 @@ const toggleFiltersMenu = () => {
                 <FilterX class="mr-2 h-6 w-6" />
                 Réinitialiser
               </Button>
+            </div>
+            <div>
+              <Label for="search" class="sr-only">Rechercher</Label>
+              <div class="relative block">
+                <Search
+                  class="absolute left-2.5 top-[11px] h-4 w-4 text-muted-foreground"
+                />
+                <Input
+                  id="search"
+                  v-model="filters.search"
+                  type="search"
+                  placeholder="Rechercher..."
+                  class="pl-8"
+                />
+              </div>
             </div>
             <div>
               <h3 class="mb-4 font-semibold">Trier par</h3>

@@ -26,6 +26,11 @@ class SearchController extends Controller
 
         $deals->where('expiration_date', '>', now()); // Do not show expired deals
 
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $deals->where('title', 'like', '%' . $search . '%')->orWhere('description', 'like', '%' . $search . '%');
+        }
+
         if ($request->filled('period')) {
             $period = $request->input('period');
             $date = new \DateTime();
@@ -137,6 +142,11 @@ class SearchController extends Controller
     public function searchDiscussion(Request $request): Response
     {
         $discussions = Discussion::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $discussions->where('title', 'like', '%' . $search . '%')->orWhere('content', 'like', '%' . $search . '%');
+        }
 
         if ($request->filled('period')) {
             $period = $request->input('period');
