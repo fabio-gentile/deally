@@ -314,10 +314,14 @@ const closeSheet = () => {
           </ul>
           <ul class="grid gap-6" v-if="!$page.props.auth.user?.name">
             <li>
-              <Link :href="route('login')">Se connecter</Link>
+              <Link @click="closeSheet" :href="route('login')"
+                >Se connecter</Link
+              >
             </li>
             <li>
-              <Link :href="route('register')">Créer un compte</Link>
+              <Link @click="closeSheet" :href="route('register')"
+                >Créer un compte</Link
+              >
             </li>
           </ul>
           <ul class="grid gap-6" v-else>
