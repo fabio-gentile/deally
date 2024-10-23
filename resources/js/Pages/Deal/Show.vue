@@ -7,7 +7,6 @@ import {
   Clock,
   ImageOff,
   LucideSquareArrowOutUpRight,
-  Ellipsis,
   Reply,
   Pencil,
   Trash2,
@@ -15,13 +14,6 @@ import {
   Copy,
   CircleAlert,
 } from "lucide-vue-next"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
-import { Link, router } from "@inertiajs/vue3"
+import { Head, Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import UpVote from "@/Components/Deal/UpVote.vue"
@@ -54,13 +46,8 @@ import { CarouselApi } from "@/Components/ui/carousel"
 import { calculatePercentage } from "@/lib/utils"
 import { Separator } from "@/Components/ui/separator"
 import SendMessage from "@/Components/SendMessage.vue"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
 import { useClipboard } from "@vueuse/core/index"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const { deal, images, category, userDealsCount, allCommentsCount, isExpired } =
   defineProps<{
@@ -176,36 +163,43 @@ const { copy, copied } = useClipboard({ source })
 </script>
 
 <template>
-  <main class="bg-page py-8">
+  <Head>
+    <title>
+      {{ deal.title }}
+    </title>
+    <meta
+      name="description"
+      :content="
+        deal.description.length > 150
+          ? deal.description.substring(0, 150) + '...'
+          : deal.description
+      "
+    />
+  </Head>
+  <main class="bg-page py-6">
     <Wrapper>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Deally </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('search.deals') + '?category=' + category">
-                {{ category }}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('deals.show', deal.slug)"
-              >
-                {{ deal.title }}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: 'Rechercher un deal',
+            route: 'search.deals',
+            active: false,
+          },
+          {
+            label: category,
+            route: 'search.deals',
+            query: '?category=' + category,
+            active: false,
+          },
+          {
+            label: deal.title,
+            route: 'deals.show',
+            params: deal.slug,
+            active: true,
+          },
+        ]"
+      />
       <Wrapper class="mt-6 !max-w-[850px] !p-0">
         <!-- status -->
         <div
@@ -464,7 +458,7 @@ const { copy, copied } = useClipboard({ source })
             class="break-all text-sm text-muted-foreground lg:text-base"
             v-html="deal.description"
           ></div>
-          <Separator class="my-1" />
+          <Separator class="!mb-4" />
           <div class="text-sm text-muted-foreground">
             <div class="italic">
               Dernière édition par

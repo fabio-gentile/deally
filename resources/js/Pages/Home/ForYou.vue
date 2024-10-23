@@ -114,7 +114,7 @@ const [isOpen, closeDialog] = dialogState()
 </script>
 
 <template>
-  <div class="w-full pb-8">
+  <div class="w-full pb-6">
     <Head title="Accueil" />
     <div class="bg-primary py-4 dark:bg-primary-foreground">
       <Wrapper class="max-w-2xl lg:max-w-4xl">
@@ -272,7 +272,7 @@ const [isOpen, closeDialog] = dialogState()
             </div>
             <CardDeal v-for="deal in deals" :key="deal.id" :deal="deal" />
             <Pagination
-              class="mt-4"
+              class="my-4"
               v-slot="{ page }"
               :total="pagination.total"
               :sibling-count="1"

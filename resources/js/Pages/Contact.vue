@@ -54,7 +54,7 @@ const submit = async () => {
 }
 </script>
 <template>
-  <div class="w-full py-8">
+  <div class="w-full py-6">
     <Head title="Contact" />
     <Wrapper class="!max-w-[800px]">
       <h1 class="mb-4 text-2xl font-semibold">Contactez-nous</h1>

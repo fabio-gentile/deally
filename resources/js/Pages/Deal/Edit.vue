@@ -23,13 +23,7 @@ import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
 import { Deal } from "@/types/model/deal"
 import TipTap from "@/Components/TipTap.vue"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 interface Image {
   file: File
@@ -117,47 +111,30 @@ const deleteImage = async (filename: string, index: number): Promise<void> => {
 }
 </script>
 <template>
-  <div class="py-8">
+  <div class="bg-page py-6">
     <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.deal.title" />
     <Wrapper class="max-w-[800px]">
-      <Breadcrumb class="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Deally </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <!-- TODO: Add redirection to category-->
-              <Link :href="route('home.index')"> Les bons plan </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('deals.show', deal.slug)">
-                {{ deal.title }}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('deals.edit', deal.slug)"
-              >
-                Modifier le deal
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: props.deal.title,
+            route: 'deals.show',
+            params: props.deal.slug,
+            active: false,
+          },
+          {
+            label: 'Modifier',
+            route: 'deals.edit',
+            params: props.deal.slug,
+            active: true,
+          },
+        ]"
+      />
+
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="mt-4">
           <div class="flex flex-col gap-4">
             <FormField name="title">
               <FormItem>

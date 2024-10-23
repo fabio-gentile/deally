@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import { Ellipsis, Reply, Pencil, Trash2, MessageSquare } from "lucide-vue-next"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
+import { Reply, Pencil, Trash2, MessageSquare } from "lucide-vue-next"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
-import { Link, router } from "@inertiajs/vue3"
+import { Head, Link, router } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import { timeAgo } from "@/lib/time-ago"
@@ -28,15 +21,9 @@ import ShareSocial from "@/Components/common/ShareSocial.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import { Separator } from "@/Components/ui/separator"
 import SendMessage from "@/Components/SendMessage.vue"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
 import { CommentDiscussion, Discussion } from "@/types/model/discussion"
-import { calculatePercentage } from "@/lib/utils"
 import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const { discussion, category, similarDiscussions, allCommentsCount } =
   defineProps<{
@@ -91,10 +78,6 @@ const handleRemoveComment = (id: number) => {
       { id: id },
       {
         preserveScroll: true,
-        onSuccess: () => {
-          console.log("Remove comment with id:", id)
-          console.log("Comment removed")
-        },
         preserveState: true,
       }
     )
@@ -115,42 +98,44 @@ const discussionDestroy = (id: number) => {
 </script>
 
 <template>
-  <main class="bg-page py-8">
+  <Head>
+    <title>
+      {{ discussion.title }}
+    </title>
+    <meta
+      name="description"
+      :content="
+        discussion.content.length > 150
+          ? discussion.content.substring(0, 150) + '...'
+          : discussion.content
+      "
+    />
+  </Head>
+  <main class="bg-page py-6">
     <Wrapper>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Deally </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <!-- TODO: Add redirection to category-->
-              <Link :href="route('home.index')"> Catégorie </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> {{ category }} </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('discussions.show', discussion.slug)"
-              >
-                {{ discussion.title }}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <Wrapper class="mt-6 !max-w-[850px] !p-0">
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: 'Rechercher une discussion',
+            route: 'search.discussions',
+            active: false,
+          },
+          {
+            label: category,
+            route: 'search.discussions',
+            query: '?category=' + category,
+            active: false,
+          },
+          {
+            label: discussion.title,
+            route: 'discussions.show',
+            params: discussion.slug,
+            active: true,
+          },
+        ]"
+      />
+      <Wrapper class="!max-w-[850px] !p-0">
         <!-- status -->
         <div
           class="my-6 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-lg bg-white p-4 dark:bg-primary-foreground"
@@ -208,7 +193,7 @@ const discussionDestroy = (id: number) => {
             class="tip-tap break-all text-sm text-muted-foreground lg:text-base"
             v-html="discussion.content"
           ></div>
-          <Separator class="!-mt-4" />
+          <Separator class="!mb-4" />
           <div class="text-sm text-muted-foreground">
             <!--            TODO: Add user avatar-->
             <div

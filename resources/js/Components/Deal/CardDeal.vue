@@ -42,7 +42,7 @@ const since = timeAgo(new Date(deal.created_at)) // string
         />
         <ImageOff
           v-else
-          class="mx-auto h-52 w-52 object-contain text-muted-foreground"
+          class="h-32 w-32 shrink-0 overflow-hidden rounded-lg bg-page object-contain md:h-52 md:w-52"
         />
         <div class="flex flex-col gap-3 md:hidden">
           <UpVote

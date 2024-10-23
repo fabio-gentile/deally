@@ -91,7 +91,7 @@ class HomeController extends Controller
     {
         list($deals, $pagination) = $this->getDeals($request, $deals, $user);
 
-        return Inertia::render('Home', [
+        return Inertia::render('Home/Home', [
             'categories' => CategoryDeal::orderBy('name', 'asc')->get(),
             'deals' => $deals->items(),
             'filters' => $request->all(),

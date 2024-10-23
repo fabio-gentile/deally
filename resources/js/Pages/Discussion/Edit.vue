@@ -14,14 +14,8 @@ import { Button } from "@/Components/ui/button"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import FormError from "@/Components/FormError.vue"
 import TipTap from "@/Components/TipTap.vue"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
 import { CategoryDiscussion, Discussion } from "@/types/model/discussion"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const props = defineProps<{
   categories: CategoryDiscussion[]
@@ -94,47 +88,30 @@ const handleRemoveThumbnail = () => {
 }
 </script>
 <template>
-  <div class="w-full bg-page py-8">
+  <div class="w-full bg-page py-6">
     <!--      TODO: Refaire le front-->
-    <Head title="Créer un bon plan" />
+    <Head :title="'Modification de ' + props.discussion.title" />
     <Wrapper class="!max-w-[800px]">
-      <Breadcrumb class="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Deally </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <!-- TODO: Add redirection to category-->
-              <Link :href="route('home.index')"> Discussions </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('discussions.show', props.discussion.slug)">
-                {{ props.discussion.title }}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('discussions.edit', props.discussion.slug)"
-              >
-                Modifier la discussion
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: props.discussion.title,
+            route: 'discussions.show',
+            params: props.discussion.slug,
+            active: false,
+          },
+          {
+            label: 'Modifier',
+            route: 'discussions.edit',
+            params: props.discussion.slug,
+            active: true,
+          },
+        ]"
+      />
+
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="mt-4">
           <div class="flex flex-col gap-4">
             <FormField name="title">
               <FormItem>

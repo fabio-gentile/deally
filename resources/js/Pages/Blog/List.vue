@@ -58,11 +58,11 @@ const changePage = (page: number) => {
 </script>
 <template>
   <Head title="Blog" />
-  <div class="w-full py-8">
+  <div class="w-full py-6">
     <Wrapper class="!max-w-[800px]">
       <Breadcrumb
         :breadcrumbs="[
-          { label: 'Deally', route: 'home.index', active: false },
+          { label: 'Accueil', route: 'home.index', active: false },
           {
             label: 'Blog',
             route: 'blog.index',

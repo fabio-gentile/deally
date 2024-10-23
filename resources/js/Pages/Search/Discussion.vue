@@ -9,13 +9,6 @@ import {
   PaginationNext,
   PaginationPrev,
 } from "@/Components/ui/pagination"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
 import { Button } from "@/Components/ui/button"
 import {
   Select,
@@ -28,13 +21,14 @@ import {
 } from "@/Components/ui/select"
 import { Label } from "@/Components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
-import { Head, Link, router } from "@inertiajs/vue3"
+import { Head, router } from "@inertiajs/vue3"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { ref, watch } from "vue"
 import { useDebounceFn } from "@vueuse/core"
 import { CategoryDiscussion, Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
 import { Input } from "@/Components/ui/input"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const props = defineProps<{
   categories: CategoryDiscussion[]
@@ -59,7 +53,7 @@ const search = useDebounceFn(() => {
   router.get(route("search.discussions"), filters.value, {
     preserveState: true,
     replace: true,
-    onSuccess: (page) => {
+    onSuccess: () => {
       discussions.value = props.discussions
     },
   })
@@ -89,39 +83,29 @@ const toggleFiltersMenu = () => {
 }
 </script>
 <template>
-  <Head title="Rechercher un une discussion" />
-  <div class="w-full bg-page py-8">
+  <Head title="Rechercher une discussion" />
+  <div class="w-full bg-page py-6">
     <Wrapper>
-      <Breadcrumb class="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Accueil </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('search.discussions')"
-              >
-                Rechercher une discussion
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: 'Rechercher une discussion',
+            route: 'search.discussions',
+            active: true,
+          },
+        ]"
+      />
 
       <div class="flex flex-col gap-6 lg:flex-row">
         <!--            filters-->
         <div>
-          <Button @click="toggleFiltersMenu" class="mb-4 lg:hidden">
+          <Button @click="toggleFiltersMenu" class="mt-4 lg:hidden">
             <Filter class="mr-2" />
             Filtres
           </Button>
           <aside
-            class="sticky h-fit gap-6 rounded-lg border bg-white p-4 lg:top-20 lg:grid xl:w-[350px]"
+            class="sticky mt-4 h-fit gap-6 rounded-lg border bg-white p-4 lg:top-20 lg:grid xl:w-[350px]"
             :class="{ hidden: !isFiltersMenuOpen, grid: isFiltersMenuOpen }"
           >
             <div class="flex items-center justify-between gap-4">

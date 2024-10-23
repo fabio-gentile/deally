@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <Head :title="title" />
-  <div class="w-full py-8">
+  <div class="w-full py-6">
     <Wrapper class="!max-w-[800px]">
       <h1 class="mb-6 text-2xl font-semibold md:mb-8">{{ title }}</h1>
       <div

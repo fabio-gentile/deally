@@ -15,13 +15,7 @@ import { CategoryDeal } from "@/types/model/deal"
 import FormError from "@/Components/FormError.vue"
 import TipTap from "@/Components/TipTap.vue"
 import { ToggleGroup, ToggleGroupItem } from "@/Components/ui/toggle-group"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb"
+import Breadcrumb from "@/Components/Breadcrumb.vue"
 
 const props = defineProps<{
   categories: CategoryDeal[]
@@ -96,39 +90,23 @@ const removeImage = (index: number) => {
 }
 </script>
 <template>
-  <div class="py-8">
+  <div class="bg-page py-6">
     <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
     <Wrapper class="max-w-[800px]">
-      <Breadcrumb class="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link :href="route('home.index')"> Deally </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <!-- TODO: Add redirection to category-->
-              <Link :href="route('home.index')"> Les bons plans </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>
-              <Link
-                class="font-semibold text-foreground"
-                :href="route('deals.create')"
-              >
-                Créer un deal
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumb
+        :breadcrumbs="[
+          { label: 'Accueil', route: 'home.index', active: false },
+          {
+            label: 'Créer un deal',
+            route: 'deals.create',
+            active: true,
+          },
+        ]"
+      />
+
       <Form v-slot="{ meta, values, validate }" as="" keep-values>
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="mt-4">
           <div class="flex flex-col gap-4">
             <FormField name="title">
               <FormItem>
@@ -212,7 +190,7 @@ const removeImage = (index: number) => {
 
                 <div
                   v-if="images.length"
-                  class="rounded-lg border bg-white p-4"
+                  class="flex flex-wrap gap-4 rounded-lg border bg-white p-4"
                 >
                   <div
                     v-for="(image, index) in images"

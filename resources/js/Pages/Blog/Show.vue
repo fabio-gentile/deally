@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Reply, Trash2, MessageSquare, ImageOff } from "lucide-vue-next"
-import { Link, router } from "@inertiajs/vue3"
+import { Link, router, Head } from "@inertiajs/vue3"
 import { ref } from "vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 import { timeAgo } from "@/lib/time-ago"
@@ -71,11 +71,25 @@ const handleRemoveComment = (id: number) => {
 </script>
 
 <template>
+  <Head>
+    <title>
+      {{ blog.meta_title ? blog.meta_title : blog.title }}
+    </title>
+    <meta
+      name="description"
+      :content="blog.meta_description ? blog.meta_description : blog.title"
+    />
+    <meta
+      v-if="blog.meta_keywords"
+      name="keywords"
+      :content="blog.meta_keywords"
+    />
+  </Head>
   <main class="w-full bg-page pb-6">
     <Wrapper class="mt-6 !max-w-[850px]">
       <Breadcrumb
         :breadcrumbs="[
-          { label: 'Deally', route: 'home.index', active: false },
+          { label: 'Accueil', route: 'home.index', active: false },
           {
             label: 'Blog',
             route: 'blog.index',

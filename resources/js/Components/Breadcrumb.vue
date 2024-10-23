@@ -12,6 +12,7 @@ interface Breadcrumb {
   label: string
   route?: string
   params?: Record<string, any>
+  query?: string
   active?: boolean
 }
 
@@ -30,8 +31,8 @@ const props = defineProps<{
             v-if="crumb.route"
             :href="
               crumb.params
-                ? route(crumb.route, crumb.params)
-                : route(crumb.route)
+                ? route(crumb.route, crumb.params) + (crumb.query || '')
+                : route(crumb.route) + (crumb.query || '')
             "
             :class="crumb.active ? 'font-semibold text-foreground' : ''"
           >
