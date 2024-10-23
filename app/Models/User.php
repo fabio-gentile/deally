@@ -107,6 +107,15 @@ class User extends Authenticatable implements MustVerifyEmail
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
             }
+
+            // Needed to fire the deleting event on the related models BECAUSE of on cascade delete
+            foreach ($user->deals as $deal) {
+                $deal->delete();
+            }
+
+            foreach ($user->discussions as $discussion) {
+                $discussion->delete();
+            }
         });
     }
 
@@ -138,6 +147,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function deals(): HasMany
     {
         return $this->hasMany(Deal::class);
+    }
+
+    /**
+     * Get the discussions for the user.
+     *
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class);
     }
 
     /**

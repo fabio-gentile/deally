@@ -83,6 +83,7 @@ class Deal extends Model
                 // Delete the image file from the storage
                 if (Storage::exists($filePath)) {
                     Storage::delete($filePath);
+                    $image->delete();
                 }
             }
         });

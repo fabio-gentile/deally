@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreignIdFor(\App\Models\Blog::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\User::class)->constrained();
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\CommentBlog::class, 'parent_id')->nullable();
             $table->text('content');
             $table->unsignedBigInteger('answer_to')->nullable();
