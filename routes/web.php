@@ -23,10 +23,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/nouveaux', [HomeController::class, 'new'])
     ->name('home.new');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 // Contact
 Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');

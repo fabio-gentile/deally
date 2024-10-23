@@ -9,11 +9,6 @@ import Separator from "@/Components/ui/separator/Separator.vue"
 import { LockKeyholeOpen } from "lucide-vue-next"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 
-defineProps<{
-  canResetPassword?: boolean
-  status?: string
-}>()
-
 const form = useForm({
   email: "",
   password: "",

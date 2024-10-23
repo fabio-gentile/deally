@@ -23,10 +23,7 @@ class AuthenticatedSessionController extends Controller
             Redirect::setIntendedUrl(url()->previous());
         }
 
-        return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Auth/Login');
     }
 
     /**
@@ -38,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('profile.settings', \auth()->user()->name, absolute: false))->with('success', 'Vous êtes connecté avec succès');
+        return redirect()->intended()->with('success', 'Vous êtes connecté avec succès');
     }
 
     /**

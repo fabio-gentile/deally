@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Social;
 use App\Models\User;
 use App\Rules\NoSpaces;
+use Faker\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -71,11 +72,7 @@ class SocialController extends Controller
 
         // login user
         Auth::login($user, true);
-        if (url()->previous() === route('admin.login.create')) {
-            return redirect()->route('admin.dashboard')->with('success', 'Connexion avec ' . $provider . ' réussie');
-        } else {
-            return redirect()->intended(route('profile.settings', $user->name))->with('success', 'Connexion avec ' . $provider . ' réussie');
-        }
+        return redirect()->intended()->with('success', 'Connexion avec ' . $provider . ' réussie');
     }
 
 
@@ -100,6 +97,7 @@ class SocialController extends Controller
         ];
 
         if ($name) {
+            $name = Str::limit(str_replace(' ', '', $name), 16, '');
             $validator = Validator::make(['name' => $name], $rules);
 
             if (!$validator->fails()) {
@@ -118,8 +116,9 @@ class SocialController extends Controller
      */
     public function generateRandomName(): string
     {
+        $faker = Factory::create('fr_FR');
         do {
-            $pseudo = Str::random(3) . ucfirst(Str::random(rand(4, 13)));
+            $pseudo = $faker->userName . $faker->randomNumber(3, true);
         } while (User::where('name', $pseudo)->exists()); // Assure that the name is unique
 
         return $pseudo;
