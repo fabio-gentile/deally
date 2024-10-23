@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Cocur\Slugify\Slugify;
 use Illuminate\Database\Seeder;
 
 class CategoryDealSeeder extends Seeder
@@ -12,32 +13,37 @@ class CategoryDealSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Food',
-            'Drink',
-            'Electronics',
-            'Fashion',
-            'Health',
-            'Beauty',
-            'Travel',
-            'Home',
-            'Garden',
+            'Cuisine',
+            'Boisson',
+            'Électronique',
+            'Mode',
+            'Santé',
+            'Beauté',
+            'Voyage',
+            'Maison',
+            'Jardin',
             'Sport',
-            'Entertainment',
-            'Education',
+            'Divertissement',
+            'Éducation',
             'Finance',
-            'Insurance',
-            'Automotive',
-            'Business',
+            'Assurance',
+            'Automobile',
+            'Affaires',
             'Services',
-            'Other',
+            'Autre',
         ];
+        $slugify = new Slugify();
 
         // Create categories
         foreach ($categories as $category) {
-            \App\Models\CategoryDeal::factory()->create([
+            if (\App\Models\CategoryDeal::where('name', $category)->exists()) {
+                continue;
+            }
+
+            \App\Models\CategoryDeal::create([
                 'name' => $category,
-                'slug' => \Illuminate\Support\Str::slug($category),
-            ]);
+                'slug' => $slugify->slugify($category),
+            ])->save();
         }
     }
 }

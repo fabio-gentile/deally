@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Blog;
+use Cocur\Slugify\Slugify;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Date;
@@ -21,12 +22,15 @@ class BlogSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        $slugify = new Slugify();
+        for ($i = 0; $i < 20; $i++) {
             $filename = uniqid('blog-', true) . '.png';
             Storage::copy('400x300.png', 'uploads/blog/' . $filename);
 
+            $title = $this->faker->sentence;
             Blog::create([
-               'title' => 'Blog post ' . $i + 1,
+               'title' => $title,
+                'slug' => $slugify->slugify($title),
                 'content' => $this->faker->randomHtml(),
                 'image' => $filename,
                 'meta_title' => 'Blog post ' . $i + 1,
@@ -35,7 +39,7 @@ class BlogSeeder extends Seeder
                 'is_published' => true,
                 'created_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
                 'published_at' => $this->faker->dateTimeBetween('-1 day', 'now'),
-            ]);
+            ])->save();
         }
     }
 }

@@ -15,7 +15,8 @@ return [
 
     'commands' => [
         // App\Console\Commands\ExampleCommand::class,
-        App\Console\Commands\SendDailyNewsletter::class
+        App\Console\Commands\SendDailyNewsletter::class,
+        App\Console\Commands\GiveRoleAdmin::class,
     ],
 
     /*

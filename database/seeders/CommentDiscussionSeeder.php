@@ -14,8 +14,8 @@ class CommentDiscussionSeeder extends Seeder
     {
         $discussions = \App\Models\Discussion::all();
         $discussions->each(function ($discussion) {
-            if (rand(1, 5) !== 1) { // 80% chance to generate comments
-                $commentsCount = rand(1, 50);
+            if (rand(1, 10) !== 1) { // 90% chance to generate comments
+                $commentsCount = rand(1, 10);
                 \App\Models\CommentDiscussion::factory()->count($commentsCount)->create([
                     'discussion_id' => $discussion->id,
                 ]);

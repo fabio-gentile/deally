@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Cocur\Slugify\Slugify;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,31 +14,36 @@ class CategoryDiscussionSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Food',
-            'Drink',
-            'Electronics',
-            'Fashion',
-            'Health',
-            'Beauty',
-            'Travel',
-            'Home',
-            'Garden',
+            'Cuisine',
+            'Électronique',
+            'Mode',
+            'Santé',
+            'Beauté',
+            'Voyage',
+            'Maison',
+            'Jardin',
             'Sport',
-            'Entertainment',
-            'Education',
+            'Divertissement',
+            'Éducation',
             'Finance',
-            'Insurance',
-            'Automotive',
-            'Business',
+            'Assurance',
+            'Automobile',
+            'Affaires',
             'Services',
-            'Other',
+            'Autre',
         ];
+        $slugify = new Slugify();
 
         // Create categories
         foreach ($categories as $category) {
-            \App\Models\CategoryDiscussion::factory()->create([
+            if (\App\Models\CategoryDiscussion::where('name', $category)->exists()) {
+                continue;
+            }
+
+            \App\Models\CategoryDiscussion::create([
                 'name' => $category,
-            ]);
+                'slug' => $slugify->slugify($category),
+            ])->save();
         }
     }
 }

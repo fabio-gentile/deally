@@ -17,9 +17,8 @@ class CommentDiscussionFactory extends Factory
     public function definition(): array
     {
         return [
-            'content' => $this->faker->sentence(rand(5, 20)),
-            'discussion_id' => \App\Models\Discussion::factory(),
-            'user_id' => \App\Models\User::factory(),
+            'content' => $this->faker->sentence(rand(5, 50)),
+            'user_id' => \App\Models\User::all()->random()->id,
         ];
     }
 }

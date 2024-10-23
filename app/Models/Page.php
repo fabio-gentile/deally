@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
-use Cviebrock\EloquentSluggable\SluggableObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Page extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory;
 
     protected $fillable = ['title', 'slug', 'content'];
 
@@ -22,34 +20,6 @@ class Page extends Model
     public function getRouteKeyName(): string
     {
         return 'id';
-    }
-
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
-    public function sluggable(): array
-    {
-        return [
-            'slug' => [
-                'source' => ['title', 'id'],
-            ],
-        ];
-    }
-
-    /**
-     * Slug generation event.
-     *
-     * @return string
-     */
-    public function sluggableEvent(): string
-    {
-        /**
-         * Optional behaviour -- generate slug after model is saved.
-         * This will likely become the new default in the next major release.
-         */
-        return SluggableObserver::SAVED;
     }
 
     /**

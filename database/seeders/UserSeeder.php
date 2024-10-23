@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class UserSeeder extends Seeder
 {
@@ -13,6 +14,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(20)->create();
+        $path = 'uploads/avatar/';
+        for ($i = 0; $i < 200; $i++) {
+            $filename = uniqid('avatar-', true) . '.png';
+            Storage::copy('avatar.png', $path . $filename);
+
+            User::factory()->create([
+                'avatar' => $filename,
+            ]);
+        }
     }
 }
