@@ -41,7 +41,13 @@ const deleteAvatar = () => {
           :alt="'Avatar de ' + user.name"
           class="h-24 w-24 rounded-full object-cover"
         />
-        <Dialog v-if="user.avatar">
+        <img
+          v-else
+          :src="`https://ui-avatars.com/api/?size=64&name=${user.name}`"
+          :alt="'Avatar de ' + user.name"
+          class="h-24 w-24 rounded-full object-cover"
+        />
+        <Dialog v-if="user.avatar && $page.props.auth?.user?.id === user.id">
           <DialogTrigger
             class="absolute -right-4 top-0 z-10 rounded-full bg-destructive p-1"
           >
@@ -67,12 +73,6 @@ const deleteAvatar = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        <img
-          v-else
-          :src="`https://ui-avatars.com/api/?size=64&name=${user.name}`"
-          :alt="'Avatar de ' + user.name"
-          class="h-24 w-24 rounded-full object-cover"
-        />
       </div>
 
       <h2 class="text-2xl font-semibold text-foreground">{{ user.name }}</h2>

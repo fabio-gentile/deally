@@ -108,15 +108,14 @@ const changePage = (page: number) => {
               <h2 class="font-semibold sm:text-2xl">{{ firstPost.title }}</h2>
             </Link>
             <div class="flex items-center gap-4">
-              <!--TODO: logo deally + add redirection on title and image-->
               <img
-                src="/images/avatar.jpg"
+                src="/logo.svg"
                 alt="Logo Deally"
                 class="h-8 w-8 rounded-full"
               />
               <p class="text-sm text-muted-foreground">
                 Il y a
-                {{ timeAgo(new Date(firstPost.published_at)) }}.
+                {{ timeAgo(new Date(firstPost.published_at as string)) }}.
               </p>
             </div>
           </div>
@@ -161,15 +160,14 @@ const changePage = (page: number) => {
                 <h2 class="font-semibold">{{ post.title }}</h2>
               </Link>
               <div class="flex items-center gap-4">
-                <!--TODO: logo deally + add redirection on title and image-->
                 <img
-                  src="/images/avatar.jpg"
+                  src="/logo.svg"
                   alt="Logo Deally"
                   class="h-8 w-8 rounded-full"
                 />
                 <p class="text-sm text-muted-foreground">
                   Il y a
-                  {{ timeAgo(new Date(post.published_at)) }}.
+                  {{ timeAgo(new Date(post.published_at as string)) }}.
                 </p>
               </div>
             </div>

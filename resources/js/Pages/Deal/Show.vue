@@ -375,7 +375,9 @@ const { copy, copied } = useClipboard({ source })
                 <Report :id="deal.id" type="deal"> Signaler l'annonce</Report>
               </div>
               <div class="flex flex-col gap-4">
-                <MessageSquare url="#comments">Commentaires </MessageSquare>
+                <MessageSquare :url="route('deals.show', deal.slug)"
+                  >Commentaires
+                </MessageSquare>
                 <SaveBookmark
                   :is-bookmarked="deal.user_favorite"
                   type="deal"
@@ -424,10 +426,11 @@ const { copy, copied } = useClipboard({ source })
                 <div class="grid gap-2">
                   <div>
                     Proposé par
-                    <!-- TODO: Add redirection to user profile -->
-                    <Link href="#" class="font-semibold">{{
-                      deal.user.name
-                    }}</Link>
+                    <Link
+                      :href="route('profile.deals', deal.user.name)"
+                      class="font-semibold"
+                      >{{ deal.user.name }}</Link
+                    >
                   </div>
                   <div v-if="userDealsCount > 1">
                     {{ userDealsCount }} deals partagés
@@ -463,9 +466,11 @@ const { copy, copied } = useClipboard({ source })
           <div class="text-sm text-muted-foreground">
             <div class="italic">
               Dernière édition par
-              <!-- TODO: Add redirection to user profile -->
-              <Link href="" class="font-semibold">{{ deal.user.name }}</Link
-              >, il y a {{ since }}.
+              <Link
+                :href="route('profile.deals', deal.user.name)"
+                class="font-semibold"
+                >{{ deal.user.name }}</Link
+              >, il y a {{ timeAgo(new Date(deal.updated_at as string)) }}.
             </div>
           </div>
           <div class="text-sm italic text-muted-foreground">
@@ -567,14 +572,23 @@ const { copy, copied } = useClipboard({ source })
             <div class="flex items-start justify-between">
               <div class="flex flex-row gap-2">
                 <img
-                  src="/images/avatar.jpg"
+                  v-if="comment.user.avatar"
+                  :src="'/storage/uploads/avatar/' + comment.user.avatar"
                   :alt="'Avatar de ' + comment.user.name"
-                  class="avatar h-[52px] rounded-full object-contain"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
+                />
+                <img
+                  v-else
+                  :src="`https://ui-avatars.com/api/?size=64&name=${comment.user.name}`"
+                  :alt="'Avatar de ' + comment.user.name"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
                 />
                 <div class="flex flex-col justify-evenly gap-1">
-                  <Link href="#" class="font-medium">{{
-                    comment.user.name
-                  }}</Link>
+                  <Link
+                    :href="route('profile.deals', comment.user.name)"
+                    class="font-medium"
+                    >{{ comment.user.name }}</Link
+                  >
                   <span
                     >Il y a {{ timeAgo(new Date(comment.created_at)) }}</span
                   >
@@ -631,14 +645,23 @@ const { copy, copied } = useClipboard({ source })
                 <div class="flex items-start justify-between">
                   <div class="flex flex-row gap-2">
                     <img
-                      src="/images/avatar.jpg"
+                      v-if="reply.user.avatar"
+                      :src="'/storage/uploads/avatar/' + reply.user.avatar"
                       :alt="'Avatar de ' + reply.user.name"
-                      class="avatar h-[52px] rounded-full object-contain"
+                      class="h-[52px] w-[52px] rounded-full object-cover"
+                    />
+                    <img
+                      v-else
+                      :src="`https://ui-avatars.com/api/?size=64&name=${reply.user.name}`"
+                      :alt="'Avatar de ' + reply.user.name"
+                      class="h-[52px] w-[52px] rounded-full object-cover"
                     />
                     <div class="flex flex-col justify-evenly gap-1">
-                      <Link href="#" class="font-medium">{{
-                        reply.user.name
-                      }}</Link>
+                      <Link
+                        :href="route('profile.deals', reply.user.name)"
+                        class="font-medium"
+                        >{{ reply.user.name }}</Link
+                      >
                       <span
                         >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
                       >
@@ -664,11 +687,12 @@ const { copy, copied } = useClipboard({ source })
                   </div>
                 </div>
                 <div v-if="reply.answer_to_user" class="text-muted-foreground">
-                  <!--  TODO: redirection                  -->
                   En réponse à
-                  <Link href="#" class="font-semibold text-primary">{{
-                    reply.answer_to_user.name
-                  }}</Link>
+                  <Link
+                    :href="route('profile.deals', reply.answer_to_user.name)"
+                    class="font-semibold text-primary"
+                    >{{ reply.answer_to_user.name }}</Link
+                  >
                 </div>
                 <p>
                   {{ reply.content }}

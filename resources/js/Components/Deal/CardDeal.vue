@@ -97,7 +97,6 @@ const since = timeAgo(new Date(deal.created_at)) // string
         </div>
 
         <strong>
-          <!--          TODO: add route redirection-->
           <Link
             :href="route('deals.show', deal.slug)"
             class="line-clamp-4 font-semibold md:line-clamp-2"

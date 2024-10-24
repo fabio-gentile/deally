@@ -59,10 +59,6 @@ const handleRemoveComment = (id: number) => {
       { id: id },
       {
         preserveScroll: true,
-        onSuccess: () => {
-          console.log("Remove comment with id:", id)
-          console.log("Comment removed")
-        },
         preserveState: true,
       }
     )
@@ -127,18 +123,15 @@ const handleRemoveComment = (id: number) => {
         ></div>
         <Separator class="!mb-4" />
         <div class="text-sm text-muted-foreground">
-          <!--            TODO: Add user avatar-->
           <div
             class="!-mt-4 flex flex-row items-center gap-2 text-sm text-muted-foreground"
           >
-            <!--TODO: logo deally + add redirection on title and image-->
             <img
-              src="/images/avatar.jpg"
+              src="/logo.svg"
               alt="Logo Deally"
               class="h-12 w-12 rounded-full"
             />
             <div class="grid gap-2">
-              <!-- TODO: Add redirection to user profile -->
               <div>Publié il y a {{ since }}.</div>
             </div>
           </div>
@@ -176,15 +169,27 @@ const handleRemoveComment = (id: number) => {
           <div class="flex items-start justify-between">
             <div class="flex flex-row gap-2">
               <img
-                src="/images/avatar.jpg"
+                v-if="comment.user.avatar"
+                :src="'/storage/uploads/avatar/' + comment.user.avatar"
                 :alt="'Avatar de ' + comment.user.name"
-                class="avatar h-[52px] rounded-full object-contain"
+                class="h-[52px] w-[52px] rounded-full object-cover"
+              />
+              <img
+                v-else
+                :src="`https://ui-avatars.com/api/?size=64&name=${comment.user.name}`"
+                :alt="'Avatar de ' + comment.user.name"
+                class="h-[52px] w-[52px] rounded-full object-cover"
               />
               <div class="flex flex-col justify-evenly gap-1">
-                <Link href="#" class="font-medium">{{
-                  comment.user.name
-                }}</Link>
-                <span>Il y a {{ timeAgo(new Date(comment.created_at)) }}</span>
+                <Link
+                  :href="route('profile.deals', comment.user.name)"
+                  class="font-medium"
+                  >{{ comment.user.name }}</Link
+                >
+                <span
+                  >Il y a
+                  {{ timeAgo(new Date(comment.created_at as string)) }}</span
+                >
               </div>
             </div>
 
@@ -234,16 +239,26 @@ const handleRemoveComment = (id: number) => {
               <div class="flex items-start justify-between">
                 <div class="flex flex-row gap-2">
                   <img
-                    src="/images/avatar.jpg"
+                    v-if="reply.user.avatar"
+                    :src="'/storage/uploads/avatar/' + reply.user.avatar"
                     :alt="'Avatar de ' + reply.user.name"
-                    class="avatar h-[52px] rounded-full object-contain"
+                    class="h-[52px] w-[52px] rounded-full object-cover"
+                  />
+                  <img
+                    v-else
+                    :src="`https://ui-avatars.com/api/?size=64&name=${reply.user.name}`"
+                    :alt="'Avatar de ' + reply.user.name"
+                    class="h-[52px] w-[52px] rounded-full object-cover"
                   />
                   <div class="flex flex-col justify-evenly gap-1">
-                    <Link href="#" class="font-medium">{{
-                      reply.user.name
-                    }}</Link>
+                    <Link
+                      :href="route('profile.deals', reply.user.name)"
+                      class="font-medium"
+                      >{{ reply.user.name }}</Link
+                    >
                     <span
-                      >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
+                      >Il y a
+                      {{ timeAgo(new Date(reply.created_at as string)) }}</span
                     >
                   </div>
                 </div>
@@ -266,11 +281,12 @@ const handleRemoveComment = (id: number) => {
                 </div>
               </div>
               <div v-if="reply.answer_to_user" class="text-muted-foreground">
-                <!--  TODO: redirection                  -->
                 En réponse à
-                <Link href="#" class="font-semibold text-primary">{{
-                  reply.answer_to_user.name
-                }}</Link>
+                <Link
+                  :href="route('profile.deals', reply.answer_to_user.name)"
+                  class="font-semibold text-primary"
+                  >{{ reply.answer_to_user.name }}</Link
+                >
               </div>
               <p>
                 {{ reply.content }}

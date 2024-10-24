@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Reply, Pencil, Trash2, MessageSquare } from "lucide-vue-next"
+import { Reply, Pencil, Trash2 } from "lucide-vue-next"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +24,7 @@ import SendMessage from "@/Components/SendMessage.vue"
 import { CommentDiscussion, Discussion } from "@/types/model/discussion"
 import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
 import Breadcrumb from "@/Components/Breadcrumb.vue"
+import MessageSquare from "@/Components/common/MessageSquare.vue"
 
 const { discussion, category, similarDiscussions, allCommentsCount } =
   defineProps<{
@@ -201,15 +202,24 @@ const discussionDestroy = (id: number) => {
               class="!-mt-4 flex flex-row items-center gap-2 text-sm text-muted-foreground"
             >
               <img
-                src="/images/avatar.jpg"
+                v-if="discussion.user.avatar"
+                :src="'/storage/uploads/avatar/' + discussion.user.avatar"
                 :alt="'Avatar de ' + discussion.user.name"
-                class="avatar h-[52px] rounded-full object-contain"
+                class="h-[52px] w-[52px] rounded-full object-cover"
+              />
+              <img
+                v-else
+                :src="`https://ui-avatars.com/api/?size=64&name=${discussion.user.name}`"
+                :alt="'Avatar de ' + discussion.user.name"
+                class="h-[52px] w-[52px] rounded-full object-cover"
               />
               <div class="grid gap-2">
                 <!-- TODO: Add redirection to user profile -->
-                <Link href="#" class="font-semibold">{{
-                  discussion.user.name
-                }}</Link>
+                <Link
+                  :href="route('profile.deals', discussion.user.name)"
+                  class="font-semibold"
+                  >{{ discussion.user.name }}</Link
+                >
                 <div>Publié il y a {{ since }}.</div>
               </div>
             </div>
@@ -225,7 +235,9 @@ const discussionDestroy = (id: number) => {
               :title="discussion.title"
               >Partager</ShareSocial
             >
-            <MessageSquare url="#comments">Commentaires </MessageSquare>
+            <MessageSquare :url="route('discussions.show', discussion.slug)"
+              >Commentaires
+            </MessageSquare>
             <Report :id="discussion.id" type="discussion">
               Signaler la discussion</Report
             >
@@ -270,11 +282,21 @@ const discussionDestroy = (id: number) => {
                 >
                   <!-- TODO: redirection -->
                   <Link
-                    :href="'#'"
+                    :href="route('profile.deals', similarDiscussion.user.name)"
                     class="flex min-w-0 flex-row items-center gap-2"
                   >
                     <img
-                      src="/images/avatar.jpg"
+                      v-if="similarDiscussion.user.avatar"
+                      :src="
+                        '/storage/uploads/avatar/' +
+                        similarDiscussion.user.avatar
+                      "
+                      :alt="'Avatar de ' + similarDiscussion.user.name"
+                      class="avatar h-[32px] rounded-full object-contain"
+                    />
+                    <img
+                      v-else
+                      :src="`https://ui-avatars.com/api/?size=64&name=${similarDiscussion.user.name}`"
                       :alt="'Avatar de ' + similarDiscussion.user.name"
                       class="avatar h-[32px] rounded-full object-contain"
                     />
@@ -285,7 +307,10 @@ const discussionDestroy = (id: number) => {
                   <div
                     class="flex shrink-0 flex-row items-center gap-1 text-sm text-muted-foreground"
                   >
-                    <MessageSquare class="h-4 w-4" />
+                    <MessageSquare
+                      :url="route('discussions.show', similarDiscussion.slug)"
+                      class="h-4 w-4"
+                    />
                     {{ similarDiscussion.comments_count }}
                   </div>
                 </div>
@@ -314,16 +339,26 @@ const discussionDestroy = (id: number) => {
             <div class="flex items-start justify-between">
               <div class="flex flex-row gap-2">
                 <img
-                  src="/images/avatar.jpg"
+                  v-if="comment.user.avatar"
+                  :src="'/storage/uploads/avatar/' + comment.user.avatar"
                   :alt="'Avatar de ' + comment.user.name"
-                  class="avatar h-[52px] rounded-full object-contain"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
+                />
+                <img
+                  v-else
+                  :src="`https://ui-avatars.com/api/?size=64&name=${comment.user.name}`"
+                  :alt="'Avatar de ' + comment.user.name"
+                  class="h-[52px] w-[52px] rounded-full object-cover"
                 />
                 <div class="flex flex-col justify-evenly gap-1">
-                  <Link href="#" class="font-medium">{{
-                    comment.user.name
-                  }}</Link>
+                  <Link
+                    :href="route('profile.deals', comment.user.name)"
+                    class="font-medium"
+                    >{{ comment.user.name }}</Link
+                  >
                   <span
-                    >Il y a {{ timeAgo(new Date(comment.created_at)) }}</span
+                    >Il y a
+                    {{ timeAgo(new Date(comment.created_at as string)) }}</span
                   >
                 </div>
               </div>
@@ -378,14 +413,23 @@ const discussionDestroy = (id: number) => {
                 <div class="flex items-start justify-between">
                   <div class="flex flex-row gap-2">
                     <img
-                      src="/images/avatar.jpg"
+                      v-if="reply.user.avatar"
+                      :src="'/storage/uploads/avatar/' + reply.user.avatar"
                       :alt="'Avatar de ' + reply.user.name"
-                      class="avatar h-[52px] rounded-full object-contain"
+                      class="h-[52px] w-[52px] rounded-full object-cover"
+                    />
+                    <img
+                      v-else
+                      :src="`https://ui-avatars.com/api/?size=64&name=${reply.user.name}`"
+                      :alt="'Avatar de ' + reply.user.name"
+                      class="h-[52px] w-[52px] rounded-full object-cover"
                     />
                     <div class="flex flex-col justify-evenly gap-1">
-                      <Link href="#" class="font-medium">{{
-                        reply.user.name
-                      }}</Link>
+                      <Link
+                        :href="route('profile.deals', reply.user.name)"
+                        class="font-medium"
+                        >{{ reply.user.name }}</Link
+                      >
                       <span
                         >Il y a {{ timeAgo(new Date(reply.created_at)) }}</span
                       >
@@ -410,11 +454,12 @@ const discussionDestroy = (id: number) => {
                   </div>
                 </div>
                 <div v-if="reply.answer_to_user" class="text-muted-foreground">
-                  <!--  TODO: redirection                  -->
                   En réponse à
-                  <Link href="#" class="font-semibold text-primary">{{
-                    reply.answer_to_user.name
-                  }}</Link>
+                  <Link
+                    :href="route('profile.deals', reply.answer_to_user.name)"
+                    class="font-semibold text-primary"
+                    >{{ reply.answer_to_user.name }}</Link
+                  >
                 </div>
                 <p>
                   {{ reply.content }}

@@ -75,7 +75,7 @@ class DiscussionController extends Controller
         }
 
         $similarDiscussions = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
-            ->with('user:id,name')->withCount('comments')
+            ->with('user:id,name,avatar')->withCount('comments')
             ->where('id', '!=', $discussion->id)
             ->orderBy('created_at', 'desc')
             ->limit(6)

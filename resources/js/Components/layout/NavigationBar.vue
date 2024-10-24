@@ -241,16 +241,6 @@ const closeSheet = () => {
               <ul
                 class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]"
               >
-                <li>
-                  <Link :href="route('home.index')">
-                    <img
-                      class="h-8 rounded-lg object-contain"
-                      src="/logo-deally.svg"
-                      type="logo"
-                      alt="Logo Deally"
-                    />
-                  </Link>
-                </li>
                 <li v-for="resource in resources" :key="resource.title">
                   <NavigationMenuLink as-child>
                     <Link
