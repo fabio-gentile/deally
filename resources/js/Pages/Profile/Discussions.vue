@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head, router } from "@inertiajs/vue3"
 import { useDebounceFn } from "@vueuse/core"
 import { ref, watch } from "vue"
@@ -20,7 +19,6 @@ import { Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
 import { User } from "@/types/model/user"
 
-defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
   user: User
   filters: {

@@ -59,8 +59,8 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 const updateResultsWidth = () => {
-  if (window.innerWidth < 768) {
-    resultsWidth.value = `${window.innerWidth * 0.7}px` // 80% of the screen width on mobile
+  if (window.innerWidth < 1024) {
+    resultsWidth.value = `${window.innerWidth * 0.9}px` // 80% of the screen width on mobile
   } else if (searchBar.value) {
     resultsWidth.value = `${searchBar.value.offsetWidth}px`
   }
@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="searchBar" class="relative ml-auto w-full flex-initial md:w-auto">
+  <div ref="searchBar" class="relative ml-auto w-full flex-initial lg:w-auto">
     <div class="relative block">
       <Search
         class="absolute left-2.5 top-[11px] h-4 w-4 text-muted-foreground"
@@ -89,13 +89,13 @@ onBeforeUnmount(() => {
         @focus="showResults = true"
         type="search"
         placeholder="Rechercher..."
-        class="pl-8 lg:w-[300px]"
+        class="pl-8 lg:w-[240px] xl:w-[300px]"
       />
     </div>
     <div
       v-if="showResults && results.length === 0 && query.length > 2"
       :style="{ width: resultsWidth }"
-      class="absolute top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground"
+      class="fixed left-2 top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground lg:absolute lg:left-0 lg:top-12"
     >
       <p class="font-semibold">Aucun résultat</p>
       <p>Essayez de modifier votre recherche</p>
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
     <div
       v-if="showResults && results.length"
       :style="{ width: resultsWidth }"
-      class="absolute top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground"
+      class="fixed left-2 top-16 grid gap-2 rounded-lg border bg-white px-4 py-2 text-muted-foreground lg:absolute lg:left-0 lg:top-12"
     >
       <div
         v-if="deals"

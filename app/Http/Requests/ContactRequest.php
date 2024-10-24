@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class ContactRequest extends FormRequest
 {
@@ -27,7 +26,6 @@ class ContactRequest extends FormRequest
             'email' => ['required', 'email'],
             'message' => ['required', 'string', 'max:1024'],
             'subject' => ['required', 'string', 'in:Signaler un contenu inapproprié,Proposer une amélioration,Offre commerciale,Signaler un bug,Problème de connexion,Autre'],
-            'recaptcha' => ['required', new GoogleReCaptchaV3ValidationRule('contact_us')],
         ];
     }
 

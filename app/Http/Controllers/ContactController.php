@@ -23,9 +23,7 @@ class ContactController extends Controller
      */
     public function create(): \Inertia\Response
     {
-        return Inertia::render('Contact', [
-            'recaptchaKey' => config('services.recaptcha.key'),
-        ]);
+        return Inertia::render('Contact');
     }
 
     /**

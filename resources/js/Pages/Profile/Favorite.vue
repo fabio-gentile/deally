@@ -5,11 +5,8 @@ import { Deal } from "@/types/model/deal"
 import { Discussion } from "@/types/model/discussion"
 import CardDiscussion from "@/Components/Discussion/CardDiscussion.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head } from "@inertiajs/vue3"
 import { User } from "@/types/model/user"
-
-defineOptions({ layout: ProfileLayout })
 
 interface Favorite {
   type: "deal" | "discussion"

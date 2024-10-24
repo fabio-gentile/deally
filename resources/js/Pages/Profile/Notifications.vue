@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head, useForm } from "@inertiajs/vue3"
 import { User } from "@/types/model/user"
 import { Switch } from "@/Components/ui/switch"
 import { Label } from "@/Components/ui/label"
 import { Button } from "@/Components/ui/button"
 
-defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
   user: User
   dealsCount: number
@@ -34,7 +32,7 @@ const submit = () => {
 }
 </script>
 <template>
-  <Head title="Newsletter" />
+  <Head title="Notifications" />
   <UserProfile
     :user="user"
     :deals-count="dealsCount"

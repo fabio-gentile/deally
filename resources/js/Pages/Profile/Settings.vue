@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
 import { Head } from "@inertiajs/vue3"
 import DeleteAccount from "@/Pages/Profile/Partials/DeleteAccount.vue"
 import UpdatePassword from "@/Pages/Profile/Partials/UpdatePassword.vue"
 import UpdateProfile from "@/Pages/Profile/Partials/UpdateProfile.vue"
 import { User } from "@/types/model/user"
-
-defineOptions({ layout: ProfileLayout })
 
 const props = defineProps<{
   user: User

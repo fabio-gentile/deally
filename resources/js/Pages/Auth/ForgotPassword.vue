@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from "@/Layouts/GuestLayout.vue"
-import InputError from "@/Components/InputError.vue"
-import InputLabel from "@/Components/InputLabel.vue"
-import PrimaryButton from "@/Components/PrimaryButton.vue"
-import TextInput from "@/Components/TextInput.vue"
 import { Head, Link, useForm } from "@inertiajs/vue3"
 import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import FormError from "@/Components/FormError.vue"
-import { Checkbox } from "@/Components/ui/checkbox"
 import { Button } from "@/Components/ui/button"
-import Separator from "@/Components/ui/separator/Separator.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
 
 defineProps<{

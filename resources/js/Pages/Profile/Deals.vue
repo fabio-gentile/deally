@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head, router } from "@inertiajs/vue3"
 import { Deal } from "@/types/model/deal"
 import { useDebounceFn } from "@vueuse/core"
@@ -20,7 +19,6 @@ import { Button } from "@/Components/ui/button"
 import { Pagination as IPagination } from "@/types/model/miscellaneous"
 import { User } from "@/types/model/user"
 
-defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
   user: User
   filters: {

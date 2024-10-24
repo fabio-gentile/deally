@@ -26,7 +26,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/Components/ui/navigation-menu"
 import { Button } from "@/Components/ui/button"
-import { CircleUser, Package2, Menu, Plus, ChevronDown } from "lucide-vue-next"
+import { CircleUser, Menu, Plus, ChevronDown } from "lucide-vue-next"
 import ThemeSwitcher from "@/Components/ThemeSwitcher.vue"
 import Separator from "@/Components/ui/separator/Separator.vue"
 import {
@@ -165,12 +165,15 @@ const closeSheet = () => {
       class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6"
     >
       <Link
-        href="#"
-        class="flex items-center gap-2 text-lg font-semibold md:text-base"
+        class="hidden h-10 w-20 rounded-lg lg:inline-flex lg:items-center"
+        :href="route('home.index')"
       >
-        <!--          TODO: Add logo here-->
-        <Package2 class="h-6 w-6" />
-        <span class="sr-only">Deally</span>
+        <img
+          class="h-full rounded-lg"
+          src="/logo-deally.svg"
+          type="logo"
+          alt="Logo Deally"
+        />
       </Link>
       <NavigationMenu class="hidden lg:block">
         <NavigationMenuList>
@@ -238,6 +241,16 @@ const closeSheet = () => {
               <ul
                 class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]"
               >
+                <li>
+                  <Link :href="route('home.index')">
+                    <img
+                      class="h-8 rounded-lg object-contain"
+                      src="/logo-deally.svg"
+                      type="logo"
+                      alt="Logo Deally"
+                    />
+                  </Link>
+                </li>
                 <li v-for="resource in resources" :key="resource.title">
                   <NavigationMenuLink as-child>
                     <Link
@@ -261,6 +274,7 @@ const closeSheet = () => {
         </NavigationMenuList>
       </NavigationMenu>
     </nav>
+
     <Sheet :open="isSheetOpen" @update:open="isSheetOpen = !isSheetOpen">
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" class="shrink-0 lg:hidden">
@@ -276,10 +290,13 @@ const closeSheet = () => {
           </SheetDescription>
         </SheetHeader>
         <nav class="mb-4 grid gap-8 text-lg font-medium">
-          <Link href="#" class="flex items-center gap-2 text-lg font-semibold">
-            <!--              TODO: Add logo here-->
-            <Package2 class="h-6 w-6" />
-            <span class="sr-only">Acme Inc</span>
+          <Link :href="route('home.index')">
+            <img
+              class="h-8 rounded-lg object-contain"
+              src="/logo-deally.svg"
+              type="logo"
+              alt="Logo Deally"
+            />
           </Link>
           <ul class="grid gap-8">
             <li v-for="mobileMenu in mobileMenus" :key="mobileMenu.title">
@@ -422,7 +439,7 @@ const closeSheet = () => {
       <SearchBar />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
+          <Button class="!hidden sm:!inline-flex" variant="ghost">
             <CircleUser />
             <span class="sr-only">Ouvrir menu compte</span>
           </Button>

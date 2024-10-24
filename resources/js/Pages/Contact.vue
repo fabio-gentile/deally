@@ -15,13 +15,7 @@ import {
 } from "@/Components/ui/select"
 import { Textarea } from "@/Components/ui/textarea"
 import { Button } from "@/Components/ui/button"
-import GoogleReCaptchaV3 from "@/Components/googlerecaptchav3/GoogleReCaptchaV3.vue"
-import { ref } from "vue"
 import { Loader2 } from "lucide-vue-next"
-
-const props = defineProps<{
-  recaptchaKey: string
-}>()
 
 const subjects = [
   "Proposer une amélioration",
@@ -37,20 +31,14 @@ const form = useForm({
   name: "",
   email: "",
   message: "",
-  recaptcha: "",
   website: "",
 })
 
-const captcha = ref(null)
 const submit = async () => {
   form.post(route("contact.store"), {
     preserveScroll: true,
     onSuccess: () => form.reset(),
   })
-
-  if (captcha.value) {
-    await captcha.value.execute()
-  }
 }
 </script>
 <template>
@@ -139,33 +127,6 @@ const submit = async () => {
           style="display: none"
         />
 
-        <!-- Google Recaptcha Widget-->
-        <google-re-captcha-v3
-          class="hidden"
-          v-model="form.recaptcha"
-          ref="captcha"
-          :site-key="recaptchaKey"
-          id="contact_us_id"
-          inline
-          action="contact_us"
-        ></google-re-captcha-v3>
-        <div class="text-sm text-muted-foreground">
-          Ce site est protégé par reCAPTCHA et la
-          <a
-            class="text-primary underline"
-            target="_blank"
-            href="https://policies.google.com/privacy"
-            >politique de confidentialité</a
-          >
-          et les
-          <a
-            class="text-primary underline"
-            target="_blank"
-            href="https://policies.google.com/terms"
-            >conditions d'utilisation</a
-          >
-          de Google s'appliquent.
-        </div>
         <Button :disabled="form.processing" class="w-fit" type="submit">
           <Loader2 v-if="form.processing" class="mr-2 h-5 w-5 animate-spin" />
           Envoyer

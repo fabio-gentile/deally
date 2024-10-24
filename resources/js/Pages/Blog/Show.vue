@@ -76,10 +76,12 @@ const handleRemoveComment = (id: number) => {
       {{ blog.meta_title ? blog.meta_title : blog.title }}
     </title>
     <meta
+      head-key="description"
       name="description"
       :content="blog.meta_description ? blog.meta_description : blog.title"
     />
     <meta
+      head-key="keywords"
       v-if="blog.meta_keywords"
       name="keywords"
       :content="blog.meta_keywords"

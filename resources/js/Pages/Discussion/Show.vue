@@ -103,6 +103,7 @@ const discussionDestroy = (id: number) => {
       {{ discussion.title }}
     </title>
     <meta
+      head-key="description"
       name="description"
       :content="
         discussion.content.length > 150

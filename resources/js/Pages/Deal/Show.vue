@@ -168,6 +168,7 @@ const { copy, copied } = useClipboard({ source })
       {{ deal.title }}
     </title>
     <meta
+      head-key="description"
       name="description"
       :content="
         deal.description.length > 150

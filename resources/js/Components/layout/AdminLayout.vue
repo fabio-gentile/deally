@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Toaster } from "@/Components/ui/toast"
 import { useToast } from "@/Components/ui/toast/use-toast"
-import { Link, usePage } from "@inertiajs/vue3"
+import { Link, usePage, Head } from "@inertiajs/vue3"
 import { ref, watch } from "vue"
 import { Button } from "@/Components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
@@ -126,6 +126,10 @@ const handleLinkClick = () => {
 </script>
 
 <template>
+  <Head>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="robots" content="noindex, follow" />
+  </Head>
   <div>
     <Toaster />
     <div class="min-h-screen w-full flex-row overflow-hidden md:flex">

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UserProfile from "@/Pages/Profile/Partials/UserProfile.vue"
 import Wrapper from "@/Components/layout/Wrapper.vue"
-import ProfileLayout from "@/Components/layout/ProfileLayout.vue"
 import { Head } from "@inertiajs/vue3"
 import {
   Handshake,
@@ -12,7 +11,6 @@ import {
 } from "lucide-vue-next"
 import { User } from "@/types/model/user"
 
-defineOptions({ layout: ProfileLayout })
 const props = defineProps<{
   user: User
   mostUpvotedDealCount: number
