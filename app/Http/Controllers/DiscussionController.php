@@ -7,6 +7,7 @@ use App\Models\CommentDiscussion;
 use App\Models\Discussion;
 use App\Http\Requests\StoreDiscussionRequest;
 use App\Http\Requests\UpdateDiscussionRequest;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -71,8 +72,9 @@ class DiscussionController extends Controller
         $user = auth()->user();
         if ($user) {
             // associate the voteDeals to the deal
-            $discussion->user_favorite = !!$discussion->favorites->first();
+            $discussion->user_favorite = !!Favorite::where('user_id', $user->id)->where('favoritable_id', $discussion->id)->first();
         }
+//        dd($discussion);
 
         $similarDiscussions = Discussion::where('category_discussion_id', $discussion->category_discussion_id)
             ->with('user:id,name,avatar')->withCount('comments')

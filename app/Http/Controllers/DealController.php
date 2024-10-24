@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDealRequest;
 use App\Models\CategoryDeal;
 use App\Models\CommentDeal;
 use App\Models\Deal;
+use App\Models\Favorite;
 use App\Models\ImageDeal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -41,7 +42,7 @@ class DealController extends Controller
         if ($user) {
             // associate the voteDeals to the deal
             $deal->user_vote = $deal->voteDetails->first();
-            $deal->user_favorite = !!$deal->favorites->first();
+            $deal->user_favorite = !!!!Favorite::where('user_id', $user->id)->where('favoritable_id', $deal->id)->first();
         }
 //        dd($deal);
 
