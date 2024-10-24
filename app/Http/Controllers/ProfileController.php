@@ -72,6 +72,7 @@ class ProfileController extends Controller
             ->whereIn('id', $favoriteDiscussionIds)
             ->withCount('comments')
             ->when($currentUser, function ($query) use ($currentUser) {
+                // Load the user's favorite if the user is authenticated
                 $query->withExists(['favorites' => function ($subQuery) use ($currentUser) {
                     $subQuery->where('user_id', $currentUser->id);
                 }]);
@@ -83,11 +84,23 @@ class ProfileController extends Controller
                 return $discussion;
             });
 
-        $latestFavorites = $deals->map(function ($deal) {
-            return ['type' => 'deal', 'item' => $deal];
-        })->merge($discussions->map(function ($discussion) {
-            return ['type' => 'discussion', 'item' => $discussion];
-        }))->sortByDesc('item.created_at')->values();
+//        dd($deals, $discussions);
+
+        $latestFavorites = collect();
+
+        if ($deals->isNotEmpty()) {
+            $latestFavorites = $latestFavorites->merge($deals->map(function ($deal) {
+                return ['type' => 'deal', 'item' => $deal];
+            }));
+        }
+
+        if ($discussions->isNotEmpty()) {
+            $latestFavorites = $latestFavorites->merge($discussions->map(function ($discussion) {
+                return ['type' => 'discussion', 'item' => $discussion];
+            }));
+        }
+
+        $latestFavorites = $latestFavorites->sortByDesc('item.created_at')->values();
 
         return Inertia::render('Profile/Favorite', [
             'latestFavorites' => $latestFavorites,

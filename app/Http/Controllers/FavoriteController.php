@@ -11,25 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class FavoriteController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
 //        dd($request->all());
         $request->validate([
@@ -53,45 +37,13 @@ class FavoriteController extends Controller
 
         if ($existingFavorite) {
             $existingFavorite->delete();
-            return back()->with('success', 'Bookmark removed successfully!');
+            return back()->with('success', 'Favoris supprimé avec succès !');
         } else {
             $user->favorites()->create([
                 'favoritable_id' => $favoritable->id,
                 'favoritable_type' => get_class($favoritable),
             ]);
-            return back()->with('success', 'Bookmarked successfully!');
+            return back()->with('success', 'Favoris ajouté avec succès !');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Favorite $favorite)
-    {
-        //
     }
 }
