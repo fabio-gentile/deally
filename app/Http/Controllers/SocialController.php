@@ -34,6 +34,7 @@ class SocialController extends Controller
         // check if already exists
         $user = User::where('email', $socialUser->getEmail())->first();
         $name = $socialUser->getNickname() ?? $socialUser->getName();
+        $name = Str::limit(str_replace(' ', '', $name), 16, '');
         $name = $this->generateValidName($name);
 
         // if it doesn't exist
@@ -97,7 +98,6 @@ class SocialController extends Controller
         ];
 
         if ($name) {
-            $name = Str::limit(str_replace(' ', '', $name), 16, '');
             $validator = Validator::make(['name' => $name], $rules);
 
             if (!$validator->fails()) {

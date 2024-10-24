@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\Gate;
 class VoteController extends Controller
 {
     /**
-     * Display a listing of the vote.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new vote.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created vote in storage.
      */
     public function store(Request $request, int $id)
@@ -65,37 +49,5 @@ class VoteController extends Controller
 
 //        dd('here');
         return back()->with('success', 'Votre vote a été enregistré');
-    }
-
-    /**
-     * Display the specified vote.
-     */
-    public function show(VoteDeals $vote)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified vote.
-     */
-    public function edit(VoteDeals $vote)
-    {
-        //
-    }
-
-    /**
-     * Update the specified vote in storage.
-     */
-    public function update(Request $request, VoteDeals $vote)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified vote from storage.
-     */
-    public function destroy(VoteDeals $vote)
-    {
-        //
     }
 }

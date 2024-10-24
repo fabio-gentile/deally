@@ -108,8 +108,8 @@ class DealController extends Controller
         if ($validated['images']) {
             $this->storeImage($validated['images'], $deal);
         }
-//        TODO: Add redirect with success message to the deal page
-        return redirect()->route('home.index');
+
+        return redirect()->route('deals.show', ['slug' => $deal->slug])->with('success', 'Deal créé avec succès.');
     }
 
     /**
@@ -151,23 +151,21 @@ class DealController extends Controller
 
         $this->updateDeal($updateDealRequest, $deal);
 
-        //        TODO: Add redirect with success message
-        return redirect()->route('home.index');
+        return redirect()->route('deals.show', ['slug' => $deal->slug])->with('success', 'Deal mis à jour avec succès.');
     }
 
     /**
      * Delete the specified deal image.
      */
-    public function deleteImage(Request $request, string $filename): \Illuminate\Http\JsonResponse
+    public function deleteImage(Request $request, string $filename): \Illuminate\Http\RedirectResponse
     {
         $image = ImageDeal::where('filename', $filename)->firstOrFail();
         Gate::authorize('delete', $image);
 
         Storage::delete($image->path . $image->filename);
         $image->delete();
-        $request->session()->flash('success', 'Image supprimée avec succès.');
 
-        return response()->json(['success' => 'Image supprimée avec succès.']);
+        return back()->with('success', 'Image supprimée avec succès.');
     }
 
     /**
@@ -180,8 +178,7 @@ class DealController extends Controller
 
         $deal->delete();
 
-        $request->session()->flash('success', 'Deal supprimé avec succès.');
-        return redirect()->route('home.index');
+        return redirect()->route('home.index')->with('success', 'Deal supprimé avec succès.');
     }
 
     /**

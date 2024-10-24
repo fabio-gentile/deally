@@ -77,7 +77,7 @@ class HomeController extends Controller
 
         $user->save();
 
-        return redirect()->route('home.for-you')->with('success', 'Vos préférences ont été mises à jour.');
+        return redirect()->back()->with('success', 'Vos préférences ont été mises à jour.');
     }
 
     /**

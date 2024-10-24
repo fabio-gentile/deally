@@ -49,7 +49,7 @@ class DiscussionController extends Controller
             $thumbnail->storeAs($path, $filename, 'public');
         }
 
-        Discussion::create([
+        $discussion = Discussion::create([
             'title' => $request->get('title'),
             'content' => $request->get('content'),
             'category_discussion_id' => CategoryDiscussion::where('name', $request->get('category'))->first()->id,
@@ -59,7 +59,7 @@ class DiscussionController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('home.index')->with('success', 'Discussion créée avec succès');
+        return redirect()->route('discussions.show', ['slug' => $discussion->slug])->with('success', 'Discussion créée avec succès');
     }
 
     /**
@@ -145,7 +145,7 @@ class DiscussionController extends Controller
 
         $this->handleUpdateDiscussion($request, $discussion);
 
-        return redirect()->route('home.index')->with('success', 'Discussion modifiée avec succès');
+        return redirect()->route('discussions.show', ['slug' => $discussion->slug])->with('success', 'Discussion modifiée avec succès');
     }
 
     /**
@@ -166,8 +166,7 @@ class DiscussionController extends Controller
 
         $discussion->delete();
 
-        $request->session()->flash('success', 'Discussion supprimée avec succès.');
-        return redirect()->route('home.index');
+        return redirect()->route('home.index')->with('success', 'Discussion supprimée avec succès');
     }
 
     /**
