@@ -248,7 +248,7 @@ const toggleFiltersMenu = () => {
           </aside>
         </div>
 
-        <div class="flex grow flex-col gap-3">
+        <div class="flex grow flex-col gap-3 lg:mt-4">
           <div
             v-if="deals.length < 1"
             class="flex flex-col items-center justify-center gap-6"

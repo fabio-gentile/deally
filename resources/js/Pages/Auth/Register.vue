@@ -27,7 +27,7 @@ const submit = () =>
   <Head>
     <title>Créer un compte</title>
   </Head>
-  <div class="grid w-full grid-cols-1 place-items-center py-8">
+  <div class="my-auto grid w-full grid-cols-1 place-items-center py-8">
     <Wrapper>
       <form
         @submit.prevent="submit"

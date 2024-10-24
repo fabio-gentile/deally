@@ -34,7 +34,7 @@ const verificationLinkSent = computed(
   <Head title="Vérification email" />
   <form
     @submit.prevent="submit"
-    class="max-w-[350px] p-4 py-8 sm:max-w-[450px]"
+    class="my-auto max-w-[350px] p-4 py-8 sm:max-w-[450px]"
   >
     <Card>
       <CardHeader>

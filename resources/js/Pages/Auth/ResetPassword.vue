@@ -29,7 +29,7 @@ const submit = () => {
 
 <template>
   <Head title="Réinitialiser le mot de passe" />
-  <div class="grid w-full grid-cols-1 place-items-center py-8">
+  <div class="my-auto grid w-full grid-cols-1 place-items-center py-8">
     <Wrapper>
       <form
         @submit.prevent="submit"

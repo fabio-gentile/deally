@@ -15,11 +15,11 @@
         "spatie/laravel-permission": "^6.9",
         "stevebauman/purify": "^6.2",
         "tightenco/ziggy": "^2.0",
-        "whitecube/laravel-cookie-consent": "^1.2"
+        "whitecube/laravel-cookie-consent": "^1.2",
+        "fakerphp/faker": "^1.23"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
-        "fakerphp/faker": "^1.23",
         "fumeapp/modeltyper": "^2.8",
         "laravel/breeze": "^2.2",
         "laravel/pint": "^1.13",

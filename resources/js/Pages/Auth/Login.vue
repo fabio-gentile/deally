@@ -27,7 +27,7 @@ const submit = () => {
   <Head>
     <title>Connexion</title>
   </Head>
-  <div class="grid w-full grid-cols-1 place-items-center">
+  <div class="my-auto grid w-full grid-cols-1 place-items-center">
     <Wrapper>
       <form
         @submit.prevent="submit"
