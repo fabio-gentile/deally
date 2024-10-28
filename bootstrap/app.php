@@ -33,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->setStatusCode($response->getStatusCode());
             } elseif ($response->getStatusCode() === 419) {
                 return back()->with([
-                    'message' => 'The page expired, please try again.',
+                    'message' => 'La page a expiré, veuillez réessayer.',
                 ]);
             }
 
