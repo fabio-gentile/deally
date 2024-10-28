@@ -64,16 +64,21 @@ watch(
     <meta property="og:image:width" content="1800" />
     <meta property="og:image:height" content="945" />
     <meta property="og:url" content="https://deally.fabiogentile.me" />
+    <meta head-key="og_title" property="og:title" content="Deally" />
     <meta
+      head-key="og_description"
       property="og:description"
       content="Deally est une plateforme de partage de bons plans et de réductions. Venez découvrir les meilleures offres et partager vos bons plans avec la communauté."
     />
+    <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Deally" />
+    <meta name="twitter:site" content="@deally" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Deally" />
     <meta name="twitter:url" content="https://deally.fabiogentile.me" />
+    <meta head-key="twitter_title" name="twitter:title" content="Deally" />
     <meta
+      head-key="twitter_description"
       name="twitter:description"
       content="Deally est une plateforme de partage de bons plans et de réductions. Venez découvrir les meilleures offres et partager vos bons plans avec la communauté."
     />

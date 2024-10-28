@@ -30,3 +30,14 @@ export function calculatePercentage(
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+/**
+ * Truncate a string to a certain length
+ * @param string
+ * @param length
+ */
+export function truncateString(string: string, length: number = 50) {
+  return string.length > length
+    ? string.substring(0, length - 3) + "..."
+    : string
+}

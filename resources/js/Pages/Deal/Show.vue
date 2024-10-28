@@ -43,7 +43,7 @@ import SaveBookmark from "@/Components/common/SaveBookmark.vue"
 import ShareSocial from "@/Components/common/ShareSocial.vue"
 import Button from "@/Components/ui/button/Button.vue"
 import { CarouselApi } from "@/Components/ui/carousel"
-import { calculatePercentage } from "@/lib/utils"
+import { calculatePercentage, truncateString } from "@/lib/utils"
 import { Separator } from "@/Components/ui/separator"
 import SendMessage from "@/Components/SendMessage.vue"
 import { useClipboard } from "@vueuse/core/index"
@@ -170,11 +170,19 @@ const { copy, copied } = useClipboard({ source })
     <meta
       head-key="description"
       name="description"
-      :content="
-        deal.description.length > 150
-          ? deal.description.substring(0, 150) + '...'
-          : deal.description
-      "
+      :content="truncateString(deal.description, 200)"
+    />
+    <meta head-key="og_title" property="og:title" :content="deal.title" />
+    <meta
+      head-key="og_description"
+      property="og:description"
+      :content="truncateString(deal.description, 200)"
+    />
+    <meta head-key="twitter_title" name="twitter:title" :content="deal.title" />
+    <meta
+      head-key="twitter_description"
+      name="twitter:description"
+      :content="truncateString(deal.description, 200)"
     />
   </Head>
   <main class="bg-page py-6">

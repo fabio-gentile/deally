@@ -12,6 +12,7 @@ import SendMessage from "@/Components/SendMessage.vue"
 import { Blog, CommentBlog } from "@/types/model/blog"
 import AspectRatio from "@/Components/ui/aspect-ratio/AspectRatio.vue"
 import Breadcrumb from "@/Components/Breadcrumb.vue"
+import { truncateString } from "@/lib/utils"
 
 const { blog, allCommentsCount } = defineProps<{
   blog: Blog
@@ -81,6 +82,18 @@ const handleRemoveComment = (id: number) => {
       v-if="blog.meta_keywords"
       name="keywords"
       :content="blog.meta_keywords"
+    />
+    <meta head-key="og_title" property="og:title" :content="blog.title" />
+    <meta
+      head-key="og_description"
+      property="og:description"
+      :content="truncateString(blog.content, 200)"
+    />
+    <meta head-key="twitter_title" name="twitter:title" :content="blog.title" />
+    <meta
+      head-key="twitter_description"
+      name="twitter:description"
+      :content="truncateString(blog.content, 200)"
     />
   </Head>
   <main class="w-full bg-page pb-6">

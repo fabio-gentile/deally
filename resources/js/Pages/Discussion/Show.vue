@@ -25,6 +25,7 @@ import { CommentDiscussion, Discussion } from "@/types/model/discussion"
 import { ScrollArea, ScrollBar } from "@/Components/ui/scroll-area"
 import Breadcrumb from "@/Components/Breadcrumb.vue"
 import MessageSquare from "@/Components/common/MessageSquare.vue"
+import { truncateString } from "@/lib/utils"
 
 const { discussion, category, similarDiscussions, allCommentsCount } =
   defineProps<{
@@ -106,11 +107,23 @@ const discussionDestroy = (id: number) => {
     <meta
       head-key="description"
       name="description"
-      :content="
-        discussion.content.length > 150
-          ? discussion.content.substring(0, 150) + '...'
-          : discussion.content
-      "
+      :content="truncateString(discussion.content, 200)"
+    />
+    <meta head-key="og_title" property="og:title" :content="discussion.title" />
+    <meta
+      head-key="og_description"
+      property="og:description"
+      :content="truncateString(discussion.content, 200)"
+    />
+    <meta
+      head-key="twitter_title"
+      name="twitter:title"
+      :content="discussion.title"
+    />
+    <meta
+      head-key="twitter_description"
+      name="twitter:description"
+      :content="truncateString(discussion.content, 200)"
     />
   </Head>
   <main class="bg-page py-6">
