@@ -280,7 +280,7 @@ const closeSheet = () => {
           </SheetDescription>
         </SheetHeader>
         <nav class="mb-4 grid gap-8 text-lg font-medium">
-          <Link :href="route('home.index')">
+          <Link @click="closeSheet" :href="route('home.index')">
             <img
               class="h-8 rounded-lg object-contain"
               src="/logo-deally.svg"
