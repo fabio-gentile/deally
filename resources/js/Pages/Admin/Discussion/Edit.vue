@@ -88,7 +88,6 @@ const handleRemoveThumbnail = () => {
 }
 </script>
 <template>
-  <!--      TODO: Refaire le front-->
   <AdminTitle :title="'Modification ' + discussion.title" />
   <Breadcrumb
     :breadcrumbs="[

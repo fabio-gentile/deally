@@ -39,7 +39,6 @@ const saveBookmark = () => {
 }
 </script>
 <template>
-  <!--    TODO: add route-->
   <Dialog v-if="!$page.props.auth.user?.id">
     <DialogTrigger as-child>
       <div class="flex w-fit cursor-pointer items-center gap-1 text-sm">

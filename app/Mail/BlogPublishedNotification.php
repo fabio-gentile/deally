@@ -42,8 +42,7 @@ class BlogPublishedNotification extends Mailable
             with: [
                 'blog' => $this->blog,
                 'actionText' => 'Lire l\'article',
-//                TODO: add redirection route
-                'actionUrl' => route('search.deals', ['filter_by' => 'popular', 'period' => 'today']),
+                'actionUrl' => route('blog.show', $this->blog->slug),
                 'introLines' => [
                     'Un nouvel article a été publié sur notre blog ! Vous pouvez le consulter en cliquant sur le bouton ci-dessous',
                 ],

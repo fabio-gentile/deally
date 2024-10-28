@@ -89,7 +89,6 @@ const handleRemoveThumbnail = () => {
 </script>
 <template>
   <div class="w-full bg-page py-6">
-    <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.discussion.title" />
     <Wrapper class="!max-w-[800px]">
       <Breadcrumb

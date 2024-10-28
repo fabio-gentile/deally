@@ -91,7 +91,6 @@ const removeImage = (index: number) => {
 </script>
 <template>
   <div class="bg-page py-6">
-    <!--      TODO: Refaire le front-->
     <Head title="Créer un bon plan" />
     <Wrapper class="max-w-[800px]">
       <Breadcrumb

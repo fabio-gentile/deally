@@ -68,7 +68,6 @@ const removeImage = (index: number): void => {
 </script>
 <template>
   <div class="w-full bg-page py-6">
-    <!--      TODO: Refaire le front-->
     <Head title="Créer une discussion" />
     <Wrapper class="!max-w-[800px]">
       <Breadcrumb

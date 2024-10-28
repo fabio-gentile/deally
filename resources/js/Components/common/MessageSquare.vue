@@ -13,7 +13,6 @@ const props = defineProps<{
     class="flex w-fit items-center gap-1 text-sm font-medium"
   >
     <MessageSquareText class="h-5 w-5 object-contain" />
-    <!--              TODO: add number of comments-->
     <slot />
     {{ props.count }}
   </Link>

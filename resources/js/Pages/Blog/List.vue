@@ -78,9 +78,7 @@ const changePage = (page: number) => {
         class="mb-4 flex w-full flex-col overflow-hidden rounded-lg border bg-white p-4 md:mb-8"
       >
         <div class="flex grow flex-col flex-wrap gap-4 md:flex-row">
-          <div
-            class="flex w-full shrink-0 gap-2 overflow-hidden md:max-w-[500px]"
-          >
+          <div class="flex w-full shrink-0 gap-2 overflow-hidden">
             <AspectRatio :ratio="16 / 9">
               <Link
                 v-if="firstPost.image"

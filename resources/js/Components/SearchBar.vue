@@ -161,10 +161,9 @@ onBeforeUnmount(() => {
       >
         <p v-if="index === 0" class="mb-1 font-semibold">Utilisateurs</p>
         <Button variant="ghost" as-child>
-          <!--            TODO: add route redirection-->
           <Link
             class="flex !h-auto flex-col !items-start gap-2 !py-1"
-            href="#"
+            :href="route('profile.index', user.name)"
             @click="resetSearch(true)"
             >{{ user.name }}</Link
           >

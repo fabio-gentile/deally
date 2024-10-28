@@ -35,25 +35,13 @@ const since = timeAgo(new Date(discussion.created_at)) // string
           :src="'/storage/' + discussion.path + '/' + discussion.thumbnail"
           alt=""
         />
-        <!--                <ImageOff-->
-        <!--                    v-else-->
-        <!--                    class="mx-auto h-52 w-52 object-contain text-muted-foreground"-->
-        <!--                />-->
       </div>
       <div class="flex grow flex-col justify-evenly gap-3">
         <div
           class="hidden flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between"
-        >
-          <!--          <div class="flex flex-col gap-6 text-sm md:flex-row">-->
-          <!--            <div class="flex items-center gap-2">-->
-          <!--              <Clock />-->
-          <!--              {{ since }}-->
-          <!--            </div>-->
-          <!--          </div>-->
-        </div>
+        ></div>
 
         <strong>
-          <!--          TODO: add route redirection-->
           <Link
             :href="route('discussions.show', discussion.slug)"
             class="line-clamp-4 font-semibold md:line-clamp-2"

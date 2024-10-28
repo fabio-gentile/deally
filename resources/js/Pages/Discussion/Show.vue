@@ -197,7 +197,6 @@ const discussionDestroy = (id: number) => {
           ></div>
           <Separator class="!mb-4" />
           <div class="text-sm text-muted-foreground">
-            <!--            TODO: Add user avatar-->
             <div
               class="!-mt-4 flex flex-row items-center gap-2 text-sm text-muted-foreground"
             >
@@ -214,7 +213,6 @@ const discussionDestroy = (id: number) => {
                 class="h-[52px] w-[52px] rounded-full object-cover"
               />
               <div class="grid gap-2">
-                <!-- TODO: Add redirection to user profile -->
                 <Link
                   :href="route('profile.deals', discussion.user.name)"
                   class="font-semibold"
@@ -280,7 +278,6 @@ const discussionDestroy = (id: number) => {
                 <div
                   class="flex flex-row justify-between gap-6 text-sm text-muted-foreground"
                 >
-                  <!-- TODO: redirection -->
                   <Link
                     :href="route('profile.deals', similarDiscussion.user.name)"
                     class="flex min-w-0 flex-row items-center gap-2"

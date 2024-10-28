@@ -407,7 +407,6 @@ const { copy, copied } = useClipboard({ source })
             </a>
 
             <div class="flex flex-col gap-4 md:flex-row md:justify-between">
-              <!--            TODO: Add user avatar-->
               <div
                 class="flex flex-row items-center gap-2 text-sm text-muted-foreground"
               >

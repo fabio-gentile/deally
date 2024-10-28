@@ -120,7 +120,6 @@ const submit = () =>
                   Se connecter
                 </Link>
               </div>
-              <!-- TODO: Add redirection -->
               <div class="mt-3 text-center text-xs text-muted-foreground">
                 En créant un compte, vous acceptez nos
                 <Link :href="route('pages.cgu')" class="underline">

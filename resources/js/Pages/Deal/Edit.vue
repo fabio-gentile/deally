@@ -112,7 +112,6 @@ const deleteImage = async (filename: string, index: number): Promise<void> => {
 </script>
 <template>
   <div class="bg-page py-6">
-    <!--      TODO: Refaire le front-->
     <Head :title="'Modification de ' + props.deal.title" />
     <Wrapper class="max-w-[800px]">
       <Breadcrumb
