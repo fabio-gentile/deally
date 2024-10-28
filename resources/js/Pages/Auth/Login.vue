@@ -27,14 +27,14 @@ const submit = () => {
   <Head>
     <title>Connexion</title>
   </Head>
-  <div class="my-auto grid w-full grid-cols-1 place-items-center">
+  <div class="my-auto grid w-full grid-cols-1 place-items-center py-8">
     <Wrapper>
       <form
         @submit.prevent="submit"
         class="mx-auto w-fit overflow-hidden rounded-lg border bg-white p-4 dark:bg-primary-foreground"
       >
         <div class="flex items-center justify-center">
-          <div class="mx-auto grid w-[350px] gap-6">
+          <div class="mx-auto grid w-full max-w-[375px] gap-6 sm:w-[400px]">
             <div class="grid gap-2">
               <h1 class="text-3xl font-bold">Se connecter</h1>
               <p class="text-balance text-muted-foreground">

@@ -36,7 +36,7 @@ const submit = () => {
         class="mx-auto w-fit overflow-hidden rounded-lg border bg-white p-4 dark:bg-primary-foreground"
       >
         <div class="flex items-center justify-center">
-          <div class="mx-auto grid max-w-[350px] gap-6">
+          <div class="mx-auto grid w-full max-w-[375px] gap-6 sm:w-[400px]">
             <div class="grid gap-2">
               <h1 class="text-3xl font-bold">Réinitialiser le mot de passe</h1>
               <p class="text-muted-foreground">
