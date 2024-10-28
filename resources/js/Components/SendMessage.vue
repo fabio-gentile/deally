@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import { useForm } from "@inertiajs/vue3"
+import { Link, useForm, usePage } from "@inertiajs/vue3"
 import Button from "@/Components/ui/button/Button.vue"
 import Label from "@/Components/ui/label/Label.vue"
 import Textarea from "@/Components/ui/textarea/Textarea.vue"
-import { SendHorizonal } from "lucide-vue-next"
+import { Flag, SendHorizonal } from "lucide-vue-next"
 import { Deal } from "@/types/model/deal"
 import { Discussion } from "@/types/model/discussion"
 import { Blog } from "@/types/model/blog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/Components/ui/dialog"
+import { ref } from "vue"
 
 const emit = defineEmits(["submitted"])
 
@@ -49,8 +59,33 @@ const submitForm = () => {
     },
   })
 }
+
+const page = usePage()
+const isDialogOpen = ref(false)
+const toggleIsDialogOpen = (e) => {
+  if (!page.props.auth?.user?.id) {
+    e.preventDefault()
+  }
+
+  isDialogOpen.value = page.props.auth?.user?.id ? false : !isDialogOpen.value
+}
 </script>
 <template>
+  <Dialog v-model:open="isDialogOpen">
+    <DialogContent class="text-left sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Commenter</DialogTitle>
+        <DialogDescription>
+          Pour commenter, vous devez être connecté.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Link class="w-fit" :href="route('login')">
+          <Button type="submit">Se connecter</Button>
+        </Link>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
   <form @submit.prevent="submitForm" class="flex gap-4">
     <img
       v-if="$page.props.auth?.user?.avatar"
@@ -73,6 +108,7 @@ const submitForm = () => {
     <div class="relative grow">
       <Label for="content" value="Contenu" />
       <Textarea
+        @keydown="toggleIsDialogOpen"
         id="content"
         placeholder="Écrivez votre commentaire..."
         v-model="form.content"

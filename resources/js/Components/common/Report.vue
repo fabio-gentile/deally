@@ -89,7 +89,7 @@ const [isOpen, closeDialog] = dialogState()
         <slot />
       </div>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-[425px]">
+    <DialogContent class="text-left sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Signaler</DialogTitle>
         <DialogDescription>
@@ -97,7 +97,7 @@ const [isOpen, closeDialog] = dialogState()
         </DialogDescription>
       </DialogHeader>
       <DialogFooter>
-        <Link :href="route('login')">
+        <Link class="w-fit" :href="route('login')">
           <Button type="submit">Se connecter</Button>
         </Link>
       </DialogFooter>
