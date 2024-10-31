@@ -22,7 +22,7 @@ createInertiaApp({
       `./Pages/${name}.vue`,
       import.meta.glob<DefineComponent>("./Pages/**/*.vue")
     )
-    const isAdminRoute = window.location.pathname.startsWith("/admin")
+    const isAdminRoute = route().current()?.includes("admin")
     page.default.layout =
       page.default.layout || (isAdminRoute ? AdminLayout : MainLayout)
 
