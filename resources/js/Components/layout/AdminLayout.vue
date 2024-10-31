@@ -207,11 +207,11 @@ const handleLinkClick = () => {
                 </nav>
               </div>
               <div class="mt-auto p-4">
-                <Link :href="route('home.index')">
+                <a :href="route('home.index')">
                   <Button size="sm" class="w-full">
                     Revenir au site web
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
           </div>

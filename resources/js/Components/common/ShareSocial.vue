@@ -22,7 +22,7 @@ const props = defineProps<{
 const source = ref(props.url)
 const { copy, copied } = useClipboard({ source })
 
-const socialShare = (social) => {
+const socialShare = (social: string) => {
   if (social === "facebook") {
     const facebookIntentURL = "https://www.facebook.com/sharer/sharer.php"
     const contentQuery = `?u=${encodeURIComponent(props.url)}&quote=${encodeURIComponent(props.title)}`

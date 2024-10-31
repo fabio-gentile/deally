@@ -59,7 +59,7 @@ const since = timeAgo(new Date(discussion.created_at)) // string
           <div class="flex gap-6">
             <ShareSocial
               :url="route('discussions.show', discussion.slug)"
-              title="Jordan 1 Mid"
+              :title="discussion.title"
             />
             <MessageSquare
               :count="discussion?.comments_count"

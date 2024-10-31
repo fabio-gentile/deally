@@ -377,7 +377,7 @@ const { copy, copied } = useClipboard({ source })
               <div class="flex flex-col gap-4">
                 <ShareSocial
                   :url="route('deals.show', deal.slug)"
-                  title="Jordan 1 Mid"
+                  :title="deal.title"
                   >Partager</ShareSocial
                 >
                 <Report :id="deal.id" type="deal"> Signaler l'annonce</Report>
