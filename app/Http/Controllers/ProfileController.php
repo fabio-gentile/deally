@@ -50,14 +50,9 @@ class ProfileController extends Controller
                     $subQuery->where('user_id', $currentUser->id);
                 }]);
             })
-            ->withExists(['voteDetails' => function ($query) use ($currentUser) {
-                if ($currentUser) {
-                    $query->where('user_id', $currentUser->id);
-                }
-            }])
             ->get()
             ->map(function ($deal) use ($currentUser) {
-                $deal->user_vote = $currentUser ? $deal->vote_details_exists : false;
+                $deal->user_vote = $deal->voteDetails->first() ?? false;
                 $deal->is_expired = $deal->isExpired();
                 $deal->user_favorite = $currentUser ? $deal->favorites_exists : false;
 
