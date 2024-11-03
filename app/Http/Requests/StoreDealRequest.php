@@ -62,6 +62,7 @@ class StoreDealRequest extends FormRequest
             'description.string' => 'La description doit être une chaîne de caractères.',
             'description.max' => 'La description ne peut pas dépasser 1024 caractères.',
             'description.min' => 'La description doit contenir au moins 20 caractères.',
+            'original_price.required' => 'Le prix original est requis.',
             'original_price.numeric' => 'Le prix original doit être un nombre.',
             'original_price.min' => 'Le prix original doit être au moins 0.',
             'original_price.gt' => 'Le prix original doit être supérieur au prix actuel.',
